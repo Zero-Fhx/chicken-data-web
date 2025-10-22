@@ -63,7 +63,6 @@ export function Dishes () {
 
   return (
     <>
-      {/* Test Section */}
       <TestStatePanel
         loading={loading}
         setLoading={setLoading}
@@ -108,7 +107,6 @@ export function Dishes () {
               <h3>Filtrar Platos</h3>
             </div>
 
-            {/* Desactivado si no hay filtros */}
             <button
               className='muted'
               onClick={handleClearFilters}
@@ -200,12 +198,13 @@ export function Dishes () {
             <div className='button-group'>
               {/* PageSize select */}
               <select
+                className='muted'
                 style={{ width: 'auto' }}
                 value={pageSize}
                 disabled={loading}
                 onChange={(e) => {
                   setPageSize(Number(e.target.value))
-                  setPage(1) // Reset to first page when page size changes
+                  setPage(1)
                 }}
               >
                 <option value={5}>5 por página</option>
@@ -299,19 +298,6 @@ export function Dishes () {
             <CardFooter>
               {meta.pagination && (
                 <div className='pagination'>
-                  {/* "meta": {
-                    "pagination": {
-                      "page": 2, // Pagina actual
-                      "pageSize": 10, // Numero de items por pagina
-                      "pageCount": 2, // Numero total de paginas
-                      "total": 13, // Numero total de items
-                      "hasNextPage": false, // Indica si hay una pagina siguiente
-                      "hasPrevPage": true // Indica si hay una pagina anterior
-                      }
-                    } */}
-
-                  {/* [Anterior] [1] [2] [3] [Siguiente] */}
-
                   <button
                     className='pagination-btn'
                     onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
@@ -320,8 +306,6 @@ export function Dishes () {
                     <ArrowLeftIcon />
                     Anterior
                   </button>
-
-                  {/* [1] [2] [3] */}
 
                   {[...Array(meta.pagination.pageCount || 1)].map((_, i) => (
                     <button
