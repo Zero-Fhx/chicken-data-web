@@ -8,15 +8,9 @@ import { useState } from 'react'
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
 const API_URL = `${API_BASE_URL}/dishes`
 
-// example: /api/dishes?page=1&pageSize=10&search=Combo&categoryId=9&minPrice=10&maxPrice=20&status=Active
-
 export function Dishes () {
-  // Debug: verificar variables de entorno
-  console.log('VITE_API_URL:', import.meta.env.VITE_API_URL)
-  console.log('API_BASE_URL:', API_BASE_URL)
-  console.log('API_URL:', API_URL)
-
   const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
 
   const [filters, setFilters] = useState({
     name: '',
@@ -41,10 +35,12 @@ export function Dishes () {
     })
   }
 
+  const hasActiveFilters = Object.values(filters).some((value) => value !== '')
+
   const buildURL = () => {
     const url = new URL(API_URL)
     url.searchParams.set('page', page)
-    url.searchParams.set('pageSize', 10)
+    url.searchParams.set('pageSize', pageSize)
     if (filters.name) url.searchParams.set('search', filters.name)
     if (filters.category) url.searchParams.set('categoryId', filters.category)
     if (filters.minPrice) url.searchParams.set('minPrice', filters.minPrice)
@@ -195,9 +191,11 @@ export function Dishes () {
               <h3>Filtrar Platos</h3>
             </div>
 
+            {/* Desactivado si no hay filtros */}
             <button
               className='muted'
               onClick={handleClearFilters}
+              disabled={!hasActiveFilters}
             >
               <TrashBinIcon />
               Limpiar Filtros
@@ -282,20 +280,38 @@ export function Dishes () {
               <PlateIcon />
               <h2>Lista de Platos</h2>
             </div>
-            <button
-              className='muted'
-              onClick={refetch}
-              disabled={loading}
-            >
-              <RefreshIcon />
-              Recargar Platos
-            </button>
+            <div className='button-group'>
+              {/* PageSize select */}
+              <select
+                style={{ width: 'auto' }}
+                value={pageSize}
+                disabled={loading}
+                onChange={(e) => {
+                  setPageSize(Number(e.target.value))
+                  setPage(1) // Reset to first page when page size changes
+                }}
+              >
+                <option value={5}>5 por página</option>
+                <option value={10}>10 por página</option>
+                <option value={20}>20 por página</option>
+                <option value={50}>50 por página</option>
+              </select>
+              <button
+                className='muted'
+                onClick={refetch}
+                disabled={loading}
+              >
+                <RefreshIcon />
+                Recargar Platos
+              </button>
+            </div>
+
           </CardHeader>
           <CardBody className='no-padding'>
             <table>
               <thead>
                 <tr>
-                  <th>ID</th>
+                  <th className='center-cell'>ID</th>
                   <th>Nombre</th>
                   <th>Descripción</th>
                   <th className='center-cell'>Categoría</th>
@@ -327,31 +343,33 @@ export function Dishes () {
                   ? (
                       dishes.map((dish) => (
                         <tr key={dish.id}>
-                          <td>{dish.id}</td>
-                          <td>{dish.name}</td>
-                          <td>{dish.description}</td>
+                          <td className='center-cell'>{dish.id}</td>
+                          <td><div className='ellipsis-cell'>{dish.name}</div></td>
+                          <td><div className='ellipsis-cell'>{dish.description}</div></td>
                           <td className='center-cell'>{dish.category.name}</td>
                           <td className='center-cell'>${dish.price}</td>
                           <td className='center-cell'>{dish.status === 'Active' ? 'Activo' : 'Inactivo'}</td>
-                          <td className='center-cell button-group'>
-                            <button
-                              className='view icon-only'
-                              onClick={() => console.log('Ver Plato', dish.id)}
-                            >
-                              <ViewIcon />
-                            </button>
-                            <button
-                              className='edit icon-only'
-                              onClick={() => console.log('Editar Plato', dish.id)}
-                            >
-                              <EditIcon />
-                            </button>
-                            <button
-                              className='delete icon-only'
-                              onClick={() => console.log('Eliminar Plato', dish.id)}
-                            >
-                              <DeleteIcon />
-                            </button>
+                          <td className='center-cell'>
+                            <div className='button-group' style={{ justifyContent: 'center' }}>
+                              <button
+                                className='view icon-only'
+                                onClick={() => console.log('Ver Plato', dish.id)}
+                              >
+                                <ViewIcon />
+                              </button>
+                              <button
+                                className='edit icon-only'
+                                onClick={() => console.log('Editar Plato', dish.id)}
+                              >
+                                <EditIcon />
+                              </button>
+                              <button
+                                className='delete icon-only'
+                                onClick={() => console.log('Eliminar Plato', dish.id)}
+                              >
+                                <DeleteIcon />
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       ))
