@@ -3,23 +3,31 @@ import { AddIcon, ArrowLeftIcon, ArrowRightIcon, DeleteIcon, DownloadIcon, EditI
 import { Loader } from '@/components/Loader'
 import { Separator } from '@/components/Separator'
 import { TestStatePanel } from '@/components/TestStatePanel'
+import { useDebounce } from '@/hooks/useDebounce'
 import { useFetch } from '@/hooks/useFetch'
-import { useState } from 'react'
+
+import { useMemo, useState } from 'react'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
 const API_URL = `${API_BASE_URL}/dishes`
+
+const initialFilters = {
+  name: '',
+  category: '',
+  minPrice: '',
+  maxPrice: '',
+  status: ''
+}
 
 export function Dishes () {
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
 
-  const [filters, setFilters] = useState({
-    name: '',
-    category: '',
-    minPrice: '',
-    maxPrice: '',
-    status: ''
-  })
+  const [filters, setFilters] = useState(initialFilters)
+
+  const debouncedName = useDebounce(filters.name, 500)
+  const debouncedMinPrice = useDebounce(filters.minPrice, 500)
+  const debouncedMaxPrice = useDebounce(filters.maxPrice, 500)
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target
@@ -27,31 +35,28 @@ export function Dishes () {
   }
 
   const handleClearFilters = () => {
-    setFilters({
-      name: '',
-      category: '',
-      minPrice: '',
-      maxPrice: '',
-      status: ''
-    })
+    setFilters(initialFilters)
   }
 
   const hasActiveFilters = Object.values(filters).some((value) => value !== '')
 
-  const buildURL = () => {
+  const buildURL = useMemo(() => {
     const url = new URL(API_URL)
     url.searchParams.set('page', page)
     url.searchParams.set('pageSize', pageSize)
-    if (filters.name) url.searchParams.set('search', filters.name)
+
+    if (debouncedName) url.searchParams.set('search', debouncedName.trim().toLowerCase())
+    if (debouncedMinPrice) url.searchParams.set('minPrice', debouncedMinPrice)
+    if (debouncedMaxPrice) url.searchParams.set('maxPrice', debouncedMaxPrice)
+
     if (filters.category) url.searchParams.set('categoryId', filters.category)
-    if (filters.minPrice) url.searchParams.set('minPrice', filters.minPrice)
-    if (filters.maxPrice) url.searchParams.set('maxPrice', filters.maxPrice)
     if (filters.status) url.searchParams.set('status', filters.status)
+
     return url.toString()
-  }
+  }, [page, pageSize, debouncedName, debouncedMinPrice, debouncedMaxPrice, filters.category, filters.status])
 
   const { data, loading, setLoading, error, setError, refetch } = useFetch(
-    buildURL()
+    buildURL
   )
 
   const { data: dishes, meta } = data || {}
