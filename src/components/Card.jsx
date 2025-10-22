@@ -14,9 +14,9 @@ export function CardHeader ({ children, className }) {
   const headerClass = className ? `card-header ${className}` : 'card-header'
 
   return (
-    <div className={headerClass}>
+    <header className={headerClass}>
       {children}
-    </div>
+    </header>
   )
 }
 
@@ -34,8 +34,8 @@ export function CardFooter ({ children, className }) {
   const footerClass = className ? `card-footer ${className}` : 'card-footer'
 
   return (
-    <div className={footerClass}>
+    <footer className={footerClass}>
       {children}
-    </div>
+    </footer>
   )
 }
