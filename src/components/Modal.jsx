@@ -1,52 +1,45 @@
 import { useEffect, useRef } from 'react'
 
-export function Modal ({ isOpen, onClose, children }) {
+export function Modal ({ isOpen, onAnimationEnd, children }) {
   const dialogRef = useRef(null)
 
   useEffect(() => {
     const dialog = dialogRef.current
     if (!dialog) return
 
-    if (isOpen) {
+    if (isOpen && !dialog.hasAttribute('open')) {
       dialog.removeAttribute('data-closing')
       dialog.showModal()
-    } else {
-      if (dialog.hasAttribute('open')) {
-        dialog.setAttribute('data-closing', 'true')
+    } else if (!isOpen && dialog.hasAttribute('open')) {
+      dialog.setAttribute('data-closing', 'true')
 
-        const handleAnimationEnd = () => {
+      const handleAnimationEnd = () => {
+        dialog.removeAttribute('data-closing')
+        dialog.close()
+        if (onAnimationEnd) {
+          onAnimationEnd()
+        }
+      }
+
+      const modalContent = dialog.querySelector('.modal-content')
+      if (modalContent) {
+        modalContent.addEventListener('animationend', handleAnimationEnd, { once: true })
+      }
+
+      setTimeout(() => {
+        if (dialog.hasAttribute('data-closing')) {
           dialog.removeAttribute('data-closing')
           dialog.close()
+          if (onAnimationEnd) {
+            onAnimationEnd()
+          }
         }
-
-        dialog.addEventListener('animationend', handleAnimationEnd, { once: true })
-      }
+      }, 350)
     }
-  }, [isOpen])
-
-  useEffect(() => {
-    const dialog = dialogRef.current
-    if (!dialog) return
-
-    const handleClose = () => {
-      onClose()
-    }
-
-    dialog.addEventListener('close', handleClose)
-
-    return () => {
-      dialog.removeEventListener('close', handleClose)
-    }
-  }, [onClose])
-
-  const handleBackdropClick = (e) => {
-    if (e.target === dialogRef.current) {
-      onClose()
-    }
-  }
+  }, [isOpen, onAnimationEnd])
 
   return (
-    <dialog className='modal' onClick={handleBackdropClick}>
+    <dialog ref={dialogRef} className='modal-dialog' closedby='none'>
       <div className='modal-content'>
         {children}
       </div>

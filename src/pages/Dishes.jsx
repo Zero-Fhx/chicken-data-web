@@ -1,6 +1,7 @@
 import { Card, CardBody, CardFooter, CardHeader } from '@/components/Card'
-import { AddIcon, ArrowLeftIcon, ArrowRightIcon, DeleteIcon, DownloadIcon, EditIcon, PlateIcon, RefreshIcon, SearchIcon, TrashBinIcon, ViewIcon, WarningIcon } from '@/components/Icons'
+import { AddIcon, ArrowLeftIcon, ArrowRightIcon, CancelIcon, DeleteIcon, DownloadIcon, EditIcon, PlateIcon, RefreshIcon, SearchIcon, TrashBinIcon, ViewIcon, WarningIcon } from '@/components/Icons'
 import { Loader } from '@/components/Loader'
+import { Modal } from '@/components/Modal'
 import { Separator } from '@/components/Separator'
 import { TestStatePanel } from '@/components/TestStatePanel'
 import { useDebounce } from '@/hooks/useDebounce'
@@ -11,6 +12,8 @@ import { useMemo, useState } from 'react'
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
 const API_URL = `${API_BASE_URL}/dishes`
 
+const API_CATEGORIES_URL = `${API_BASE_URL}/dish-categories`
+
 const initialFilters = {
   name: '',
   category: '',
@@ -19,11 +22,28 @@ const initialFilters = {
   status: ''
 }
 
+const statusOptions = [
+  { value: 'Active', label: 'Activo' },
+  { value: 'Inactive', label: 'Inactivo' }
+]
+
 export function Dishes () {
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
 
   const [filters, setFilters] = useState(initialFilters)
+
+  const [selectedDish, setSelectedDish] = useState(null)
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const { data: categoriesData } = useFetch(API_CATEGORIES_URL)
+  const categories = categoriesData?.data || []
+
+  const categoryOptions = categories.map((category) => ({
+    value: category.id,
+    label: category.name
+  }))
 
   const debouncedName = useDebounce(filters.name, 500)
   const debouncedMinPrice = useDebounce(filters.minPrice, 500)
@@ -60,6 +80,32 @@ export function Dishes () {
   )
 
   const { data: dishes, meta } = data || {}
+
+  const handleDishSelect = (dish) => {
+    console.log('Ver Plato', dish.id)
+    setSelectedDish(dish)
+    console.log(dish)
+    setIsModalOpen(true)
+  }
+
+  const handleCloseWithX = () => {
+    console.log('Cerrando modal con X')
+    setIsModalOpen(false)
+  }
+
+  const handleCancel = () => {
+    console.log('Cancelando acción...')
+    setIsModalOpen(false)
+  }
+
+  const handleSave = () => {
+    console.log('Guardando cambios...')
+    setIsModalOpen(false)
+  }
+
+  const handleAnimationEnd = () => {
+    setSelectedDish(null)
+  }
 
   return (
     <>
@@ -138,10 +184,11 @@ export function Dishes () {
                 onChange={handleFilterChange}
               >
                 <option value=''>Todas las Categorías</option>
-                <option value='1'>General</option>
-                <option value='2'>Entrante</option>
-                <option value='3'>Plato Principal</option>
-                <option value='4'>Postre</option>
+                {categoryOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -269,7 +316,7 @@ export function Dishes () {
                             <div className='button-group' style={{ justifyContent: 'center' }}>
                               <button
                                 className='view icon-only'
-                                onClick={() => console.log('Ver Plato', dish.id)}
+                                onClick={() => handleDishSelect(dish)}
                               >
                                 <ViewIcon />
                               </button>
@@ -330,6 +377,80 @@ export function Dishes () {
             </CardFooter>}
         </Card>
       </section>
+
+      <Modal
+        isOpen={isModalOpen}
+        onAnimationEnd={handleAnimationEnd}
+      >
+        <form action=''>
+          <Card>
+            <CardHeader>
+              <div className='header-with-icon'>
+                <PlateIcon />
+                <h3>Datos del Plato</h3>
+              </div>
+              <button type='button' className='modal-close-button' onClick={handleCloseWithX}>
+                <CancelIcon />
+              </button>
+            </CardHeader>
+            <CardBody>
+              <div className='modal-input-group'>
+                <div className='input-group'>
+                  <label htmlFor=''>Nombre:</label>
+                  <input type='text' value={selectedDish?.name || ''} disabled />
+                </div>
+                <div className='input-group'>
+                  <label htmlFor=''>Descripción:</label>
+                  <textarea value={selectedDish?.description || ''} disabled />
+                </div>
+                {/* Category - Select */}
+                <div className='input-group'>
+                  <label htmlFor=''>Categoría:</label>
+                  <select name='category' id='' disabled value={selectedDish?.category.id || ''}>
+                    <option value=''>Seleccionar categoría</option>
+                    {categoryOptions.map((option) => (
+                      <option
+                        key={option.value}
+                        value={option.value}
+                      >
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className='input-group'>
+                  <label htmlFor=''>Precio:</label>
+                  <input type='number' value={selectedDish?.price || ''} disabled />
+                </div>
+                <div className='input-group'>
+                  <label htmlFor=''>Estado:</label>
+                  <select name='status' id='' disabled value={selectedDish?.status || ''}>
+                    <option value=''>Seleccionar estado</option>
+                    {statusOptions.map((option) => (
+                      <option
+                        key={option.value}
+                        value={option.value}
+                      >
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </CardBody>
+            <CardFooter className='modal-footer'>
+              <button type='button' onClick={handleCancel}>
+                <CancelIcon />
+                Cancelar
+              </button>
+              <button type='button' className='primary' onClick={handleSave}>
+                <AddIcon />
+                Guardar
+              </button>
+            </CardFooter>
+          </Card>
+        </form>
+      </Modal>
     </>
   )
 }
