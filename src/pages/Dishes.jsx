@@ -173,6 +173,7 @@ export function Dishes () {
                 name='name'
                 value={filters.name}
                 onChange={handleFilterChange}
+                autocomplete='off'
               />
             </div>
 
@@ -248,8 +249,11 @@ export function Dishes () {
               <select
                 className='muted'
                 style={{ width: 'auto' }}
+                id='page-size-select'
+                name='pageSize'
                 value={pageSize}
                 disabled={loading}
+                autocomplete='off'
                 onChange={(e) => {
                   setPageSize(Number(e.target.value))
                   setPage(1)
@@ -397,16 +401,16 @@ export function Dishes () {
             <CardBody className='modal-body'>
               <div className='modal-input-group'>
                 <div className='input-group'>
-                  <label htmlFor='name'>Nombre <RequiredSpan /></label>
-                  <input type='text' name='name' value={selectedDish?.name || ''} disabled />
+                  <label htmlFor='modal-name'>Nombre <RequiredSpan /></label>
+                  <input type='text' id='modal-name' name='name' value={selectedDish?.name || ''} autocomplete='off' disabled />
                 </div>
                 <div className='input-group'>
-                  <label htmlFor='description'>Descripción <RequiredSpan /></label>
-                  <textarea name='description' value={selectedDish?.description || ''} disabled />
+                  <label htmlFor='modal-description'>Descripción <RequiredSpan /></label>
+                  <textarea id='modal-description' name='description' value={selectedDish?.description || ''} autocomplete='off' disabled />
                 </div>
                 <div className='input-group'>
-                  <label htmlFor='category'>Categoría <RequiredSpan /></label>
-                  <select name='category' id='category' disabled value={selectedDish?.category.id || ''}>
+                  <label htmlFor='modal-category'>Categoría <RequiredSpan /></label>
+                  <select name='category' id='modal-category' disabled value={selectedDish?.category.id || ''} autocomplete='off'>
                     <option value=''>Seleccionar categoría</option>
                     {categoryOptions.map((option) => (
                       <option
@@ -419,12 +423,12 @@ export function Dishes () {
                   </select>
                 </div>
                 <div className='input-group'>
-                  <label htmlFor='price'>Precio <RequiredSpan /></label>
-                  <input type='number' name='price' value={selectedDish?.price || ''} disabled />
+                  <label htmlFor='modal-price'>Precio <RequiredSpan /></label>
+                  <input type='number' id='modal-price' name='price' value={selectedDish?.price || ''} autocomplete='off' disabled />
                 </div>
                 <div className='input-group'>
-                  <label htmlFor='status'>Estado <RequiredSpan /></label>
-                  <select name='status' id='status' disabled value={selectedDish?.status || ''}>
+                  <label htmlFor='modal-status'>Estado <RequiredSpan /></label>
+                  <select name='status' id='modal-status' disabled value={selectedDish?.status || ''} autocomplete='off'>
                     <option value=''>Seleccionar estado</option>
                     {statusOptions.map((option) => (
                       <option
