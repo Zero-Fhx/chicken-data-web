@@ -2,6 +2,7 @@ import { Card, CardBody, CardFooter, CardHeader } from '@/components/Card'
 import { AddIcon, ArrowLeftIcon, ArrowRightIcon, CancelIcon, DeleteIcon, DownloadIcon, EditIcon, PlateIcon, RefreshIcon, SearchIcon, TrashBinIcon, ViewIcon, WarningIcon } from '@/components/Icons'
 import { Loader } from '@/components/Loader'
 import { Modal } from '@/components/Modal'
+import { RequiredSpan } from '@/components/RequiredSpan'
 import { Separator } from '@/components/Separator'
 import { TestStatePanel } from '@/components/TestStatePanel'
 import { useDebounce } from '@/hooks/useDebounce'
@@ -315,19 +316,19 @@ export function Dishes () {
                           <td className='center-cell'>
                             <div className='button-group' style={{ justifyContent: 'center' }}>
                               <button
-                                className='view icon-only'
+                                className='view icon-only no-transform'
                                 onClick={() => handleDishSelect(dish)}
                               >
                                 <ViewIcon />
                               </button>
                               <button
-                                className='edit icon-only'
+                                className='edit icon-only no-transform'
                                 onClick={() => console.log('Editar Plato', dish.id)}
                               >
                                 <EditIcon />
                               </button>
                               <button
-                                className='delete icon-only'
+                                className='delete icon-only no-transform'
                                 onClick={() => console.log('Eliminar Plato', dish.id)}
                               >
                                 <DeleteIcon />
@@ -389,24 +390,23 @@ export function Dishes () {
                 <PlateIcon />
                 <h3>Datos del Plato</h3>
               </div>
-              <button type='button' className='modal-close-button' onClick={handleCloseWithX}>
+              <button type='button' className='modal-close-button no-transform' onClick={handleCloseWithX}>
                 <CancelIcon />
               </button>
             </CardHeader>
-            <CardBody>
+            <CardBody className='modal-body'>
               <div className='modal-input-group'>
                 <div className='input-group'>
-                  <label htmlFor=''>Nombre:</label>
-                  <input type='text' value={selectedDish?.name || ''} disabled />
+                  <label htmlFor='name'>Nombre <RequiredSpan /></label>
+                  <input type='text' name='name' value={selectedDish?.name || ''} disabled />
                 </div>
                 <div className='input-group'>
-                  <label htmlFor=''>Descripción:</label>
-                  <textarea value={selectedDish?.description || ''} disabled />
+                  <label htmlFor='description'>Descripción <RequiredSpan /></label>
+                  <textarea name='description' value={selectedDish?.description || ''} disabled />
                 </div>
-                {/* Category - Select */}
                 <div className='input-group'>
-                  <label htmlFor=''>Categoría:</label>
-                  <select name='category' id='' disabled value={selectedDish?.category.id || ''}>
+                  <label htmlFor='category'>Categoría <RequiredSpan /></label>
+                  <select name='category' id='category' disabled value={selectedDish?.category.id || ''}>
                     <option value=''>Seleccionar categoría</option>
                     {categoryOptions.map((option) => (
                       <option
@@ -419,12 +419,12 @@ export function Dishes () {
                   </select>
                 </div>
                 <div className='input-group'>
-                  <label htmlFor=''>Precio:</label>
-                  <input type='number' value={selectedDish?.price || ''} disabled />
+                  <label htmlFor='price'>Precio <RequiredSpan /></label>
+                  <input type='number' name='price' value={selectedDish?.price || ''} disabled />
                 </div>
                 <div className='input-group'>
-                  <label htmlFor=''>Estado:</label>
-                  <select name='status' id='' disabled value={selectedDish?.status || ''}>
+                  <label htmlFor='status'>Estado <RequiredSpan /></label>
+                  <select name='status' id='status' disabled value={selectedDish?.status || ''}>
                     <option value=''>Seleccionar estado</option>
                     {statusOptions.map((option) => (
                       <option

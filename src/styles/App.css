@@ -193,6 +193,7 @@ textarea {
 
 textarea {
   resize: vertical;
+  field-sizing: content;
   min-height: 4rem;
   max-height: 8rem;
 }
@@ -522,7 +523,6 @@ tbody tr:hover {
   &:hover {
     background: #fee2e2;
     color: #dc2626;
-    transform: scale(1) translateY(0px);
   }
 }
 
@@ -540,4 +540,13 @@ tbody tr:hover {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+.modal-body {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.no-transform {
+  transform: none !important;
 }
