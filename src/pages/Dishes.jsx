@@ -1,17 +1,19 @@
 import { Card, CardBody, CardFooter, CardHeader } from '@/components/Card'
-import { AddIcon, ArrowLeftIcon, ArrowRightIcon, CancelIcon, DeleteIcon, DownloadIcon, EditIcon, PlateIcon, RefreshIcon, SearchIcon, TrashBinIcon, ViewIcon, WarningIcon } from '@/components/Icons'
+import { AddIcon, ArrowLeftIcon, ArrowRightIcon, CancelIcon, CheckIcon, DownloadIcon, EditIcon, PlateIcon, RefreshIcon, SearchIcon, TrashBinIcon, ViewIcon, WarningIcon } from '@/components/Icons'
 import { Loader } from '@/components/Loader'
+
 import { Modal } from '@/components/Modal'
 import { RequiredSpan } from '@/components/RequiredSpan'
 import { Separator } from '@/components/Separator'
 import { TestStatePanel } from '@/components/TestStatePanel'
 import { useDebounce } from '@/hooks/useDebounce'
 import { useFetch } from '@/hooks/useFetch'
+import { useEffect, useMemo, useState } from 'react'
 
-import { useMemo, useState } from 'react'
+import trunc from '@/services/trunc'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
-const API_URL = `${API_BASE_URL}/dishes`
+const API_URL = `${API_BASE_URL}/dishes/`
 
 const API_CATEGORIES_URL = `${API_BASE_URL}/dish-categories`
 
@@ -28,6 +30,13 @@ const statusOptions = [
   { value: 'Inactive', label: 'Inactivo' }
 ]
 
+const initialFormErrors = {
+  name: '',
+  category: '',
+  price: '',
+  status: ''
+}
+
 export function Dishes () {
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
@@ -37,8 +46,13 @@ export function Dishes () {
   const [selectedDish, setSelectedDish] = useState(null)
 
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [modalMode, setModalMode] = useState('view')
+  const [modalLoading, setModalLoading] = useState(false)
+  const [modalSuccess, setModalSuccess] = useState(null) // null | 'save' | 'delete' | 'create'
 
-  const { data: categoriesData } = useFetch(API_CATEGORIES_URL)
+  const [formErrors, setFormErrors] = useState(initialFormErrors)
+
+  const { data: categoriesData, loading: categoriesLoading } = useFetch(API_CATEGORIES_URL)
   const categories = categoriesData?.data || []
 
   const categoryOptions = categories.map((category) => ({
@@ -52,7 +66,14 @@ export function Dishes () {
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target
-    setFilters((prev) => ({ ...prev, [name]: value }))
+
+    let finalValue = value
+
+    if ((name === 'minPrice' || name === 'maxPrice') && value !== '') {
+      finalValue = trunc(parseFloat(value), 2)
+    }
+
+    setFilters((prev) => ({ ...prev, [name]: finalValue }))
   }
 
   const handleClearFilters = () => {
@@ -82,10 +103,68 @@ export function Dishes () {
 
   const { data: dishes, meta } = data || {}
 
-  const handleDishSelect = (dish) => {
+  useEffect(() => {
+    if (error && error.status === 400 && page > 1) {
+      setError(null)
+      setPage(1)
+    }
+  }, [error, page, setError])
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setSelectedDish((prev) => ({ ...prev, [name]: value }))
+    console.log(`Cambio en el campo ${name}:`, value)
+
+    if (modalMode === 'edit') {
+      if (name === 'name') {
+        if (value.trim() === '') {
+          setFormErrors((prev) => ({ ...prev, name: 'El nombre es obligatorio' }))
+          return
+        } else {
+          setFormErrors((prev) => ({ ...prev, name: '' }))
+        }
+      }
+
+      if (name === 'price') {
+        const formattedValue = trunc(parseFloat(value), 2)
+        const priceValue = parseFloat(formattedValue)
+
+        setSelectedDish((prev) => ({ ...prev, price: isNaN(priceValue) ? '' : formattedValue.toString() }))
+
+        if (isNaN(priceValue) || priceValue <= 0) {
+          setFormErrors((prev) => ({ ...prev, price: 'El precio debe ser mayor a 0' }))
+          return
+        } else {
+          setFormErrors((prev) => ({ ...prev, price: '' }))
+        }
+      }
+
+      if (name === 'category') {
+        const selectedCategory = categories.find(cat => cat.id === parseInt(value))
+        setSelectedDish((prev) => ({ ...prev, category: selectedCategory || null }))
+        if (!selectedCategory) {
+          setFormErrors((prev) => ({ ...prev, category: 'La categoría es obligatoria' }))
+          return
+        } else {
+          setFormErrors((prev) => ({ ...prev, category: '' }))
+        }
+      }
+
+      if (name === 'status') {
+        if (value === '') {
+          setFormErrors((prev) => ({ ...prev, status: 'El estado es obligatorio' }))
+        } else {
+          setFormErrors((prev) => ({ ...prev, status: '' }))
+        }
+      }
+    }
+  }
+
+  const handleDishSelect = (dish, mode) => {
     console.log('Ver Plato', dish.id)
     setSelectedDish(dish)
     console.log(dish)
+    setModalMode(mode)
     setIsModalOpen(true)
   }
 
@@ -101,11 +180,81 @@ export function Dishes () {
 
   const handleSave = () => {
     console.log('Guardando cambios...')
-    setIsModalOpen(false)
+    setModalLoading(true)
+
+    const updatedDish = {
+      id: selectedDish.id,
+      name: selectedDish.name,
+      category: selectedDish.category,
+      price: selectedDish.price,
+      status: selectedDish.status
+    }
+
+    console.log('Datos a enviar:', updatedDish)
+
+    fetch(`${API_URL}${selectedDish.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updatedDish)
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Error al actualizar el plato')
+        }
+        return response.json()
+      })
+      .then((data) => {
+        console.log('Plato actualizado:', data)
+        refetch()
+        setModalSuccess('save')
+        setTimeout(() => {
+          setIsModalOpen(false)
+        }, 1500)
+      })
+      .catch((error) => {
+        console.error('Error:', error)
+        setModalLoading(false)
+        alert('Error al actualizar el plato: ' + error.message)
+      })
+  }
+
+  const handleDelete = () => {
+    console.log('Eliminando plato...')
+    setModalLoading(true)
+
+    const dishId = selectedDish.id
+
+    fetch(`${API_URL}${dishId}`, {
+      method: 'DELETE'
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Error al eliminar el plato')
+        }
+        return response.json()
+      })
+      .then((data) => {
+        console.log('Plato eliminado:', data)
+        refetch()
+        setModalSuccess('delete')
+        setTimeout(() => {
+          setIsModalOpen(false)
+        }, 200)
+      })
+      .catch((error) => {
+        console.error('Error:', error)
+        setModalLoading(false)
+        alert('Error al eliminar el plato: ' + error.message)
+      })
   }
 
   const handleAnimationEnd = () => {
     setSelectedDish(null)
+    setFormErrors(initialFormErrors)
+    setModalLoading(false)
+    setModalSuccess(null)
   }
 
   return (
@@ -173,7 +322,6 @@ export function Dishes () {
                 name='name'
                 value={filters.name}
                 onChange={handleFilterChange}
-                autocomplete='off'
               />
             </div>
 
@@ -184,6 +332,7 @@ export function Dishes () {
                 name='category'
                 value={filters.category}
                 onChange={handleFilterChange}
+                disabled={categoriesLoading}
               >
                 <option value=''>Todas las Categorías</option>
                 {categoryOptions.map((option) => (
@@ -201,6 +350,7 @@ export function Dishes () {
                 type='number'
                 id='filter-price-min'
                 name='minPrice'
+                min='0'
                 value={filters.minPrice}
                 onChange={handleFilterChange}
               />
@@ -213,6 +363,7 @@ export function Dishes () {
                 type='number'
                 id='filter-price-max'
                 name='maxPrice'
+                min='0'
                 value={filters.maxPrice}
                 onChange={handleFilterChange}
               />
@@ -245,7 +396,6 @@ export function Dishes () {
               <h2>Lista de Platos</h2>
             </div>
             <div className='button-group'>
-              {/* PageSize select */}
               <select
                 className='muted'
                 style={{ width: 'auto' }}
@@ -253,7 +403,6 @@ export function Dishes () {
                 name='pageSize'
                 value={pageSize}
                 disabled={loading}
-                autocomplete='off'
                 onChange={(e) => {
                   setPageSize(Number(e.target.value))
                   setPage(1)
@@ -295,7 +444,7 @@ export function Dishes () {
                       <Loader width={24} height={24} />
                     </td>
                   </tr>}
-                {error &&
+                {error && !(error.status === 400 && page > 1) &&
                   <tr>
                     <td className='center-cell muted-text' colSpan='7' style={{ padding: '2rem' }}>
                       <div>
@@ -308,40 +457,48 @@ export function Dishes () {
                     </td>
                   </tr>}
                 {!loading && !error && dishes && (dishes.length > 0
-                  ? (
-                      dishes.map((dish) => (
-                        <tr key={dish.id}>
-                          <td className='center-cell'>{dish.id}</td>
-                          <td><div className='ellipsis-cell'>{dish.name}</div></td>
-                          <td><div className='ellipsis-cell'>{dish.description}</div></td>
-                          <td className='center-cell'>{dish.category.name}</td>
-                          <td className='center-cell'>${dish.price}</td>
-                          <td className='center-cell'>{dish.status === 'Active' ? 'Activo' : 'Inactivo'}</td>
-                          <td className='center-cell'>
-                            <div className='button-group' style={{ justifyContent: 'center' }}>
-                              <button
-                                className='view icon-only no-transform'
-                                onClick={() => handleDishSelect(dish)}
-                              >
-                                <ViewIcon />
-                              </button>
-                              <button
-                                className='edit icon-only no-transform'
-                                onClick={() => console.log('Editar Plato', dish.id)}
-                              >
-                                <EditIcon />
-                              </button>
-                              <button
-                                className='delete icon-only no-transform'
-                                onClick={() => console.log('Eliminar Plato', dish.id)}
-                              >
-                                <DeleteIcon />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))
-                    )
+                  ? dishes.map((dish) => (
+                    <tr key={dish.id}>
+                      <td className='center-cell'>{dish.id}</td>
+                      <td><div className='ellipsis-cell'>{dish.name}</div></td>
+                      <td><div className='ellipsis-cell'>{dish.description}</div></td>
+                      <td className='center-cell'>{dish.category.name}</td>
+                      <td className='center-cell'>
+                        <div className='price-cell'>
+                          <span>
+                            S/. {dish.price.toFixed(2)}
+                          </span>
+                        </div>
+                      </td>
+                      <td className='center-cell'>
+                        <span className={'badge-status ' + (dish.status === 'Active' ? 'active' : 'inactive')}>
+                          {dish.status === 'Active' ? 'Activo' : 'Inactivo'}
+                        </span>
+                      </td>
+                      <td className='center-cell'>
+                        <div className='button-group' style={{ justifyContent: 'center' }}>
+                          <button
+                            className='view icon-only no-transform'
+                            onClick={() => handleDishSelect(dish, 'view')}
+                          >
+                            <ViewIcon />
+                          </button>
+                          <button
+                            className='edit icon-only no-transform'
+                            onClick={() => handleDishSelect(dish, 'edit')}
+                          >
+                            <EditIcon />
+                          </button>
+                          <button
+                            className='delete icon-only no-transform'
+                            onClick={() => handleDishSelect(dish, 'delete')}
+                          >
+                            <TrashBinIcon />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
                   : (<tr><td className='center-cell muted-text' colSpan='7' style={{ padding: '2rem' }}>No se encontraron platos.</td></tr>))}
               </tbody>
             </table>
@@ -391,66 +548,187 @@ export function Dishes () {
           <Card>
             <CardHeader>
               <div className='header-with-icon'>
-                <PlateIcon />
-                <h3>Datos del Plato</h3>
+                {modalMode === 'view' && <ViewIcon />}
+                {modalMode === 'edit' && <EditIcon />}
+                {modalMode === 'delete' && <TrashBinIcon />}
+                <h3>
+                  {modalMode === 'view' && 'Ver Plato'}
+                  {modalMode === 'edit' && 'Editar Plato'}
+                  {modalMode === 'delete' && 'Eliminar Plato'}
+                </h3>
               </div>
               <button type='button' className='modal-close-button no-transform' onClick={handleCloseWithX}>
                 <CancelIcon />
               </button>
             </CardHeader>
             <CardBody className='modal-body'>
-              <div className='modal-input-group'>
-                <div className='input-group'>
-                  <label htmlFor='modal-name'>Nombre <RequiredSpan /></label>
-                  <input type='text' id='modal-name' name='name' value={selectedDish?.name || ''} autocomplete='off' disabled />
+              {modalLoading && (
+                <div className='modal-loading-overlay'>
+                  {modalSuccess
+                    ? (
+                      <div className='modal-success-overlay'>
+                        <CheckIcon width={40} height={40} color='#059669' />
+                        {modalSuccess === 'save' && <span>¡Cambios guardados exitosamente!</span>}
+                        {modalSuccess === 'delete' && <span>¡Eliminación exitosa!</span>}
+                        {modalSuccess === 'create' && <span>¡Plato creado exitosamente!</span>}
+                      </div>
+                      )
+                    : (
+                      <Loader
+                        width={32}
+                        height={32}
+                        text={
+                          modalMode === 'delete'
+                            ? 'Eliminando...'
+                            : modalMode === 'create'
+                              ? 'Creando plato...'
+                              : 'Guardando cambios...'
+                        }
+                      />
+                      )}
                 </div>
-                <div className='input-group'>
-                  <label htmlFor='modal-description'>Descripción <RequiredSpan /></label>
-                  <textarea id='modal-description' name='description' value={selectedDish?.description || ''} autocomplete='off' disabled />
-                </div>
-                <div className='input-group'>
-                  <label htmlFor='modal-category'>Categoría <RequiredSpan /></label>
-                  <select name='category' id='modal-category' disabled value={selectedDish?.category.id || ''} autocomplete='off'>
-                    <option value=''>Seleccionar categoría</option>
-                    {categoryOptions.map((option) => (
-                      <option
-                        key={option.value}
-                        value={option.value}
+              )}
+              {modalMode === 'delete'
+                ? (
+                  <div className='delete-confirmation'>
+                    <div className='warning-message'>
+                      <WarningIcon width={48} height={48} color='rgb(220, 38, 38)' />
+                      <div>
+                        <h4 style={{ color: 'rgb(220, 38, 38)', margin: '0 0 0.5rem 0' }}>
+                          ¿Estás seguro de que deseas eliminar este plato?
+                        </h4>
+                        <p style={{ margin: 0, color: 'rgb(107, 114, 128)' }}>
+                          Esta acción no se puede deshacer. El plato será eliminado permanentemente.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className='dish-details'>
+                      <div className='detail-item'>
+                        <strong>Nombre:</strong> {selectedDish?.name}
+                      </div>
+                      <div className='detail-item'>
+                        <strong>Categoría:</strong> {selectedDish?.category?.name}
+                      </div>
+                      <div className='detail-item'>
+                        <strong>Precio:</strong> S/. {selectedDish?.price}
+                      </div>
+                      <div className='detail-item'>
+                        <strong>Estado:</strong> {selectedDish?.status === 'Active' ? 'Activo' : 'Inactivo'}
+                      </div>
+                    </div>
+                  </div>
+                  )
+                : (
+                  <div className='modal-input-group'>
+                    <div className='input-group'>
+                      <label htmlFor='modal-name'>Nombre <RequiredSpan /></label>
+                      <input
+                        className={formErrors.name ? 'input-error' : ''}
+                        type='text'
+                        id='modal-name'
+                        name='name'
+                        value={selectedDish?.name || ''}
+                        disabled={modalMode === 'view' || modalLoading}
+                        onChange={handleChange}
+                      />
+                      <small className='info-error'>{formErrors.name}</small>
+                    </div>
+                    <div className='input-group'>
+                      <label htmlFor='modal-description'>Descripción</label>
+                      <textarea
+                        className={formErrors.description ? 'input-error' : ''}
+                        id='modal-description'
+                        name='description'
+                        value={selectedDish?.description || ''}
+                        disabled={modalMode === 'view' || modalLoading}
+                        onChange={handleChange}
+                      />
+                      <small className='info-error'>{formErrors.description}</small>
+                    </div>
+                    <div className='input-group'>
+                      <label htmlFor='modal-category'>Categoría <RequiredSpan /></label>
+                      <select
+                        className={formErrors.category ? 'input-error' : ''}
+                        name='category'
+                        id='modal-category'
+                        disabled={modalMode === 'view' || modalLoading}
+                        value={selectedDish?.category?.id || ''}
+                        onChange={handleChange}
                       >
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className='input-group'>
-                  <label htmlFor='modal-price'>Precio <RequiredSpan /></label>
-                  <input type='number' id='modal-price' name='price' value={selectedDish?.price || ''} autocomplete='off' disabled />
-                </div>
-                <div className='input-group'>
-                  <label htmlFor='modal-status'>Estado <RequiredSpan /></label>
-                  <select name='status' id='modal-status' disabled value={selectedDish?.status || ''} autocomplete='off'>
-                    <option value=''>Seleccionar estado</option>
-                    {statusOptions.map((option) => (
-                      <option
-                        key={option.value}
-                        value={option.value}
+                        <option value=''>Seleccionar categoría</option>
+                        {categoryOptions.map((option) => (
+                          <option
+                            key={option.value}
+                            value={option.value}
+                          >
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                      <small className='info-error'>{formErrors.category}</small>
+                    </div>
+                    <div className='input-group'>
+                      <label htmlFor='modal-price'>Precio <RequiredSpan /></label>
+                      <input
+                        className={formErrors.price ? 'input-error' : ''}
+                        type='number'
+                        id='modal-price'
+                        name='price'
+                        value={selectedDish?.price || ''}
+                        disabled={modalMode === 'view' || modalLoading}
+                        onChange={handleChange}
+                      />
+                      <small className='info-error'>{formErrors.price}</small>
+                    </div>
+                    <div className='input-group'>
+                      <label htmlFor='modal-status'>Estado <RequiredSpan /></label>
+                      <select
+                        className={formErrors.status ? 'input-error' : ''}
+                        name='status'
+                        id='modal-status'
+                        disabled={modalMode === 'view' || modalLoading}
+                        value={selectedDish?.status || ''}
+                        onChange={handleChange}
                       >
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
+                        <option value=''>Seleccionar estado</option>
+                        {statusOptions.map((option) => (
+                          <option
+                            key={option.value}
+                            value={option.value}
+                          >
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                      <small className='info-error'>{formErrors.status}</small>
+                    </div>
+                  </div>
+                  )}
             </CardBody>
             <CardFooter className='modal-footer'>
-              <button type='button' onClick={handleCancel}>
+              <button type='button' onClick={handleCancel} disabled={modalLoading}>
                 <CancelIcon />
                 Cancelar
               </button>
-              <button type='button' className='primary' onClick={handleSave}>
-                <AddIcon />
-                Guardar
-              </button>
+              {modalMode === 'view' && (
+                <button type='button' className='edit' onClick={() => setModalMode('edit')} disabled={modalLoading}>
+                  <EditIcon />
+                  Editar
+                </button>
+              )}
+              {modalMode === 'edit' && (
+                <button type='button' className='primary' onClick={handleSave} disabled={modalLoading || Object.values(formErrors).some((error) => error !== '')}>
+                  <AddIcon />
+                  Guardar Cambios
+                </button>
+              )}
+              {modalMode === 'delete' && (
+                <button type='button' className='delete' onClick={handleDelete} disabled={modalLoading}>
+                  <TrashBinIcon />
+                  Confirmar Eliminación
+                </button>
+              )}
             </CardFooter>
           </Card>
         </form>
