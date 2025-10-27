@@ -11,10 +11,23 @@ export function useFetch (url) {
 
     try {
       const response = await fetch(url)
+      if (!response.ok) {
+        const errorText = await response.text()
+        setError({
+          status: response.status,
+          ...JSON.parse(errorText)
+        })
+        setData(null)
+        return
+      }
       const result = await response.json()
       setData(result)
     } catch (error) {
-      setError(error)
+      setError({
+        message: error.message || 'Error de red',
+        error
+      })
+      setData(null)
     } finally {
       setLoading(false)
     }
