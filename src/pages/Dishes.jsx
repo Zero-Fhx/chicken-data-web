@@ -389,6 +389,89 @@ export function Dishes () {
       <Separator />
 
       <section>
+
+        {loading && (
+          <>
+            <div className='results-counter loading'>
+              <span className='result-icon'>
+                <Loader width={20} height={20} text='' />
+              </span>
+              <span className='result-text loading'>Cargando platos...</span>
+            </div>
+          </>
+        )}
+        {error && (
+          <>
+            <div className='results-counter error'>
+              <span className='result-icon'>
+                <PlateIcon />
+              </span>
+              <span className='result-text error'>Error al cargar los platos</span>
+            </div>
+          </>
+        )}
+        {!loading && !error && dishes.length === 0 && (
+          <>
+            <div className='results-counter no-results'>
+              <span className='result-icon'>
+                <PlateIcon />
+              </span>
+              <span className='result-text no-results'>No se encontraron platos</span>
+            </div>
+          </>
+        )}
+
+        {!loading && !error && dishes.length > 0 && (
+          <>
+            <div className='results-counter'>
+              <span className='result-icon'>
+                <PlateIcon />
+              </span>
+              <span className='result-text'>
+                {meta.pagination.total === 1 && (
+                  <>
+                    Mostrando
+                    <span className='result-number'>1</span>
+                    plato
+                  </>
+                )}
+
+                {meta.pagination.total > 1 && meta.pagination.total <= pageSize && (
+                  <>
+                    Mostrando
+                    <span className='result-number'>{meta.pagination.total}</span>
+                    platos
+                  </>
+                )}
+
+                {meta.pagination.total > pageSize && dishes.length !== 1 && (
+                  <>
+                    Mostrando
+                    <span className='result-number'>
+                      {meta.pagination.page * meta.pagination.pageSize - (meta.pagination.pageSize - 1)} - {Math.min(meta.pagination.page * meta.pagination.pageSize, meta.pagination.total)}
+                    </span>
+                    de
+                    <span className='result-number'>{meta.pagination.total}</span>
+                    platos
+                  </>
+                )}
+
+                {meta.pagination.total > pageSize && dishes.length === 1 && (
+                  <>
+                    Mostrando
+                    <span className='result-number'>
+                      {meta.pagination.page * meta.pagination.pageSize - (meta.pagination.pageSize - 1)}
+                    </span>
+                    de
+                    <span className='result-number'>{meta.pagination.total}</span>
+                    platos
+                  </>
+                )}
+              </span>
+            </div>
+          </>
+        )}
+
         <Card>
           <CardHeader>
             <div className='header-with-icon'>
@@ -439,7 +522,7 @@ export function Dishes () {
               </thead>
               <tbody>
                 {loading &&
-                  <tr>
+                  <tr className='loading-row'>
                     <td className='center-cell' colSpan='7' style={{ padding: '2rem' }}>
                       <Loader width={24} height={24} />
                     </td>
