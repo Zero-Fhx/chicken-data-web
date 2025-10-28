@@ -5,39 +5,66 @@ export function useFetch (url) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  const fetchData = useCallback(async () => {
-    setLoading(true)
-    setError(null)
+  const [trigger, setTrigger] = useState(0)
 
-    try {
-      const response = await fetch(url)
-      if (!response.ok) {
-        const errorText = await response.text()
-        setError({
-          status: response.status,
-          ...JSON.parse(errorText)
-        })
-        setData(null)
-        return
-      }
-      const result = await response.json()
-      setData(result)
-    } catch (error) {
-      setError({
-        message: error.message || 'Error de red',
-        error
-      })
-      setData(null)
-    } finally {
-      setLoading(false)
-    }
-  }, [url])
+  const refetch = useCallback(() => {
+    setTrigger(prev => prev + 1)
+  }, [])
 
   useEffect(() => {
-    fetchData()
-  }, [fetchData])
+    const controller = new AbortController()
+    const signal = controller.signal
 
-  const refetch = () => { fetchData() }
+    const fetchData = async () => {
+      setLoading(true)
+      setError(null)
+
+      try {
+        const response = await fetch(url, { signal })
+
+        if (!response.ok) {
+          const errorText = await response.text()
+
+          if (signal.aborted) return
+
+          setError({
+            status: response.status,
+            ...JSON.parse(errorText)
+          })
+          setData(null)
+          return
+        }
+
+        const result = await response.json()
+
+        if (!signal.aborted) {
+          setData(result)
+        }
+      } catch (error) {
+        if (error.name === 'AbortError') {
+          console.log('Fetch abortado exitosamente.')
+        } else {
+          if (!signal.aborted) {
+            setError({
+              message: error.message || 'Error de red',
+              error
+            })
+            setData(null)
+          }
+        }
+      } finally {
+        if (!signal.aborted) {
+          setLoading(false)
+        }
+      }
+    }
+
+    fetchData()
+
+    return () => {
+      controller.abort()
+    }
+  }, [url, trigger])
 
   return { data, loading, error, setData, setLoading, setError, refetch }
 }
