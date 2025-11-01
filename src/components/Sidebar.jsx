@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router'
 
-import { LogoIcon, PlateIcon } from './Icons'
+import { LogoIcon, PlateIcon, TruckIcon } from './Icons'
 
 import '@/styles/Sidebar.css'
 
@@ -18,7 +18,7 @@ const MENU = [
       { name: 'Ingredients', label: 'Ingredientes', icon: PlateIcon },
       { name: 'Purchases', label: 'Compras', icon: PlateIcon },
       { name: 'Sales', label: 'Ventas', icon: PlateIcon },
-      { name: 'Suppliers', label: 'Proveedores', icon: PlateIcon }
+      { name: 'Suppliers', label: 'Proveedores', icon: TruckIcon }
     ]
   },
   {
