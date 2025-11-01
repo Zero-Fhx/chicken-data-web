@@ -1,21 +1,25 @@
-import { Card, CardBody, CardFooter, CardHeader } from '@/components/Card'
-import { AddIcon, CancelIcon, CheckIcon, DownloadIcon, EditIcon, PlateIcon, RefreshIcon, SearchIcon, TrashBinIcon, ViewIcon } from '@/components/Icons'
-import { Loader } from '@/components/Loader'
-
-import { Modal } from '@/components/Modal'
-import { RequiredSpan } from '@/components/RequiredSpan'
-import { Separator } from '@/components/Separator'
-import { TestStatePanel } from '@/components/TestStatePanel'
-import { useDebounce } from '@/hooks/useDebounce'
-import { useFetch } from '@/hooks/useFetch'
 import { useEffect, useMemo, useState } from 'react'
 
+import { useDebounce } from '@/hooks/useDebounce'
+import { useFetch } from '@/hooks/useFetch'
+
+import { Card, CardBody, CardFooter, CardHeader } from '@/components/Card'
 import { DeleteConfirmation } from '@/components/DeleteConfirmation'
 import { EmptyState } from '@/components/EmptyState'
 import { ErrorState } from '@/components/ErrorState'
+import { Loader } from '@/components/Loader'
+import { Modal } from '@/components/Modal'
+import { PageHeader } from '@/components/PageHeader'
 import { Pagination } from '@/components/Pagination'
+import { RequiredSpan } from '@/components/RequiredSpan'
 import { ResultsCounter } from '@/components/ResultsCounter'
+import { Separator } from '@/components/Separator'
 import { StatusBadge } from '@/components/StatusBadge'
+import { TableControls } from '@/components/TableControls'
+import { TestStatePanel } from '@/components/TestStatePanel'
+
+import { AddIcon, CancelIcon, CheckIcon, DownloadIcon, EditIcon, PlateIcon, SearchIcon, TrashBinIcon, ViewIcon } from '@/components/Icons'
+
 import trunc from '@/services/trunc'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
@@ -274,30 +278,24 @@ export function Dishes () {
 
       <Separator />
 
-      <section>
-        <div>
-          <h1 className='title'>Gestión de Platos</h1>
-          <p className='muted-text'>Administra tu catalogo de platos aquí.</p>
-        </div>
-
-        <div className='button-group'>
-          <button
-            className='primary'
-            onClick={() => console.log('Agregar Plato')}
-          >
-            <AddIcon />
-            Agregar Plato
-          </button>
-
-          <button
-            className='secondary'
-            onClick={() => console.log('Exportar Datos')}
-          >
-            <DownloadIcon />
-            Exportar Datos
-          </button>
-        </div>
-      </section>
+      <PageHeader
+        title='Gestión de Platos'
+        description='Administra tu catalogo de platos aquí.'
+        actions={[
+          {
+            label: 'Agregar Plato',
+            icon: <AddIcon />,
+            variant: 'primary',
+            onClick: () => console.log('Agregar Plato')
+          },
+          {
+            label: 'Exportar Datos',
+            icon: <DownloadIcon />,
+            variant: 'secondary',
+            onClick: () => console.log('Exportar Datos')
+          }
+        ]}
+      />
 
       <Separator />
 
@@ -409,38 +407,19 @@ export function Dishes () {
 
         <Card>
           <CardHeader>
-            <div className='header-with-icon'>
-              <PlateIcon />
-              <h2>Lista de Platos</h2>
-            </div>
-            <div className='button-group'>
-              <select
-                className='muted'
-                style={{ width: 'auto' }}
-                id='page-size-select'
-                name='pageSize'
-                value={pageSize}
-                disabled={loading}
-                onChange={(e) => {
-                  setPageSize(Number(e.target.value))
-                  setPage(1)
-                }}
-              >
-                <option value={5}>5 por página</option>
-                <option value={10}>10 por página</option>
-                <option value={20}>20 por página</option>
-                <option value={50}>50 por página</option>
-              </select>
-              <button
-                className='muted'
-                onClick={refetch}
-                disabled={loading}
-              >
-                <RefreshIcon />
-                Recargar Platos
-              </button>
-            </div>
-
+            <TableControls
+              title='Lista de Platos'
+              icon={PlateIcon}
+              pageSize={pageSize}
+              onPageSizeChange={(size) => {
+                setPageSize(size)
+                setPage(1)
+              }}
+              onRefresh={refetch}
+              loading={loading}
+              pageSizeOptions={[5, 10, 20, 50]}
+              refreshLabel='Recargar Platos'
+            />
           </CardHeader>
           <CardBody className='no-padding'>
             <table>
