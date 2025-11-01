@@ -233,6 +233,45 @@ export function TrashBinIcon ({ width = 24, height = 24, color = 'currentColor',
   )
 }
 
+export function TruckIcon ({ width = 24, height = 24, color = 'currentColor' }) {
+  return (
+    <svg width={width} height={height} viewBox='0 0 24 24' fill='none'>
+      <path
+        d='M16 3H1V16H16V3Z'
+        stroke={color}
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M16 8H20L23 11V16H16V8Z'
+        stroke={color}
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <circle
+        cx='5.5'
+        cy='18.5'
+        r='2.5'
+        stroke={color}
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <circle
+        cx='18.5'
+        cy='18.5'
+        r='2.5'
+        stroke={color}
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+    </svg>
+  )
+}
+
 export function UserIcon ({ width = 24, height = 24, color = 'currentColor' }) {
   return (
     <svg width={width} height={height} viewBox='0 0 24 24' fill='none'>
