@@ -21,6 +21,7 @@ export function App () {
       <div className='page-content'>
         <Routes>
           <Route path='/' element={<Home />} />
+          <Route path='/home' element={<Home />} />
           <Route path='/dishes' element={<Dishes />} />
           <Route path='/ingredients' element={<Ingredients />} />
           <Route path='/purchases' element={<Purchases />} />
