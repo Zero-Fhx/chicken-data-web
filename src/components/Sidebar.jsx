@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router'
 
-import { LogoIcon, PlateIcon, TruckIcon } from './Icons'
+import { ChartIcon, CubeAltIcon, CubeIcon, DollarIcon, LogoIcon, SettingsIcon, ShoppingCartIcon, TruckIcon, UserIcon } from './Icons'
 
 import '@/styles/Sidebar.css'
 
@@ -8,24 +8,24 @@ const MENU = [
   {
     label: 'Dashboard',
     items: [
-      { name: 'Home', label: 'Inicio', icon: PlateIcon }
+      { name: 'Home', label: 'Inicio', icon: ChartIcon }
     ]
   },
   {
     label: 'Gestión',
     items: [
-      { name: 'Dishes', label: 'Platos', icon: PlateIcon },
-      { name: 'Ingredients', label: 'Ingredientes', icon: PlateIcon },
-      { name: 'Purchases', label: 'Compras', icon: PlateIcon },
-      { name: 'Sales', label: 'Ventas', icon: PlateIcon },
+      { name: 'Dishes', label: 'Platos', icon: CubeIcon },
+      { name: 'Ingredients', label: 'Ingredientes', icon: CubeAltIcon },
+      { name: 'Purchases', label: 'Compras', icon: ShoppingCartIcon },
+      { name: 'Sales', label: 'Ventas', icon: DollarIcon },
       { name: 'Suppliers', label: 'Proveedores', icon: TruckIcon }
     ]
   },
   {
     label: 'Sistema',
     items: [
-      { name: 'Users', label: 'Usuarios', icon: PlateIcon },
-      { name: 'Settings', label: 'Configuración', icon: PlateIcon }
+      { name: 'Users', label: 'Usuarios', icon: UserIcon },
+      { name: 'Settings', label: 'Configuración', icon: SettingsIcon }
     ]
   }
 ]
