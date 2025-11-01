@@ -1,0 +1,127 @@
+import { Card, CardBody, CardHeader } from '@/components/Card'
+import { SearchIcon, TrashBinIcon } from '@/components/Icons'
+
+export function FilterSection ({
+  title = 'Filtros',
+  icon: Icon = SearchIcon,
+  fields = [],
+  values = {},
+  onFilterChange,
+  onClearFilters,
+  hasActiveFilters = false,
+  clearButtonLabel = 'Limpiar Filtros'
+}) {
+  const handleChange = (e) => {
+    if (onFilterChange) {
+      onFilterChange(e)
+    }
+  }
+
+  const handleClear = () => {
+    if (onClearFilters) {
+      onClearFilters()
+    }
+  }
+
+  const renderField = (field) => {
+    const {
+      type = 'text',
+      name,
+      label,
+      placeholder,
+      options = [],
+      disabled = false,
+      min,
+      max,
+      step
+    } = field
+
+    const fieldId = `filter-${name}`
+    const value = values[name] || ''
+
+    switch (type) {
+      case 'select':
+        return (
+          <div key={name} className='filter-input'>
+            <label htmlFor={fieldId}>{label}:</label>
+            <select
+              id={fieldId}
+              name={name}
+              value={value}
+              onChange={handleChange}
+              disabled={disabled}
+            >
+              <option value=''>{placeholder || `Seleccionar ${label}`}</option>
+              {options.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        )
+
+      case 'number':
+        return (
+          <div key={name} className='filter-input'>
+            <label htmlFor={fieldId}>{label}:</label>
+            <input
+              type='number'
+              id={fieldId}
+              name={name}
+              placeholder={placeholder}
+              value={value}
+              onChange={handleChange}
+              disabled={disabled}
+              min={min}
+              max={max}
+              step={step}
+            />
+          </div>
+        )
+
+      case 'text':
+      default:
+        return (
+          <div key={name} className='filter-input'>
+            <label htmlFor={fieldId}>{label}:</label>
+            <input
+              type='text'
+              id={fieldId}
+              name={name}
+              placeholder={placeholder}
+              value={value}
+              onChange={handleChange}
+              disabled={disabled}
+            />
+          </div>
+        )
+    }
+  }
+
+  return (
+    <section>
+      <Card>
+        <CardHeader>
+          <div className='header-with-icon'>
+            <Icon />
+            <h3>{title}</h3>
+          </div>
+
+          <button
+            className='muted'
+            onClick={handleClear}
+            disabled={!hasActiveFilters}
+          >
+            <TrashBinIcon />
+            {clearButtonLabel}
+          </button>
+        </CardHeader>
+
+        <CardBody className='filter-form'>
+          {fields.map((field) => renderField(field))}
+        </CardBody>
+      </Card>
+    </section>
+  )
+}

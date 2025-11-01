@@ -4,19 +4,16 @@ import { useDebounce } from '@/hooks/useDebounce'
 import { useFetch } from '@/hooks/useFetch'
 
 import { Card, CardBody, CardFooter, CardHeader } from '@/components/Card'
+import { DataTable } from '@/components/DataTable'
 import { DeleteConfirmation } from '@/components/DeleteConfirmation'
-import { EmptyState } from '@/components/EmptyState'
-import { ErrorState } from '@/components/ErrorState'
+import { FilterSection } from '@/components/FilterSection'
 import { AddIcon, CancelIcon, CheckIcon, DownloadIcon, EditIcon, PlateIcon, SearchIcon, TrashBinIcon, ViewIcon } from '@/components/Icons'
 import { Loader } from '@/components/Loader'
 import { Modal } from '@/components/Modal'
 import { PageHeader } from '@/components/PageHeader'
-import { Pagination } from '@/components/Pagination'
 import { RequiredSpan } from '@/components/RequiredSpan'
-import { ResultsCounter } from '@/components/ResultsCounter'
 import { Separator } from '@/components/Separator'
 import { StatusBadge } from '@/components/StatusBadge'
-import { TableControls } from '@/components/TableControls'
 import { TestStatePanel } from '@/components/TestStatePanel'
 
 import trunc from '@/services/trunc'
@@ -68,6 +65,108 @@ export function Dishes () {
     value: category.id,
     label: category.name
   }))
+
+  const filterFields = [
+    {
+      type: 'text',
+      name: 'name',
+      label: 'Plato',
+      placeholder: 'Buscar Plato'
+    },
+    {
+      type: 'select',
+      name: 'category',
+      label: 'Categoría',
+      placeholder: 'Todas las Categorías',
+      options: categoryOptions,
+      disabled: categoriesLoading
+    },
+    {
+      type: 'number',
+      name: 'minPrice',
+      label: 'Precio Mínimo',
+      placeholder: 'Precio Mínimo',
+      min: 0
+    },
+    {
+      type: 'number',
+      name: 'maxPrice',
+      label: 'Precio Máximo',
+      placeholder: 'Precio Máximo',
+      min: 0
+    },
+    {
+      type: 'select',
+      name: 'status',
+      label: 'Estado',
+      placeholder: 'Todos los Estados',
+      options: statusOptions
+    }
+  ]
+
+  const tableColumns = [
+    {
+      key: 'id',
+      label: 'ID',
+      align: 'center'
+    },
+    {
+      key: 'name',
+      label: 'Nombre',
+      ellipsis: true
+    },
+    {
+      key: 'description',
+      label: 'Descripción',
+      ellipsis: true
+    },
+    {
+      key: 'category',
+      label: 'Categoría',
+      align: 'center',
+      render: (row) => row.category.name
+    },
+    {
+      key: 'price',
+      label: 'Precio',
+      align: 'center',
+      render: (row) => (
+        <div className='price-cell'>
+          <span>S/. {row.price.toFixed(2)}</span>
+        </div>
+      )
+    },
+    {
+      key: 'status',
+      label: 'Estado',
+      align: 'center',
+      render: (row) => <StatusBadge status={row.status} />
+    }
+  ]
+
+  const tableActions = [
+    {
+      label: 'Ver',
+      icon: <ViewIcon />,
+      variant: 'view',
+      iconOnly: true,
+      onClick: (row) => handleDishSelect(row, 'view')
+    },
+    {
+      label: 'Editar',
+      icon: <EditIcon />,
+      variant: 'edit',
+      iconOnly: true,
+      onClick: (row) => handleDishSelect(row, 'edit')
+    },
+    {
+      label: 'Eliminar',
+      icon: <TrashBinIcon />,
+      variant: 'delete',
+      iconOnly: true,
+      onClick: (row) => handleDishSelect(row, 'delete')
+    }
+  ]
 
   const debouncedName = useDebounce(filters.name, 500)
   const debouncedMinPrice = useDebounce(filters.minPrice, 500)
@@ -298,225 +397,43 @@ export function Dishes () {
 
       <Separator />
 
-      <section>
-        <Card>
-          <CardHeader>
-            <div className='header-with-icon'>
-              <SearchIcon />
-              <h3>Filtrar Platos</h3>
-            </div>
-
-            <button
-              className='muted'
-              onClick={handleClearFilters}
-              disabled={!hasActiveFilters}
-            >
-              <TrashBinIcon />
-              Limpiar Filtros
-            </button>
-          </CardHeader>
-
-          <CardBody className='filter-form'>
-            <div className='filter-input'>
-              <label htmlFor='filter-name'>Plato:</label>
-              <input
-                placeholder='Buscar Plato'
-                id='filter-name'
-                name='name'
-                value={filters.name}
-                onChange={handleFilterChange}
-              />
-            </div>
-
-            <div className='filter-input'>
-              <label htmlFor='filter-category'>Categoría:</label>
-              <select
-                id='filter-category'
-                name='category'
-                value={filters.category}
-                onChange={handleFilterChange}
-                disabled={categoriesLoading}
-              >
-                <option value=''>Todas las Categorías</option>
-                {categoryOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className='filter-input'>
-              <label htmlFor='filter-price-min'>Precio Mínimo:</label>
-              <input
-                placeholder='Precio Mínimo'
-                type='number'
-                id='filter-price-min'
-                name='minPrice'
-                min='0'
-                value={filters.minPrice}
-                onChange={handleFilterChange}
-              />
-            </div>
-
-            <div className='filter-input'>
-              <label htmlFor='filter-price-max'>Precio Máximo:</label>
-              <input
-                placeholder='Precio Máximo'
-                type='number'
-                id='filter-price-max'
-                name='maxPrice'
-                min='0'
-                value={filters.maxPrice}
-                onChange={handleFilterChange}
-              />
-            </div>
-
-            <div className='filter-input'>
-              <label htmlFor='filter-status'>Estado:</label>
-              <select
-                id='filter-status'
-                name='status'
-                value={filters.status}
-                onChange={handleFilterChange}
-              >
-                <option value=''>Todos los Estados</option>
-                <option value='Active'>Activo</option>
-                <option value='Inactive'>Inactivo</option>
-              </select>
-            </div>
-          </CardBody>
-        </Card>
-      </section>
+      <FilterSection
+        title='Filtrar Platos'
+        icon={SearchIcon}
+        fields={filterFields}
+        values={filters}
+        onFilterChange={handleFilterChange}
+        onClearFilters={handleClearFilters}
+        hasActiveFilters={hasActiveFilters}
+      />
 
       <Separator />
 
-      <section>
-
-        <ResultsCounter
-          loading={loading}
-          error={error}
-          items={dishes}
-          meta={meta}
-          pageSize={pageSize}
-          icon={PlateIcon}
-          itemName='plato'
-          itemNamePlural='platos'
-        />
-
-        <Card>
-          <CardHeader>
-            <TableControls
-              title='Lista de Platos'
-              icon={PlateIcon}
-              pageSize={pageSize}
-              onPageSizeChange={(size) => {
-                setPageSize(size)
-                setPage(1)
-              }}
-              onRefresh={refetch}
-              loading={loading}
-              pageSizeOptions={[5, 10, 20, 50]}
-              refreshLabel='Recargar Platos'
-            />
-          </CardHeader>
-          <CardBody className='no-padding'>
-            <table>
-              <thead>
-                <tr>
-                  <th className='center-cell'>ID</th>
-                  <th>Nombre</th>
-                  <th>Descripción</th>
-                  <th className='center-cell'>Categoría</th>
-                  <th className='center-cell'>Precio</th>
-                  <th className='center-cell'>Estado</th>
-                  <th className='center-cell'>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {loading &&
-                  <tr className='loading-state-row'>
-                    <td className='center-cell' colSpan='7' style={{ padding: '2rem' }}>
-                      <Loader width={24} height={24} />
-                    </td>
-                  </tr>}
-                {error && !(error.status === 400 && page > 1) &&
-                  <tr className='error-state-row'>
-                    <td className='center-cell' colSpan='7' style={{ padding: 0 }}>
-                      <ErrorState
-                        title='Error al cargar los platos'
-                        message={error.message}
-                        onRetry={refetch}
-                      />
-                    </td>
-                  </tr>}
-                {!loading && !error && dishes && (dishes.length > 0
-                  ? dishes.map((dish) => (
-                    <tr key={dish.id}>
-                      <td className='center-cell'>{dish.id}</td>
-                      <td><div className='ellipsis-cell'>{dish.name}</div></td>
-                      <td><div className='ellipsis-cell'>{dish.description}</div></td>
-                      <td className='center-cell'>{dish.category.name}</td>
-                      <td className='center-cell'>
-                        <div className='price-cell'>
-                          <span>
-                            S/. {dish.price.toFixed(2)}
-                          </span>
-                        </div>
-                      </td>
-                      <td className='center-cell'>
-                        <StatusBadge status={dish.status} />
-                      </td>
-                      <td className='center-cell'>
-                        <div className='button-group' style={{ justifyContent: 'center' }}>
-                          <button
-                            className='view icon-only no-transform'
-                            onClick={() => handleDishSelect(dish, 'view')}
-                          >
-                            <ViewIcon />
-                          </button>
-                          <button
-                            className='edit icon-only no-transform'
-                            onClick={() => handleDishSelect(dish, 'edit')}
-                          >
-                            <EditIcon />
-                          </button>
-                          <button
-                            className='delete icon-only no-transform'
-                            onClick={() => handleDishSelect(dish, 'delete')}
-                          >
-                            <TrashBinIcon />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                  : (
-                    <tr className='empty-state-row'>
-                      <td className='center-cell' colSpan='7' style={{ padding: 0 }}>
-                        <EmptyState
-                          icon={PlateIcon}
-                          message='No se encontraron platos'
-                          description='Intenta ajustar los filtros o crear un nuevo plato'
-                        />
-                      </td>
-                    </tr>
-                    ))}
-              </tbody>
-            </table>
-          </CardBody>
-          {meta &&
-            <CardFooter>
-              {meta.pagination && (
-                <Pagination
-                  currentPage={page}
-                  totalPages={meta.pagination.pageCount}
-                  onPageChange={setPage}
-                />
-              )}
-            </CardFooter>}
-        </Card>
-      </section>
+      <DataTable
+        title='Lista de Platos'
+        icon={PlateIcon}
+        columns={tableColumns}
+        data={dishes}
+        loading={loading}
+        error={error}
+        meta={meta}
+        page={page}
+        pageSize={pageSize}
+        onPageChange={setPage}
+        onPageSizeChange={(size) => {
+          setPageSize(size)
+          setPage(1)
+        }}
+        onRefresh={refetch}
+        pageSizeOptions={[5, 10, 20, 50]}
+        refreshLabel='Recargar Platos'
+        itemName='plato'
+        itemNamePlural='platos'
+        emptyIcon={PlateIcon}
+        emptyMessage='No se encontraron platos'
+        emptyDescription='Intenta ajustar los filtros o crear un nuevo plato'
+        actions={tableActions}
+      />
 
       <Modal
         isOpen={isModalOpen}
