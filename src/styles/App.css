@@ -374,6 +374,9 @@ select {
 
 .info-error {
   color: #dc2626;
+  font-size: 0.75rem;
+  margin-top: -0.25rem;
+  display: block;
 }
 
 label {
