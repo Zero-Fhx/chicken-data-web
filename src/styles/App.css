@@ -769,28 +769,6 @@ tbody tr:hover {
   border-radius: 0.5rem;
 }
 
-.dish-details {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  padding: 1rem;
-  background-color: #f9fafb;
-  border-radius: 0.5rem;
-  border: 1px solid #e5e7eb;
-}
-
-.detail-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.875rem;
-}
-
-.detail-item strong {
-  color: #374151;
-  min-width: 80px;
-}
-
 button.delete {
   background-color: #dc2626;
   color: white;
