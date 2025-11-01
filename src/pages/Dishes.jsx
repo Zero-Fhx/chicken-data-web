@@ -8,7 +8,7 @@ import { DataTable } from '@/components/DataTable'
 import { DeleteConfirmation } from '@/components/DeleteConfirmation'
 import { ErrorModal } from '@/components/ErrorModal'
 import { FilterSection } from '@/components/FilterSection'
-import { AddIcon, CancelIcon, CheckIcon, DownloadIcon, EditIcon, PlateIcon, SearchIcon, TrashBinIcon, ViewIcon } from '@/components/Icons'
+import { AddIcon, CancelIcon, CheckIcon, CubeIcon, DownloadIcon, EditIcon, SearchIcon, TrashBinIcon, ViewIcon } from '@/components/Icons'
 import { Loader } from '@/components/Loader'
 import { Modal } from '@/components/Modal'
 import { PageHeader } from '@/components/PageHeader'
@@ -427,7 +427,7 @@ export function Dishes () {
       <section>
         <DataTable
           title='Lista de Platos'
-          icon={PlateIcon}
+          icon={CubeIcon}
           columns={tableColumns}
           data={dishes}
           loading={loading}
@@ -445,7 +445,7 @@ export function Dishes () {
           refreshLabel='Recargar Platos'
           itemName='plato'
           itemNamePlural='platos'
-          emptyIcon={PlateIcon}
+          emptyIcon={CubeIcon}
           emptyMessage='No se encontraron platos'
           emptyDescription='Intenta ajustar los filtros o crear un nuevo plato'
           actions={tableActions}
