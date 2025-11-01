@@ -1,5 +1,5 @@
 import { Card, CardBody, CardFooter, CardHeader } from '@/components/Card'
-import { AddIcon, ArrowLeftIcon, ArrowRightIcon, CancelIcon, CheckIcon, DownloadIcon, EditIcon, PlateIcon, RefreshIcon, SearchIcon, TrashBinIcon, ViewIcon, WarningIcon } from '@/components/Icons'
+import { AddIcon, CancelIcon, CheckIcon, DownloadIcon, EditIcon, PlateIcon, RefreshIcon, SearchIcon, TrashBinIcon, ViewIcon, WarningIcon } from '@/components/Icons'
 import { Loader } from '@/components/Loader'
 
 import { Modal } from '@/components/Modal'
@@ -10,6 +10,9 @@ import { useDebounce } from '@/hooks/useDebounce'
 import { useFetch } from '@/hooks/useFetch'
 import { useEffect, useMemo, useState } from 'react'
 
+import { DeleteConfirmation } from '@/components/DeleteConfirmation'
+import { Pagination } from '@/components/Pagination'
+import { ResultsCounter } from '@/components/ResultsCounter'
 import trunc from '@/services/trunc'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
@@ -390,87 +393,16 @@ export function Dishes () {
 
       <section>
 
-        {loading && (
-          <>
-            <div className='results-counter loading'>
-              <span className='result-icon'>
-                <Loader width={20} height={20} text='' />
-              </span>
-              <span className='result-text loading'>Cargando platos...</span>
-            </div>
-          </>
-        )}
-        {error && (
-          <>
-            <div className='results-counter error'>
-              <span className='result-icon'>
-                <PlateIcon />
-              </span>
-              <span className='result-text error'>Error al cargar los platos</span>
-            </div>
-          </>
-        )}
-        {!loading && !error && dishes.length === 0 && (
-          <>
-            <div className='results-counter no-results'>
-              <span className='result-icon'>
-                <PlateIcon />
-              </span>
-              <span className='result-text no-results'>No se encontraron platos</span>
-            </div>
-          </>
-        )}
-
-        {!loading && !error && dishes.length > 0 && (
-          <>
-            <div className='results-counter'>
-              <span className='result-icon'>
-                <PlateIcon />
-              </span>
-              <span className='result-text'>
-                {meta.pagination.total === 1 && (
-                  <>
-                    Mostrando
-                    <span className='result-number'>1</span>
-                    plato
-                  </>
-                )}
-
-                {meta.pagination.total > 1 && meta.pagination.total <= pageSize && (
-                  <>
-                    Mostrando
-                    <span className='result-number'>{meta.pagination.total}</span>
-                    platos
-                  </>
-                )}
-
-                {meta.pagination.total > pageSize && dishes.length !== 1 && (
-                  <>
-                    Mostrando
-                    <span className='result-number'>
-                      {meta.pagination.page * meta.pagination.pageSize - (meta.pagination.pageSize - 1)} - {Math.min(meta.pagination.page * meta.pagination.pageSize, meta.pagination.total)}
-                    </span>
-                    de
-                    <span className='result-number'>{meta.pagination.total}</span>
-                    platos
-                  </>
-                )}
-
-                {meta.pagination.total > pageSize && dishes.length === 1 && (
-                  <>
-                    Mostrando
-                    <span className='result-number'>
-                      {meta.pagination.page * meta.pagination.pageSize - (meta.pagination.pageSize - 1)}
-                    </span>
-                    de
-                    <span className='result-number'>{meta.pagination.total}</span>
-                    platos
-                  </>
-                )}
-              </span>
-            </div>
-          </>
-        )}
+        <ResultsCounter
+          loading={loading}
+          error={error}
+          items={dishes}
+          meta={meta}
+          pageSize={pageSize}
+          icon={PlateIcon}
+          itemName='plato'
+          itemNamePlural='platos'
+        />
 
         <Card>
           <CardHeader>
@@ -589,35 +521,11 @@ export function Dishes () {
           {meta &&
             <CardFooter>
               {meta.pagination && (
-                <div className='pagination'>
-                  <button
-                    className='pagination-btn'
-                    onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-                    disabled={page === 1}
-                  >
-                    <ArrowLeftIcon />
-                    Anterior
-                  </button>
-
-                  {[...Array(meta.pagination.pageCount || 1)].map((_, i) => (
-                    <button
-                      key={i}
-                      className={`pagination-btn ${page === i + 1 ? 'active' : ''}`}
-                      onClick={() => setPage(i + 1)}
-                    >
-                      {i + 1}
-                    </button>
-                  ))}
-
-                  <button
-                    className='pagination-btn'
-                    onClick={() => setPage((prev) => (prev < (meta.pagination.pageCount || 1) ? prev + 1 : prev))}
-                    disabled={page === (meta.pagination.pageCount || 1)}
-                  >
-                    Siguiente
-                    <ArrowRightIcon />
-                  </button>
-                </div>
+                <Pagination
+                  currentPage={page}
+                  totalPages={meta.pagination.pageCount}
+                  onPageChange={setPage}
+                />
               )}
             </CardFooter>}
         </Card>
@@ -673,34 +581,16 @@ export function Dishes () {
               )}
               {modalMode === 'delete'
                 ? (
-                  <div className='delete-confirmation'>
-                    <div className='warning-message'>
-                      <WarningIcon width={48} height={48} color='rgb(220, 38, 38)' />
-                      <div>
-                        <h4 style={{ color: 'rgb(220, 38, 38)', margin: '0 0 0.5rem 0' }}>
-                          ¿Estás seguro de que deseas eliminar este plato?
-                        </h4>
-                        <p style={{ margin: 0, color: 'rgb(107, 114, 128)' }}>
-                          Esta acción no se puede deshacer. El plato será eliminado permanentemente.
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className='dish-details'>
-                      <div className='detail-item'>
-                        <strong>Nombre:</strong> {selectedDish?.name}
-                      </div>
-                      <div className='detail-item'>
-                        <strong>Categoría:</strong> {selectedDish?.category?.name}
-                      </div>
-                      <div className='detail-item'>
-                        <strong>Precio:</strong> S/. {selectedDish?.price}
-                      </div>
-                      <div className='detail-item'>
-                        <strong>Estado:</strong> {selectedDish?.status === 'Active' ? 'Activo' : 'Inactivo'}
-                      </div>
-                    </div>
-                  </div>
+                  <DeleteConfirmation
+                    title='¿Estás seguro de que deseas eliminar este plato?'
+                    description='Esta acción no se puede deshacer. El plato será eliminado permanentemente.'
+                    details={[
+                      { label: 'Nombre', value: selectedDish?.name },
+                      { label: 'Categoría', value: selectedDish?.category?.name },
+                      { label: 'Precio', value: `S/. ${selectedDish?.price}` },
+                      { label: 'Estado', value: selectedDish?.status === 'Active' ? 'Activo' : 'Inactivo' }
+                    ]}
+                  />
                   )
                 : (
                   <div className='modal-input-group'>
