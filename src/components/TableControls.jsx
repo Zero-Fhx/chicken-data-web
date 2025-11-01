@@ -1,4 +1,5 @@
 import { RefreshIcon } from '@/components/Icons'
+
 import '@/styles/TableControls.css'
 
 export function TableControls ({

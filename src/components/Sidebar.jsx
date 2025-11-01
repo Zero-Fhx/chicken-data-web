@@ -1,6 +1,6 @@
-import { LogoIcon, PlateIcon } from './Icons'
-
 import { NavLink } from 'react-router'
+
+import { LogoIcon, PlateIcon } from './Icons'
 
 import '@/styles/Sidebar.css'
 

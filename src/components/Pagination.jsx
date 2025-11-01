@@ -1,4 +1,5 @@
 import { ArrowLeftIcon, ArrowRightIcon } from '@/components/Icons'
+
 import '@/styles/Pagination.css'
 
 export function Pagination ({ currentPage, totalPages, onPageChange, disabled = false }) {

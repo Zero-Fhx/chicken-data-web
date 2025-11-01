@@ -1,4 +1,5 @@
 import { WarningIcon } from '@/components/Icons'
+
 import '@/styles/DeleteConfirmation.css'
 
 export function DeleteConfirmation ({

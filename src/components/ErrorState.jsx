@@ -1,4 +1,5 @@
 import { RefreshIcon, WarningIcon } from '@/components/Icons'
+
 import '@/styles/ErrorState.css'
 
 export function ErrorState ({
