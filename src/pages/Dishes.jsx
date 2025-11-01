@@ -6,6 +6,7 @@ import { useFetch } from '@/hooks/useFetch'
 import { Card, CardBody, CardFooter, CardHeader } from '@/components/Card'
 import { DataTable } from '@/components/DataTable'
 import { DeleteConfirmation } from '@/components/DeleteConfirmation'
+import { ErrorModal } from '@/components/ErrorModal'
 import { FilterSection } from '@/components/FilterSection'
 import { AddIcon, CancelIcon, CheckIcon, DownloadIcon, EditIcon, PlateIcon, SearchIcon, TrashBinIcon, ViewIcon } from '@/components/Icons'
 import { Loader } from '@/components/Loader'
@@ -55,6 +56,7 @@ export function Dishes () {
   const [modalMode, setModalMode] = useState('view')
   const [modalLoading, setModalLoading] = useState(false)
   const [modalSuccess, setModalSuccess] = useState(null) // null | 'save' | 'delete' | 'create'
+  const [modalError, setModalError] = useState(null)
 
   const [formErrors, setFormErrors] = useState(initialFormErrors)
 
@@ -221,9 +223,8 @@ export function Dishes () {
   const handleChange = (e) => {
     const { name, value } = e.target
     setSelectedDish((prev) => ({ ...prev, [name]: value }))
-    console.log(`Cambio en el campo ${name}:`, value)
 
-    if (modalMode === 'edit') {
+    if (modalMode === 'edit' || modalMode === 'create') {
       if (name === 'name') {
         if (value.trim() === '') {
           setFormErrors((prev) => ({ ...prev, name: 'El nombre es obligatorio' }))
@@ -269,54 +270,69 @@ export function Dishes () {
   }
 
   const handleDishSelect = (dish, mode) => {
-    console.log('Ver Plato', dish.id)
     setSelectedDish(dish)
-    console.log(dish)
     setModalMode(mode)
     setIsModalOpen(true)
   }
 
+  const handleCreateNew = () => {
+    setSelectedDish({
+      name: '',
+      description: '',
+      category: null,
+      price: '',
+      status: 'Active'
+    })
+    setModalMode('create')
+    setIsModalOpen(true)
+  }
+
+  const handleExport = () => {
+    console.log('Exportando datos de platos...')
+  }
+
   const handleCloseWithX = () => {
-    console.log('Cerrando modal con X')
     setIsModalOpen(false)
   }
 
   const handleCancel = () => {
-    console.log('Cancelando acción...')
     setIsModalOpen(false)
   }
 
+  const handleCloseError = () => {
+    setModalError(null)
+  }
+
   const handleSave = () => {
-    console.log('Guardando cambios...')
     setModalLoading(true)
 
-    const updatedDish = {
-      id: selectedDish.id,
+    const dishData = {
       name: selectedDish.name,
-      category: selectedDish.category,
-      price: selectedDish.price,
+      description: selectedDish.description || null,
+      categoryId: selectedDish.category?.id || null,
+      price: parseFloat(selectedDish.price),
       status: selectedDish.status
     }
 
-    console.log('Datos a enviar:', updatedDish)
+    const url = modalMode === 'create' ? API_URL : `${API_URL}${selectedDish.id}`
+    const method = modalMode === 'create' ? 'POST' : 'PATCH'
 
-    fetch(`${API_URL}${selectedDish.id}`, {
-      method: 'PATCH',
+    fetch(url, {
+      method,
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(updatedDish)
+      body: JSON.stringify(dishData)
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error('Error al actualizar el plato')
+          throw new Error(`Error al ${modalMode === 'create' ? 'crear' : 'actualizar'} el plato`)
         }
         return response.json()
       })
-      .then((data) => {
-        console.log('Plato actualizado:', data)
+      .then(() => {
         refetch()
-        setModalSuccess('save')
+        setModalSuccess(modalMode === 'create' ? 'create' : 'save')
         setTimeout(() => {
           setIsModalOpen(false)
         }, 1500)
@@ -324,12 +340,11 @@ export function Dishes () {
       .catch((error) => {
         console.error('Error:', error)
         setModalLoading(false)
-        alert('Error al actualizar el plato: ' + error.message)
+        setModalError(`Error al ${modalMode === 'create' ? 'crear' : 'actualizar'} el plato: ${error.message}`)
       })
   }
 
   const handleDelete = () => {
-    console.log('Eliminando plato...')
     setModalLoading(true)
 
     const dishId = selectedDish.id
@@ -343,8 +358,7 @@ export function Dishes () {
         }
         return response.json()
       })
-      .then((data) => {
-        console.log('Plato eliminado:', data)
+      .then(() => {
         refetch()
         setModalSuccess('delete')
         setTimeout(() => {
@@ -354,7 +368,7 @@ export function Dishes () {
       .catch((error) => {
         console.error('Error:', error)
         setModalLoading(false)
-        alert('Error al eliminar el plato: ' + error.message)
+        setModalError(`Error al eliminar el plato: ${error.message}`)
       })
   }
 
@@ -363,6 +377,7 @@ export function Dishes () {
     setFormErrors(initialFormErrors)
     setModalLoading(false)
     setModalSuccess(null)
+    setModalError(null)
   }
 
   return (
@@ -384,13 +399,13 @@ export function Dishes () {
             label: 'Agregar Plato',
             icon: <AddIcon />,
             variant: 'primary',
-            onClick: () => console.log('Agregar Plato')
+            onClick: handleCreateNew
           },
           {
             label: 'Exportar Datos',
             icon: <DownloadIcon />,
             variant: 'secondary',
-            onClick: () => console.log('Exportar Datos')
+            onClick: handleExport
           }
         ]}
       />
@@ -409,31 +424,33 @@ export function Dishes () {
 
       <Separator />
 
-      <DataTable
-        title='Lista de Platos'
-        icon={PlateIcon}
-        columns={tableColumns}
-        data={dishes}
-        loading={loading}
-        error={error}
-        meta={meta}
-        page={page}
-        pageSize={pageSize}
-        onPageChange={setPage}
-        onPageSizeChange={(size) => {
-          setPageSize(size)
-          setPage(1)
-        }}
-        onRefresh={refetch}
-        pageSizeOptions={[5, 10, 20, 50]}
-        refreshLabel='Recargar Platos'
-        itemName='plato'
-        itemNamePlural='platos'
-        emptyIcon={PlateIcon}
-        emptyMessage='No se encontraron platos'
-        emptyDescription='Intenta ajustar los filtros o crear un nuevo plato'
-        actions={tableActions}
-      />
+      <section>
+        <DataTable
+          title='Lista de Platos'
+          icon={PlateIcon}
+          columns={tableColumns}
+          data={dishes}
+          loading={loading}
+          error={error}
+          meta={meta}
+          page={page}
+          pageSize={pageSize}
+          onPageChange={setPage}
+          onPageSizeChange={(size) => {
+            setPageSize(size)
+            setPage(1)
+          }}
+          onRefresh={refetch}
+          pageSizeOptions={[5, 10, 20, 50]}
+          refreshLabel='Recargar Platos'
+          itemName='plato'
+          itemNamePlural='platos'
+          emptyIcon={PlateIcon}
+          emptyMessage='No se encontraron platos'
+          emptyDescription='Intenta ajustar los filtros o crear un nuevo plato'
+          actions={tableActions}
+        />
+      </section>
 
       <Modal
         isOpen={isModalOpen}
@@ -446,10 +463,12 @@ export function Dishes () {
                 {modalMode === 'view' && <ViewIcon />}
                 {modalMode === 'edit' && <EditIcon />}
                 {modalMode === 'delete' && <TrashBinIcon />}
+                {modalMode === 'create' && <AddIcon />}
                 <h3>
                   {modalMode === 'view' && 'Ver Plato'}
                   {modalMode === 'edit' && 'Editar Plato'}
                   {modalMode === 'delete' && 'Eliminar Plato'}
+                  {modalMode === 'create' && 'Crear Plato'}
                 </h3>
               </div>
               <button type='button' className='modal-close-button no-transform' onClick={handleCloseWithX}>
@@ -482,6 +501,9 @@ export function Dishes () {
                       />
                       )}
                 </div>
+              )}
+              {modalError && (
+                <ErrorModal message={modalError} onClose={handleCloseError} />
               )}
               {modalMode === 'delete'
                 ? (
@@ -594,10 +616,15 @@ export function Dishes () {
                   Editar
                 </button>
               )}
-              {modalMode === 'edit' && (
-                <button type='button' className='primary' onClick={handleSave} disabled={modalLoading || Object.values(formErrors).some((error) => error !== '')}>
+              {(modalMode === 'edit' || modalMode === 'create') && (
+                <button
+                  type='button'
+                  className='primary'
+                  onClick={handleSave}
+                  disabled={modalLoading || Object.values(formErrors).some((error) => error !== '') || !selectedDish?.name || !selectedDish?.price}
+                >
                   <AddIcon />
-                  Guardar Cambios
+                  {modalMode === 'create' ? 'Crear Plato' : 'Guardar Cambios'}
                 </button>
               )}
               {modalMode === 'delete' && (
