@@ -1,4 +1,5 @@
 import { WarningIcon } from '@/components/Icons'
+import '@/styles/DeleteConfirmation.css'
 
 export function DeleteConfirmation ({
   title = '¿Estás seguro de que deseas eliminar este elemento?',
@@ -10,10 +11,10 @@ export function DeleteConfirmation ({
       <div className='warning-message'>
         <WarningIcon width={48} height={48} color='rgb(220, 38, 38)' />
         <div>
-          <h4 style={{ color: 'rgb(220, 38, 38)', margin: '0 0 0.5rem 0' }}>
+          <h4 className='delete-confirmation-title'>
             {title}
           </h4>
-          <p style={{ margin: 0, color: 'rgb(107, 114, 128)' }}>
+          <p className='delete-confirmation-description'>
             {description}
           </p>
         </div>

@@ -1,5 +1,5 @@
 import { Card, CardBody, CardFooter, CardHeader } from '@/components/Card'
-import { AddIcon, CancelIcon, CheckIcon, DownloadIcon, EditIcon, PlateIcon, RefreshIcon, SearchIcon, TrashBinIcon, ViewIcon, WarningIcon } from '@/components/Icons'
+import { AddIcon, CancelIcon, CheckIcon, DownloadIcon, EditIcon, PlateIcon, RefreshIcon, SearchIcon, TrashBinIcon, ViewIcon } from '@/components/Icons'
 import { Loader } from '@/components/Loader'
 
 import { Modal } from '@/components/Modal'
@@ -11,8 +11,11 @@ import { useFetch } from '@/hooks/useFetch'
 import { useEffect, useMemo, useState } from 'react'
 
 import { DeleteConfirmation } from '@/components/DeleteConfirmation'
+import { EmptyState } from '@/components/EmptyState'
+import { ErrorState } from '@/components/ErrorState'
 import { Pagination } from '@/components/Pagination'
 import { ResultsCounter } from '@/components/ResultsCounter'
+import { StatusBadge } from '@/components/StatusBadge'
 import trunc from '@/services/trunc'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
@@ -454,21 +457,19 @@ export function Dishes () {
               </thead>
               <tbody>
                 {loading &&
-                  <tr className='loading-row'>
+                  <tr className='loading-state-row'>
                     <td className='center-cell' colSpan='7' style={{ padding: '2rem' }}>
                       <Loader width={24} height={24} />
                     </td>
                   </tr>}
                 {error && !(error.status === 400 && page > 1) &&
-                  <tr>
-                    <td className='center-cell muted-text' colSpan='7' style={{ padding: '2rem' }}>
-                      <div>
-                        <WarningIcon width={40} height={40} color='rgb(220, 38, 38)' />
-                        <div>
-                          <strong style={{ color: 'rgb(220, 38, 38)' }}>Error al cargar los platos</strong>
-                          <div className='muted-text' style={{ marginTop: '0.25rem', fontSize: '0.875rem' }}>{error.message}</div>
-                        </div>
-                      </div>
+                  <tr className='error-state-row'>
+                    <td className='center-cell' colSpan='7' style={{ padding: 0 }}>
+                      <ErrorState
+                        title='Error al cargar los platos'
+                        message={error.message}
+                        onRetry={refetch}
+                      />
                     </td>
                   </tr>}
                 {!loading && !error && dishes && (dishes.length > 0
@@ -486,9 +487,7 @@ export function Dishes () {
                         </div>
                       </td>
                       <td className='center-cell'>
-                        <span className={'badge-status ' + (dish.status === 'Active' ? 'active' : 'inactive')}>
-                          {dish.status === 'Active' ? 'Activo' : 'Inactivo'}
-                        </span>
+                        <StatusBadge status={dish.status} />
                       </td>
                       <td className='center-cell'>
                         <div className='button-group' style={{ justifyContent: 'center' }}>
@@ -514,7 +513,17 @@ export function Dishes () {
                       </td>
                     </tr>
                   ))
-                  : (<tr><td className='center-cell muted-text' colSpan='7' style={{ padding: '2rem' }}>No se encontraron platos.</td></tr>))}
+                  : (
+                    <tr className='empty-state-row'>
+                      <td className='center-cell' colSpan='7' style={{ padding: 0 }}>
+                        <EmptyState
+                          icon={PlateIcon}
+                          message='No se encontraron platos'
+                          description='Intenta ajustar los filtros o crear un nuevo plato'
+                        />
+                      </td>
+                    </tr>
+                    ))}
               </tbody>
             </table>
           </CardBody>

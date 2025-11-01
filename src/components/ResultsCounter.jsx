@@ -1,4 +1,5 @@
 import { Loader } from '@/components/Loader'
+import '@/styles/ResultsCounter.css'
 
 export function ResultsCounter ({
   loading,
