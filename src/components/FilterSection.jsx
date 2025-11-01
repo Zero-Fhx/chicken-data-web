@@ -6,6 +6,7 @@ export function FilterSection ({
   icon: Icon = SearchIcon,
   fields = [],
   values = {},
+  errors = {},
   onFilterChange,
   onClearFilters,
   hasActiveFilters = false,
@@ -38,6 +39,8 @@ export function FilterSection ({
 
     const fieldId = `filter-${name}`
     const value = values[name] || ''
+    const error = errors[name] || ''
+    const hasError = !!error
 
     switch (type) {
       case 'select':
@@ -76,7 +79,26 @@ export function FilterSection ({
               min={min}
               max={max}
               step={step}
+              className={hasError ? 'input-error' : ''}
             />
+            {hasError && <small className='info-error'>{error}</small>}
+          </div>
+        )
+
+      case 'checkbox':
+        return (
+          <div key={name} className='filter-input filter-checkbox'>
+            <label htmlFor={fieldId}>
+              <input
+                type='checkbox'
+                id={fieldId}
+                name={name}
+                checked={values[name] || false}
+                onChange={handleChange}
+                disabled={disabled}
+              />
+              {label}
+            </label>
           </div>
         )
 

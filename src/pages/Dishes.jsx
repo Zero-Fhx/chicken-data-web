@@ -17,12 +17,11 @@ import { Separator } from '@/components/Separator'
 import { StatusBadge } from '@/components/StatusBadge'
 import { TestStatePanel } from '@/components/TestStatePanel'
 
+import API_ENDPOINTS from '@/services/api'
 import trunc from '@/services/trunc'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
-const API_URL = `${API_BASE_URL}/dishes/`
-
-const API_CATEGORIES_URL = `${API_BASE_URL}/dish-categories`
+const API_URL = `${API_ENDPOINTS.dishes}/`
+const API_CATEGORIES_URL = API_ENDPOINTS.dishCategories
 
 const initialFilters = {
   name: '',
@@ -49,13 +48,14 @@ export function Dishes () {
   const [pageSize, setPageSize] = useState(10)
 
   const [filters, setFilters] = useState(initialFilters)
+  const [filterErrors, setFilterErrors] = useState({ minPrice: '', maxPrice: '' })
 
   const [selectedDish, setSelectedDish] = useState(null)
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalMode, setModalMode] = useState('view')
   const [modalLoading, setModalLoading] = useState(false)
-  const [modalSuccess, setModalSuccess] = useState(null) // null | 'save' | 'delete' | 'create'
+  const [modalSuccess, setModalSuccess] = useState(null)
   const [modalError, setModalError] = useState(null)
 
   const [formErrors, setFormErrors] = useState(initialFormErrors)
@@ -180,14 +180,32 @@ export function Dishes () {
     let finalValue = value
 
     if ((name === 'minPrice' || name === 'maxPrice') && value !== '') {
-      finalValue = trunc(parseFloat(value), 2)
+      const formattedValue = trunc(parseFloat(value), 2)
+      finalValue = isNaN(formattedValue) ? '' : formattedValue.toString()
     }
 
-    setFilters((prev) => ({ ...prev, [name]: finalValue }))
+    const newFilters = { ...filters, [name]: finalValue }
+    setFilters(newFilters)
+
+    if (name === 'minPrice' || name === 'maxPrice') {
+      const minPrice = parseFloat(name === 'minPrice' ? finalValue : newFilters.minPrice)
+      const maxPrice = parseFloat(name === 'maxPrice' ? finalValue : newFilters.maxPrice)
+
+      if (!isNaN(minPrice) && !isNaN(maxPrice) && minPrice > maxPrice) {
+        if (name === 'minPrice') {
+          setFilterErrors({ minPrice: 'El precio mínimo no puede ser mayor al máximo', maxPrice: '' })
+        } else {
+          setFilterErrors({ minPrice: '', maxPrice: 'El precio máximo no puede ser menor al mínimo' })
+        }
+      } else {
+        setFilterErrors({ minPrice: '', maxPrice: '' })
+      }
+    }
   }
 
   const handleClearFilters = () => {
     setFilters(initialFilters)
+    setFilterErrors({ minPrice: '', maxPrice: '' })
   }
 
   const hasActiveFilters = Object.values(filters).some((value) => value !== '')
@@ -198,14 +216,14 @@ export function Dishes () {
     url.searchParams.set('pageSize', pageSize)
 
     if (debouncedName) url.searchParams.set('search', debouncedName.trim().toLowerCase())
-    if (debouncedMinPrice) url.searchParams.set('minPrice', debouncedMinPrice)
-    if (debouncedMaxPrice) url.searchParams.set('maxPrice', debouncedMaxPrice)
+    if (debouncedMinPrice && !filterErrors.minPrice) url.searchParams.set('minPrice', debouncedMinPrice)
+    if (debouncedMaxPrice && !filterErrors.maxPrice) url.searchParams.set('maxPrice', debouncedMaxPrice)
 
     if (filters.category) url.searchParams.set('categoryId', filters.category)
     if (filters.status) url.searchParams.set('status', filters.status)
 
     return url.toString()
-  }, [page, pageSize, debouncedName, debouncedMinPrice, debouncedMaxPrice, filters.category, filters.status])
+  }, [page, pageSize, debouncedName, debouncedMinPrice, debouncedMaxPrice, filters.category, filters.status, filterErrors])
 
   const { data, loading, setLoading, error, setError, refetch } = useFetch(
     buildURL
@@ -417,6 +435,7 @@ export function Dishes () {
         icon={SearchIcon}
         fields={filterFields}
         values={filters}
+        errors={filterErrors}
         onFilterChange={handleFilterChange}
         onClearFilters={handleClearFilters}
         hasActiveFilters={hasActiveFilters}
