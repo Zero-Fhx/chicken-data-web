@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useDebounce } from '@/hooks/useDebounce'
 import { useFetch } from '@/hooks/useFetch'
 
+import { AdjustStockForm } from '@/components/AdjustStockForm'
 import { Card, CardBody, CardFooter, CardHeader } from '@/components/Card'
 import { DataTable } from '@/components/DataTable'
 import { DeleteConfirmation } from '@/components/DeleteConfirmation'
@@ -43,7 +44,8 @@ const initialFormErrors = {
   category: '',
   stock: '',
   minimumStock: '',
-  status: ''
+  status: '',
+  adjustmentValue: ''
 }
 
 export function Ingredients () {
@@ -58,7 +60,7 @@ export function Ingredients () {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalMode, setModalMode] = useState('view')
   const [modalLoading, setModalLoading] = useState(false)
-  const [modalSuccess, setModalSuccess] = useState(null) // null | 'save' | 'delete' | 'create'
+  const [modalSuccess, setModalSuccess] = useState(null)
   const [modalError, setModalError] = useState(null)
 
   const [formErrors, setFormErrors] = useState(initialFormErrors)
@@ -219,13 +221,12 @@ export function Ingredients () {
     let finalValue = value
 
     if ((name === 'minStock' || name === 'maxStock') && value !== '') {
-      const formattedValue = trunc(parseFloat(value), 2)
-      finalValue = isNaN(formattedValue) ? '' : formattedValue.toString()
+      const formattedValue = trunc(value, 2)
+      finalValue = formattedValue
     }
 
     setFilters((prev) => ({ ...prev, [name]: finalValue }))
 
-    // Validación de rango para minStock y maxStock
     if (name === 'minStock' || name === 'maxStock') {
       const currentFilters = { ...filters, [name]: finalValue }
       const minStock = parseFloat(currentFilters.minStock)
@@ -279,6 +280,25 @@ export function Ingredients () {
     }
   }, [error, page, setError])
 
+  const calculateResultingStock = () => {
+    if (!selectedIngredient) return 0
+
+    const currentStock = parseFloat(selectedIngredient.stock) || 0
+    const adjustmentValue = parseFloat(selectedIngredient.adjustmentValue) || 0
+    const adjustmentType = selectedIngredient.adjustmentType || 'add'
+
+    switch (adjustmentType) {
+      case 'add':
+        return currentStock + adjustmentValue
+      case 'subtract':
+        return currentStock - adjustmentValue
+      case 'set':
+        return adjustmentValue
+      default:
+        return currentStock
+    }
+  }
+
   const handleChange = (e) => {
     const { name, value } = e.target
     setSelectedIngredient((prev) => ({ ...prev, [name]: value }))
@@ -303,10 +323,10 @@ export function Ingredients () {
       }
 
       if (name === 'stock') {
-        const formattedValue = trunc(parseFloat(value), 2)
+        const formattedValue = trunc(value, 2)
         const stockValue = parseFloat(formattedValue)
 
-        setSelectedIngredient((prev) => ({ ...prev, stock: isNaN(stockValue) ? '' : formattedValue.toString() }))
+        setSelectedIngredient((prev) => ({ ...prev, stock: formattedValue }))
 
         if (isNaN(stockValue) || stockValue < 0) {
           setFormErrors((prev) => ({ ...prev, stock: 'El stock debe ser mayor o igual a 0' }))
@@ -317,10 +337,10 @@ export function Ingredients () {
       }
 
       if (name === 'minimumStock') {
-        const formattedValue = trunc(parseFloat(value), 2)
+        const formattedValue = trunc(value, 2)
         const minStockValue = parseFloat(formattedValue)
 
-        setSelectedIngredient((prev) => ({ ...prev, minimumStock: isNaN(minStockValue) ? '' : formattedValue.toString() }))
+        setSelectedIngredient((prev) => ({ ...prev, minimumStock: formattedValue }))
 
         if (isNaN(minStockValue) || minStockValue < 0) {
           setFormErrors((prev) => ({ ...prev, minimumStock: 'El stock mínimo debe ser mayor o igual a 0' }))
@@ -349,10 +369,67 @@ export function Ingredients () {
         }
       }
     }
+
+    if (modalMode === 'adjust') {
+      if (name === 'adjustmentType') {
+        setSelectedIngredient((prev) => ({ ...prev, adjustmentType: value, adjustmentValue: '' }))
+        setFormErrors((prev) => ({ ...prev, adjustmentValue: '' }))
+      }
+
+      if (name === 'adjustmentValue') {
+        const formattedValue = trunc(value, 2)
+        const adjustmentValue = parseFloat(formattedValue)
+
+        setSelectedIngredient((prev) => ({ ...prev, adjustmentValue: formattedValue }))
+
+        if (isNaN(adjustmentValue) || adjustmentValue < 0) {
+          setFormErrors((prev) => ({ ...prev, adjustmentValue: 'El valor debe ser mayor o igual a 0' }))
+        } else {
+          setFormErrors((prev) => ({ ...prev, adjustmentValue: '' }))
+        }
+      }
+    }
+  }
+
+  const handleAdjustmentTypeChange = (type) => {
+    setSelectedIngredient((prev) => ({ ...prev, adjustmentType: type, adjustmentValue: '' }))
+    setFormErrors((prev) => ({ ...prev, adjustmentValue: '' }))
+  }
+
+  const handleAdjustmentValueChange = (e) => {
+    const value = e.target.value
+
+    if (value === '') {
+      setSelectedIngredient((prev) => ({ ...prev, adjustmentValue: value }))
+      setFormErrors((prev) => ({ ...prev, adjustmentValue: '' }))
+      return
+    }
+
+    const formattedValue = trunc(value, 2)
+    const adjustmentValue = parseFloat(formattedValue)
+    const adjustmentType = selectedIngredient?.adjustmentType || 'add'
+
+    setSelectedIngredient((prev) => ({ ...prev, adjustmentValue: formattedValue }))
+
+    if (isNaN(adjustmentValue) || adjustmentValue < 0) {
+      setFormErrors((prev) => ({ ...prev, adjustmentValue: 'El valor no puede ser negativo' }))
+    } else if ((adjustmentType === 'add' || adjustmentType === 'subtract') && adjustmentValue === 0) {
+      setFormErrors((prev) => ({ ...prev, adjustmentValue: 'El valor debe ser mayor a 0' }))
+    } else {
+      setFormErrors((prev) => ({ ...prev, adjustmentValue: '' }))
+    }
   }
 
   const handleIngredientSelect = (ingredient, mode) => {
-    setSelectedIngredient(ingredient)
+    if (mode === 'adjust') {
+      setSelectedIngredient({
+        ...ingredient,
+        adjustmentType: 'add',
+        adjustmentValue: ''
+      })
+    } else {
+      setSelectedIngredient(ingredient)
+    }
     setModalMode(mode)
     setIsModalOpen(true)
   }
@@ -388,6 +465,47 @@ export function Ingredients () {
 
   const handleSave = () => {
     setModalLoading(true)
+
+    if (modalMode === 'adjust') {
+      const resultingStock = calculateResultingStock()
+
+      if (resultingStock < 0) {
+        setModalError('El stock resultante no puede ser negativo')
+        setModalLoading(false)
+        return
+      }
+
+      const adjustmentData = {
+        stock: resultingStock
+      }
+
+      fetch(`${API_URL}${selectedIngredient.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(adjustmentData)
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Error al ajustar el stock del ingrediente')
+          }
+          return response.json()
+        })
+        .then(() => {
+          refetch()
+          setModalSuccess('save')
+          setTimeout(() => {
+            setIsModalOpen(false)
+          }, 1500)
+        })
+        .catch((error) => {
+          console.error('Error:', error)
+          setModalLoading(false)
+          setModalError(`Error al ajustar el stock del ingrediente: ${error.message}`)
+        })
+      return
+    }
 
     const ingredientData = {
       name: selectedIngredient.name,
@@ -609,7 +727,16 @@ export function Ingredients () {
                 )}
               {modalMode === 'adjust' &&
                 (
-                  <><AdjustIcon /></>
+                  <AdjustStockForm
+                    ingredientName={selectedIngredient?.name}
+                    currentStock={selectedIngredient?.stock}
+                    unit={selectedIngredient?.unit}
+                    adjustmentType={selectedIngredient?.adjustmentType || 'add'}
+                    adjustmentValue={selectedIngredient?.adjustmentValue || ''}
+                    onAdjustmentTypeChange={handleAdjustmentTypeChange}
+                    onAdjustmentValueChange={handleAdjustmentValueChange}
+                    error={formErrors.adjustmentValue}
+                  />
                 )}
               {(modalMode === 'view' || modalMode === 'edit' || modalMode === 'create') && (
                 <div className='modal-input-group'>
@@ -739,6 +866,28 @@ export function Ingredients () {
                 >
                   <AddIcon />
                   {modalMode === 'create' ? 'Crear Ingrediente' : 'Guardar Cambios'}
+                </button>
+              )}
+              {modalMode === 'adjust' && (
+                <button
+                  type='button'
+                  className='adjust'
+                  onClick={handleSave}
+                  disabled={
+                    modalLoading ||
+                    Object.values(formErrors).some((error) => error !== '') ||
+                    !selectedIngredient?.adjustmentValue ||
+                    selectedIngredient.adjustmentValue === '' ||
+                    calculateResultingStock() < 0 ||
+                    ((selectedIngredient.adjustmentType === 'add' || selectedIngredient.adjustmentType === 'subtract') &&
+                      (selectedIngredient.adjustmentValue === '0' ||
+                       selectedIngredient.adjustmentValue === '0.' ||
+                       selectedIngredient.adjustmentValue === '0.0' ||
+                       parseFloat(selectedIngredient.adjustmentValue || 0) === 0))
+                  }
+                >
+                  <AdjustIcon />
+                  Confirmar Ajuste
                 </button>
               )}
               {modalMode === 'delete' && (
