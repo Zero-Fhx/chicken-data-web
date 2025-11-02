@@ -180,8 +180,8 @@ export function Dishes () {
     let finalValue = value
 
     if ((name === 'minPrice' || name === 'maxPrice') && value !== '') {
-      const formattedValue = trunc(parseFloat(value), 2)
-      finalValue = isNaN(formattedValue) ? '' : formattedValue.toString()
+      const formattedValue = trunc(value, 2)
+      finalValue = formattedValue
     }
 
     const newFilters = { ...filters, [name]: finalValue }
@@ -253,10 +253,10 @@ export function Dishes () {
       }
 
       if (name === 'price') {
-        const formattedValue = trunc(parseFloat(value), 2)
+        const formattedValue = trunc(value, 2)
         const priceValue = parseFloat(formattedValue)
 
-        setSelectedDish((prev) => ({ ...prev, price: isNaN(priceValue) ? '' : formattedValue.toString() }))
+        setSelectedDish((prev) => ({ ...prev, price: isNaN(priceValue) ? '' : formattedValue }))
 
         if (isNaN(priceValue) || priceValue <= 0) {
           setFormErrors((prev) => ({ ...prev, price: 'El precio debe ser mayor a 0' }))
