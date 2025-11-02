@@ -524,105 +524,105 @@ export function Dishes () {
               {modalError && (
                 <ErrorModal message={modalError} onClose={handleCloseError} />
               )}
-              {modalMode === 'delete'
-                ? (
-                  <DeleteConfirmation
-                    title='¿Estás seguro de que deseas eliminar este plato?'
-                    description='Esta acción no se puede deshacer. El plato será eliminado permanentemente.'
-                    details={[
-                      { label: 'Nombre', value: selectedDish?.name },
-                      { label: 'Categoría', value: selectedDish?.category?.name },
-                      { label: 'Precio', value: `S/. ${selectedDish?.price}` },
-                      { label: 'Estado', value: selectedDish?.status === 'Active' ? 'Activo' : 'Inactivo' }
-                    ]}
-                  />
-                  )
-                : (
-                  <div className='modal-input-group'>
-                    <div className='input-group'>
-                      <label htmlFor='modal-name'>Nombre <RequiredSpan /></label>
-                      <input
-                        className={formErrors.name ? 'input-error' : ''}
-                        type='text'
-                        id='modal-name'
-                        name='name'
-                        value={selectedDish?.name || ''}
-                        disabled={modalMode === 'view' || modalLoading}
-                        onChange={handleChange}
-                      />
-                      <small className='info-error'>{formErrors.name}</small>
-                    </div>
-                    <div className='input-group'>
-                      <label htmlFor='modal-description'>Descripción</label>
-                      <textarea
-                        className={formErrors.description ? 'input-error' : ''}
-                        id='modal-description'
-                        name='description'
-                        value={selectedDish?.description || ''}
-                        disabled={modalMode === 'view' || modalLoading}
-                        onChange={handleChange}
-                      />
-                      <small className='info-error'>{formErrors.description}</small>
-                    </div>
-                    <div className='input-group'>
-                      <label htmlFor='modal-category'>Categoría <RequiredSpan /></label>
-                      <select
-                        className={formErrors.category ? 'input-error' : ''}
-                        name='category'
-                        id='modal-category'
-                        disabled={modalMode === 'view' || modalLoading}
-                        value={selectedDish?.category?.id || ''}
-                        onChange={handleChange}
-                      >
-                        <option value=''>Seleccionar categoría</option>
-                        {categoryOptions.map((option) => (
-                          <option
-                            key={option.value}
-                            value={option.value}
-                          >
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
-                      <small className='info-error'>{formErrors.category}</small>
-                    </div>
-                    <div className='input-group'>
-                      <label htmlFor='modal-price'>Precio <RequiredSpan /></label>
-                      <input
-                        className={formErrors.price ? 'input-error' : ''}
-                        type='number'
-                        id='modal-price'
-                        name='price'
-                        value={selectedDish?.price || ''}
-                        disabled={modalMode === 'view' || modalLoading}
-                        onChange={handleChange}
-                      />
-                      <small className='info-error'>{formErrors.price}</small>
-                    </div>
-                    <div className='input-group'>
-                      <label htmlFor='modal-status'>Estado <RequiredSpan /></label>
-                      <select
-                        className={formErrors.status ? 'input-error' : ''}
-                        name='status'
-                        id='modal-status'
-                        disabled={modalMode === 'view' || modalLoading}
-                        value={selectedDish?.status || ''}
-                        onChange={handleChange}
-                      >
-                        <option value=''>Seleccionar estado</option>
-                        {statusOptions.map((option) => (
-                          <option
-                            key={option.value}
-                            value={option.value}
-                          >
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
-                      <small className='info-error'>{formErrors.status}</small>
-                    </div>
+              {modalMode === 'delete' && (
+                <DeleteConfirmation
+                  title='¿Estás seguro de que deseas eliminar este plato?'
+                  description='Esta acción no se puede deshacer. El plato será eliminado permanentemente.'
+                  details={[
+                    { label: 'Nombre', value: selectedDish?.name },
+                    { label: 'Categoría', value: selectedDish?.category?.name },
+                    { label: 'Precio', value: `S/. ${selectedDish?.price}` },
+                    { label: 'Estado', value: selectedDish?.status === 'Active' ? 'Activo' : 'Inactivo' }
+                  ]}
+                />
+              )}
+              {(modalMode === 'view' || modalMode === 'edit' || modalMode === 'create') && (
+
+                <div className='modal-input-group'>
+                  <div className='input-group'>
+                    <label htmlFor='modal-name'>Nombre <RequiredSpan /></label>
+                    <input
+                      className={formErrors.name ? 'input-error' : ''}
+                      type='text'
+                      id='modal-name'
+                      name='name'
+                      value={selectedDish?.name || ''}
+                      disabled={modalMode === 'view' || modalLoading}
+                      onChange={handleChange}
+                    />
+                    <small className='info-error'>{formErrors.name}</small>
                   </div>
-                  )}
+                  <div className='input-group'>
+                    <label htmlFor='modal-description'>Descripción</label>
+                    <textarea
+                      className={formErrors.description ? 'input-error' : ''}
+                      id='modal-description'
+                      name='description'
+                      value={selectedDish?.description || ''}
+                      disabled={modalMode === 'view' || modalLoading}
+                      onChange={handleChange}
+                    />
+                    <small className='info-error'>{formErrors.description}</small>
+                  </div>
+                  <div className='input-group'>
+                    <label htmlFor='modal-category'>Categoría <RequiredSpan /></label>
+                    <select
+                      className={formErrors.category ? 'input-error' : ''}
+                      name='category'
+                      id='modal-category'
+                      disabled={modalMode === 'view' || modalLoading}
+                      value={selectedDish?.category?.id || ''}
+                      onChange={handleChange}
+                    >
+                      <option value=''>Seleccionar categoría</option>
+                      {categoryOptions.map((option) => (
+                        <option
+                          key={option.value}
+                          value={option.value}
+                        >
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                    <small className='info-error'>{formErrors.category}</small>
+                  </div>
+                  <div className='input-group'>
+                    <label htmlFor='modal-price'>Precio <RequiredSpan /></label>
+                    <input
+                      className={formErrors.price ? 'input-error' : ''}
+                      type='number'
+                      id='modal-price'
+                      name='price'
+                      value={selectedDish?.price || ''}
+                      disabled={modalMode === 'view' || modalLoading}
+                      onChange={handleChange}
+                    />
+                    <small className='info-error'>{formErrors.price}</small>
+                  </div>
+                  <div className='input-group'>
+                    <label htmlFor='modal-status'>Estado <RequiredSpan /></label>
+                    <select
+                      className={formErrors.status ? 'input-error' : ''}
+                      name='status'
+                      id='modal-status'
+                      disabled={modalMode === 'view' || modalLoading}
+                      value={selectedDish?.status || ''}
+                      onChange={handleChange}
+                    >
+                      <option value=''>Seleccionar estado</option>
+                      {statusOptions.map((option) => (
+                        <option
+                          key={option.value}
+                          value={option.value}
+                        >
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                    <small className='info-error'>{formErrors.status}</small>
+                  </div>
+                </div>
+              )}
             </CardBody>
             <CardFooter className='modal-footer'>
               <button type='button' onClick={handleCancel} disabled={modalLoading}>
