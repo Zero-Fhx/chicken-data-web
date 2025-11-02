@@ -3,10 +3,10 @@ export default function trunc (value, decimals = 2) {
   const decimalPointIndex = string.indexOf('.')
 
   if (decimalPointIndex === -1) {
-    return Number(string)
+    return string
   }
 
   const decimalLength = decimalPointIndex + 1
-  const numStr = string.substr(0, decimalLength + decimals)
-  return Number(numStr)
+  const numStr = string.substring(0, decimalLength + decimals)
+  return numStr
 }
