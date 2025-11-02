@@ -141,6 +141,23 @@ button.warning {
   }
 }
 
+button.adjust {
+  background-color: #fd7e14;
+
+  &:hover {
+    background-color: #e8590c;
+  }
+
+  &:disabled {
+    background-color: #ffbb88;
+  }
+
+  &:focus {
+    outline: 2px solid #e8590c;
+    outline-offset: 2px;
+  }
+}
+
 button.info,
 button.edit {
   background-color: #17a2b8;

@@ -8,7 +8,7 @@ import { DataTable } from '@/components/DataTable'
 import { DeleteConfirmation } from '@/components/DeleteConfirmation'
 import { ErrorModal } from '@/components/ErrorModal'
 import { FilterSection } from '@/components/FilterSection'
-import { AddIcon, CancelIcon, CheckIcon, CubeIcon, DownloadIcon, EditIcon, SearchIcon, TrashBinIcon, ViewIcon } from '@/components/Icons'
+import { AddIcon, AdjustIcon, CancelIcon, CheckIcon, CubeIcon, DownloadIcon, EditIcon, SearchIcon, TrashBinIcon, ViewIcon } from '@/components/Icons'
 import { Loader } from '@/components/Loader'
 import { Modal } from '@/components/Modal'
 import { PageHeader } from '@/components/PageHeader'
@@ -185,6 +185,13 @@ export function Ingredients () {
       variant: 'view',
       iconOnly: true,
       onClick: (row) => handleIngredientSelect(row, 'view')
+    },
+    {
+      label: 'Ajustar',
+      icon: <AdjustIcon />,
+      variant: 'adjust',
+      iconOnly: true,
+      onClick: (row) => handleIngredientSelect(row, 'adjust')
     },
     {
       label: 'Editar',
@@ -542,11 +549,13 @@ export function Ingredients () {
                 {modalMode === 'edit' && <EditIcon />}
                 {modalMode === 'delete' && <TrashBinIcon />}
                 {modalMode === 'create' && <AddIcon />}
+                {modalMode === 'adjust' && <AdjustIcon />}
                 <h3>
                   {modalMode === 'view' && 'Ver Ingrediente'}
                   {modalMode === 'edit' && 'Editar Ingrediente'}
                   {modalMode === 'delete' && 'Eliminar Ingrediente'}
                   {modalMode === 'create' && 'Crear Ingrediente'}
+                  {modalMode === 'adjust' && 'Ajustar Stock del Ingrediente'}
                 </h3>
               </div>
               <button type='button' className='modal-close-button no-transform' onClick={handleCloseWithX}>
@@ -583,8 +592,8 @@ export function Ingredients () {
               {modalError && (
                 <ErrorModal message={modalError} onClose={handleCloseError} />
               )}
-              {modalMode === 'delete'
-                ? (
+              {modalMode === 'delete' &&
+                (
                   <DeleteConfirmation
                     title='¿Estás seguro de que deseas eliminar este ingrediente?'
                     description='Esta acción no se puede deshacer. El ingrediente será eliminado permanentemente.'
@@ -597,114 +606,118 @@ export function Ingredients () {
                       { label: 'Estado', value: selectedIngredient?.status === 'Active' ? 'Activo' : 'Inactivo' }
                     ]}
                   />
-                  )
-                : (
-                  <div className='modal-input-group'>
-                    <div className='input-group'>
-                      <label htmlFor='modal-name'>Nombre <RequiredSpan /></label>
-                      <input
-                        className={formErrors.name ? 'input-error' : ''}
-                        type='text'
-                        id='modal-name'
-                        name='name'
-                        value={selectedIngredient?.name || ''}
-                        disabled={modalMode === 'view' || modalLoading}
-                        onChange={handleChange}
-                      />
-                      <small className='info-error'>{formErrors.name}</small>
-                    </div>
-                    <div className='input-group'>
-                      <label htmlFor='modal-unit'>Unidad de Medida <RequiredSpan /></label>
-                      <input
-                        className={formErrors.unit ? 'input-error' : ''}
-                        type='text'
-                        id='modal-unit'
-                        name='unit'
-                        placeholder='ej: kg, L, unidad'
-                        value={selectedIngredient?.unit || ''}
-                        disabled={modalMode === 'view' || modalLoading}
-                        onChange={handleChange}
-                      />
-                      <small className='info-error'>{formErrors.unit}</small>
-                    </div>
-                    <div className='input-group'>
-                      <label htmlFor='modal-category'>Categoría <RequiredSpan /></label>
-                      <select
-                        className={formErrors.category ? 'input-error' : ''}
-                        name='category'
-                        id='modal-category'
-                        disabled={modalMode === 'view' || modalLoading}
-                        value={selectedIngredient?.category?.id || ''}
-                        onChange={handleChange}
-                      >
-                        <option value=''>Seleccionar categoría</option>
-                        {categoryOptions.map((option) => (
-                          <option
-                            key={option.value}
-                            value={option.value}
-                          >
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
-                      <small className='info-error'>{formErrors.category}</small>
-                    </div>
-                    <div className='input-group'>
-                      <label htmlFor='modal-stock'>Stock Actual</label>
-                      <input
-                        className={formErrors.stock ? 'input-error' : ''}
-                        type='number'
-                        id='modal-stock'
-                        name='stock'
-                        placeholder='ej: 100.50'
-                        min='0'
-                        step='0.01'
-                        value={selectedIngredient?.stock || ''}
-                        disabled={modalMode === 'view' || modalLoading}
-                        onChange={handleChange}
-                      />
-                      <small className='info-error'>{formErrors.stock}</small>
-                    </div>
-                    <div className='input-group'>
-                      <label htmlFor='modal-minimumStock'>Stock Mínimo</label>
-                      <input
-                        className={formErrors.minimumStock ? 'input-error' : ''}
-                        type='number'
-                        id='modal-minimumStock'
-                        name='minimumStock'
-                        placeholder='ej: 10.00'
-                        min='0'
-                        step='0.01'
-                        value={selectedIngredient?.minimumStock || ''}
-                        disabled={modalMode === 'view' || modalLoading}
-                        onChange={handleChange}
-                      />
-                      <small className='info-error'>{formErrors.minimumStock}</small>
-                    </div>
-                    <div className='input-group'>
-                      <label htmlFor='modal-status'>Estado <RequiredSpan /></label>
-                      <select
-                        className={formErrors.status ? 'input-error' : ''}
-                        name='status'
-                        id='modal-status'
-                        disabled={modalMode === 'view' || modalLoading}
-                        value={selectedIngredient?.status || ''}
-                        onChange={handleChange}
-                      >
-                        <option value=''>Seleccionar estado</option>
-                        {statusOptions.map((option) => (
-                          <option
-                            key={option.value}
-                            value={option.value}
-                          >
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
-                      <small className='info-error'>{formErrors.status}</small>
-                    </div>
+                )}
+              {modalMode === 'adjust' &&
+                (
+                  <><AdjustIcon /></>
+                )}
+              {(modalMode === 'view' || modalMode === 'edit' || modalMode === 'create') && (
+                <div className='modal-input-group'>
+                  <div className='input-group'>
+                    <label htmlFor='modal-name'>Nombre <RequiredSpan /></label>
+                    <input
+                      className={formErrors.name ? 'input-error' : ''}
+                      type='text'
+                      id='modal-name'
+                      name='name'
+                      value={selectedIngredient?.name || ''}
+                      disabled={modalMode === 'view' || modalLoading}
+                      onChange={handleChange}
+                    />
+                    <small className='info-error'>{formErrors.name}</small>
                   </div>
-                  )}
+                  <div className='input-group'>
+                    <label htmlFor='modal-unit'>Unidad de Medida <RequiredSpan /></label>
+                    <input
+                      className={formErrors.unit ? 'input-error' : ''}
+                      type='text'
+                      id='modal-unit'
+                      name='unit'
+                      placeholder='ej: kg, L, unidad'
+                      value={selectedIngredient?.unit || ''}
+                      disabled={modalMode === 'view' || modalLoading}
+                      onChange={handleChange}
+                    />
+                    <small className='info-error'>{formErrors.unit}</small>
+                  </div>
+                  <div className='input-group'>
+                    <label htmlFor='modal-category'>Categoría <RequiredSpan /></label>
+                    <select
+                      className={formErrors.category ? 'input-error' : ''}
+                      name='category'
+                      id='modal-category'
+                      disabled={modalMode === 'view' || modalLoading}
+                      value={selectedIngredient?.category?.id || ''}
+                      onChange={handleChange}
+                    >
+                      <option value=''>Seleccionar categoría</option>
+                      {categoryOptions.map((option) => (
+                        <option
+                          key={option.value}
+                          value={option.value}
+                        >
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                    <small className='info-error'>{formErrors.category}</small>
+                  </div>
+                  <div className='input-group'>
+                    <label htmlFor='modal-stock'>Stock Actual</label>
+                    <input
+                      className={formErrors.stock ? 'input-error' : ''}
+                      type='number'
+                      id='modal-stock'
+                      name='stock'
+                      placeholder='ej: 100.50'
+                      min='0'
+                      step='0.01'
+                      value={selectedIngredient?.stock || ''}
+                      disabled={modalMode === 'view' || modalLoading}
+                      onChange={handleChange}
+                    />
+                    <small className='info-error'>{formErrors.stock}</small>
+                  </div>
+                  <div className='input-group'>
+                    <label htmlFor='modal-minimumStock'>Stock Mínimo</label>
+                    <input
+                      className={formErrors.minimumStock ? 'input-error' : ''}
+                      type='number'
+                      id='modal-minimumStock'
+                      name='minimumStock'
+                      placeholder='ej: 10.00'
+                      min='0'
+                      step='0.01'
+                      value={selectedIngredient?.minimumStock || ''}
+                      disabled={modalMode === 'view' || modalLoading}
+                      onChange={handleChange}
+                    />
+                    <small className='info-error'>{formErrors.minimumStock}</small>
+                  </div>
+                  <div className='input-group'>
+                    <label htmlFor='modal-status'>Estado <RequiredSpan /></label>
+                    <select
+                      className={formErrors.status ? 'input-error' : ''}
+                      name='status'
+                      id='modal-status'
+                      disabled={modalMode === 'view' || modalLoading}
+                      value={selectedIngredient?.status || ''}
+                      onChange={handleChange}
+                    >
+                      <option value=''>Seleccionar estado</option>
+                      {statusOptions.map((option) => (
+                        <option
+                          key={option.value}
+                          value={option.value}
+                        >
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                    <small className='info-error'>{formErrors.status}</small>
+                  </div>
+                </div>
+              )}
             </CardBody>
             <CardFooter className='modal-footer'>
               <button type='button' onClick={handleCancel} disabled={modalLoading}>
