@@ -1,5 +1,6 @@
 import { Card, CardBody, CardHeader } from '@/components/Card'
 import { SearchIcon, TrashBinIcon } from '@/components/Icons'
+import { InputWithLabel } from '@/components/InputWithLabel'
 
 export function FilterSection ({
   title = 'Filtros',
@@ -65,6 +66,30 @@ export function FilterSection ({
         )
 
       case 'number':
+        if (name.toLowerCase().includes('price') || name.toLowerCase().includes('precio')) {
+          return (
+            <div key={name} className='filter-input'>
+              <label htmlFor={fieldId}>{label}:</label>
+              <InputWithLabel
+                label='S/.'
+                position='left'
+                type='number'
+                id={fieldId}
+                name={name}
+                placeholder={placeholder}
+                value={value}
+                onChange={handleChange}
+                disabled={disabled}
+                min={min}
+                max={max}
+                step={step || '0.01'}
+                className={hasError ? 'input-error' : ''}
+              />
+              {hasError && <small className='info-error'>{error}</small>}
+            </div>
+          )
+        }
+
         return (
           <div key={name} className='filter-input'>
             <label htmlFor={fieldId}>{label}:</label>
