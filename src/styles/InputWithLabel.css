@@ -1,0 +1,47 @@
+.input-with-label-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.input-with-label {
+  flex: 1;
+  width: 100%;
+}
+
+.input-label {
+  position: absolute;
+  color: #6b7280;
+  font-size: 0.875rem;
+  font-weight: 500;
+  pointer-events: none;
+  background-color: #f9fafb;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  white-space: nowrap;
+  display: inline-block;
+}
+
+.input-label.left {
+  left: 0.75rem;
+}
+
+.input-label.right {
+  right: 0.75rem;
+}
+
+.input-with-label-wrapper.left .input-with-label {
+  padding-left: calc(0.75rem + var(--label-width, 3rem) + 0.5rem);
+}
+
+.input-with-label-wrapper.right .input-with-label {
+  padding-right: calc(0.75rem + var(--label-width, 3rem) + 0.5rem);
+}
+
+@media (max-width: 640px) {
+  .input-label {
+    font-size: 0.8125rem;
+    padding: 0.2rem 0.4rem;
+  }
+}
