@@ -473,8 +473,41 @@ export function Dishes () {
     return true
   }
 
+  const validateFormBeforeSave = () => {
+    const errors = {}
+    let isValid = true
+
+    if (!selectedDish.name?.trim()) {
+      errors.name = 'El nombre es obligatorio'
+      isValid = false
+    }
+
+    if (!selectedDish.category?.id) {
+      errors.category = 'La categoría es obligatoria'
+      isValid = false
+    }
+
+    if (!selectedDish.price || parseFloat(selectedDish.price) <= 0) {
+      errors.price = 'El precio debe ser mayor a 0'
+      isValid = false
+    }
+
+    if (!selectedDish.status) {
+      errors.status = 'El estado es obligatorio'
+      isValid = false
+    }
+
+    setFormErrors(prev => ({ ...prev, ...errors }))
+    return isValid
+  }
+
   const handleSave = async () => {
     setModalLoading(true)
+
+    if (!validateFormBeforeSave()) {
+      setModalLoading(false)
+      return
+    }
 
     if (hasRecipe && !validateRecipeIngredients(recipeIngredients)) {
       setModalLoading(false)
