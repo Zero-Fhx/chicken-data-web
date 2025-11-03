@@ -11,9 +11,25 @@ export function InputWithLabel ({
   const wrapperRef = useRef(null)
 
   useEffect(() => {
-    if (labelRef.current && wrapperRef.current) {
-      const labelWidth = labelRef.current.offsetWidth
-      wrapperRef.current.style.setProperty('--label-width', `${labelWidth}px`)
+    const updateLabelWidth = () => {
+      if (labelRef.current && wrapperRef.current) {
+        const labelWidth = labelRef.current.offsetWidth
+        if (labelWidth > 0) {
+          wrapperRef.current.style.setProperty('--label-width', `${labelWidth}px`)
+        }
+      }
+    }
+
+    const timeoutId = setTimeout(updateLabelWidth, 0)
+
+    const observer = new ResizeObserver(updateLabelWidth)
+    if (labelRef.current) {
+      observer.observe(labelRef.current)
+    }
+
+    return () => {
+      clearTimeout(timeoutId)
+      observer.disconnect()
     }
   }, [label])
 
