@@ -1,0 +1,286 @@
+.recipe-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.recipe-section .separator {
+  margin: 0.25rem 0 0.5rem 0;
+}
+
+.recipe-checkbox-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+}
+
+.recipe-checkbox-container:has(input:disabled) {
+  background-color: #f3f4f6;
+  opacity: 0.8;
+}
+
+.recipe-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.recipe-checkbox-label:has(input:disabled) {
+  cursor: not-allowed;
+}
+
+.recipe-checkbox-label input[type="checkbox"] {
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+  accent-color: #2563eb;
+}
+
+.recipe-checkbox-label input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.checkbox-text {
+  color: #1f2937;
+}
+
+.loading-indicator {
+  color: #6b7280;
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+.recipe-info-text {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-left: 2rem;
+}
+
+.recipe-ingredients-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 0;
+}
+
+.recipe-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.recipe-header h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.btn-add-ingredient {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-add-ingredient:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.btn-add-ingredient:disabled {
+  display: none;
+}
+
+.recipe-loading,
+.recipe-empty {
+  padding: 2rem;
+  text-align: center;
+  background-color: #f9fafb;
+  border: 2px dashed #d1d5db;
+  border-radius: 0.5rem;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.recipe-ingredients-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.recipe-ingredient-item {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+  overflow: hidden;
+}
+
+.recipe-ingredient-item:not(:has(input:disabled)):hover {
+  background-color: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.recipe-ingredient-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s;
+}
+
+.recipe-ingredient-header:not(:has(input:disabled)):hover {
+  background-color: #f3f4f6;
+}
+
+.recipe-ingredient-toggle {
+  font-size: 0.875rem;
+  color: #6b7280;
+  min-width: 1rem;
+}
+
+.recipe-ingredient-title-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.recipe-ingredient-title {
+  font-weight: 500;
+  color: #374151;
+}
+
+.recipe-ingredient-summary {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 400;
+}
+
+.recipe-ingredient-remove {
+  background: none;
+  color: #374151;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  opacity: 0.6;
+  transition: all 0.2s;
+  border-radius: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.recipe-ingredient-remove:hover {
+  opacity: 1;
+  color: #dc2626;
+  background-color: #fee2e2;
+  transform: scale(1);
+}
+
+.recipe-ingredient-remove svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.recipe-ingredient-content {
+  padding: 1rem 1rem 1rem 2.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  animation: expandContent 0.2s ease-out;
+}
+
+@keyframes expandContent {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.recipe-ingredient-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.recipe-ingredient-field label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.recipe-ingredient-field input,
+.recipe-ingredient-field select {
+  background-color: #ffffff !important;
+}
+
+.quantity-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.quantity-input-wrapper input {
+  flex: 1;
+  padding-right: 3.5rem;
+}
+
+.quantity-input-wrapper .input-unit {
+  position: absolute;
+  right: 1rem;
+  color: #6b7280;
+  font-size: 0.875rem;
+  font-weight: 500;
+  pointer-events: none;
+  background-color: #f9fafb;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.recipe-error {
+  color: #dc2626;
+  font-size: 0.875rem;
+  padding: 0.5rem;
+  background-color: #fee2e2;
+  border-radius: 0.375rem;
+}
+
+@media (max-width: 640px) {
+  .recipe-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .btn-add-ingredient {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .recipe-ingredient-content {
+    padding: 0 0.5rem 0.5rem 1.5rem;
+  }
+}
