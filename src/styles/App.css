@@ -502,7 +502,6 @@ tbody tr:hover {
   }
 }
 
-/* Badge Cell - Estilo general para badges numericos */
 .badge-cell {
   display: flex;
   justify-content: center;
@@ -523,7 +522,6 @@ tbody tr:hover {
   }
 }
 
-/* Sistema de semaforo para stock */
 .stock-indicator {
   display: flex;
   justify-content: center;
