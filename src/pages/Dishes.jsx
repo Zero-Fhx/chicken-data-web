@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { useDebounce } from '@/hooks/useDebounce'
 import { useFetch } from '@/hooks/useFetch'
@@ -9,9 +9,11 @@ import { DeleteConfirmation } from '@/components/DeleteConfirmation'
 import { ErrorModal } from '@/components/ErrorModal'
 import { FilterSection } from '@/components/FilterSection'
 import { AddIcon, CancelIcon, CheckIcon, CubeIcon, DownloadIcon, EditIcon, SearchIcon, TrashBinIcon, ViewIcon } from '@/components/Icons'
+import { InputWithLabel } from '@/components/InputWithLabel'
 import { Loader } from '@/components/Loader'
 import { Modal } from '@/components/Modal'
 import { PageHeader } from '@/components/PageHeader'
+import { RecipeSection } from '@/components/RecipeSection'
 import { RequiredSpan } from '@/components/RequiredSpan'
 import { Separator } from '@/components/Separator'
 import { StatusBadge } from '@/components/StatusBadge'
@@ -22,6 +24,7 @@ import trunc from '@/services/trunc'
 
 const API_URL = `${API_ENDPOINTS.dishes}/`
 const API_CATEGORIES_URL = API_ENDPOINTS.dishCategories
+const API_INGREDIENTS_URL = API_ENDPOINTS.ingredients
 
 const initialFilters = {
   name: '',
@@ -40,7 +43,8 @@ const initialFormErrors = {
   name: '',
   category: '',
   price: '',
-  status: ''
+  status: '',
+  ingredients: ''
 }
 
 export function Dishes () {
@@ -59,6 +63,14 @@ export function Dishes () {
   const [modalError, setModalError] = useState(null)
 
   const [formErrors, setFormErrors] = useState(initialFormErrors)
+
+  const errorModalRef = useRef(null)
+
+  const [hasRecipe, setHasRecipe] = useState(false)
+  const [recipeIngredients, setRecipeIngredients] = useState([])
+  const [allIngredients, setAllIngredients] = useState([])
+  const [ingredientsLoading, setIngredientsLoading] = useState(true)
+  const [recipeLoading, setRecipeLoading] = useState(false)
 
   const { data: categoriesData, loading: categoriesLoading } = useFetch(API_CATEGORIES_URL)
   const categories = categoriesData?.data || []
@@ -232,11 +244,53 @@ export function Dishes () {
   const { data: dishes, meta } = data || {}
 
   useEffect(() => {
+    const fetchAllIngredients = async () => {
+      try {
+        setIngredientsLoading(true)
+        let allFetchedIngredients = []
+        let currentPage = 1
+        let hasNextPage = true
+
+        while (hasNextPage) {
+          const response = await fetch(`${API_INGREDIENTS_URL}?page=${currentPage}&pageSize=100`)
+          const result = await response.json()
+
+          if (result.success && result.data) {
+            allFetchedIngredients = [...allFetchedIngredients, ...result.data]
+            hasNextPage = result.meta?.pagination?.hasNextPage || false
+            currentPage++
+          } else {
+            break
+          }
+        }
+
+        allFetchedIngredients.sort((a, b) => a.name.localeCompare(b.name))
+        setAllIngredients(allFetchedIngredients)
+      } catch (error) {
+        console.error('Error fetching ingredients:', error)
+      } finally {
+        setIngredientsLoading(false)
+      }
+    }
+
+    fetchAllIngredients()
+  }, [])
+
+  useEffect(() => {
     if (error && error.status === 400 && page > 1) {
       setError(null)
       setPage(1)
     }
   }, [error, page, setError])
+
+  useEffect(() => {
+    if (modalError && errorModalRef.current) {
+      errorModalRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      })
+    }
+  }, [modalError])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -291,6 +345,42 @@ export function Dishes () {
     setSelectedDish(dish)
     setModalMode(mode)
     setIsModalOpen(true)
+
+    if (mode === 'view' || mode === 'edit') {
+      fetchDishRecipe(dish.id)
+    } else {
+      setHasRecipe(false)
+      setRecipeIngredients([])
+    }
+  }
+
+  const fetchDishRecipe = async (dishId) => {
+    try {
+      setRecipeLoading(true)
+      const response = await fetch(`${API_URL}${dishId}/recipe`)
+      const result = await response.json()
+
+      if (result.success && result.data && result.data.length > 0) {
+        const formattedIngredients = result.data.map((item) => ({
+          id: item.id,
+          ingredientId: item.ingredient.id,
+          name: item.ingredient.name,
+          unit: item.ingredient.unit,
+          quantityUsed: trunc(item.quantityUsed.toString(), 2)
+        }))
+        setRecipeIngredients(formattedIngredients)
+        setHasRecipe(true)
+      } else {
+        setRecipeIngredients([])
+        setHasRecipe(false)
+      }
+    } catch (error) {
+      console.error('Error fetching dish recipe:', error)
+      setRecipeIngredients([])
+      setHasRecipe(false)
+    } finally {
+      setRecipeLoading(false)
+    }
   }
 
   const handleCreateNew = () => {
@@ -303,6 +393,8 @@ export function Dishes () {
     })
     setModalMode('create')
     setIsModalOpen(true)
+    setHasRecipe(false)
+    setRecipeIngredients([])
   }
 
   const handleExport = () => {
@@ -321,8 +413,73 @@ export function Dishes () {
     setModalError(null)
   }
 
-  const handleSave = () => {
+  const handleRecipeToggle = (checked) => {
+    setHasRecipe(checked)
+    if (!checked) {
+      setRecipeIngredients([])
+      setFormErrors(prev => ({ ...prev, ingredients: '' }))
+    }
+  }
+
+  const handleRecipeIngredientsChange = (newIngredients) => {
+    setRecipeIngredients(newIngredients)
+
+    setFormErrors(prev => ({ ...prev, ingredients: '' }))
+  }
+
+  const validateRecipeIngredients = (ingredients) => {
+    if (!hasRecipe) {
+      setFormErrors(prev => ({ ...prev, ingredients: '' }))
+      return true
+    }
+
+    const validIngredients = ingredients.filter(
+      ing => ing.ingredientId && ing.quantityUsed && parseFloat(ing.quantityUsed) > 0
+    )
+
+    if (validIngredients.length === 0) {
+      setFormErrors(prev => ({
+        ...prev,
+        ingredients: 'Debes agregar al menos un ingrediente válido con cantidad mayor a 0'
+      }))
+      return false
+    }
+
+    const hasIncompleteIngredients = ingredients.some(
+      ing => (ing.ingredientId || ing.quantityUsed) &&
+             (!ing.ingredientId || !ing.quantityUsed || parseFloat(ing.quantityUsed) <= 0)
+    )
+
+    if (hasIncompleteIngredients) {
+      setFormErrors(prev => ({
+        ...prev,
+        ingredients: 'Todos los ingredientes deben tener datos completos (ingrediente seleccionado y cantidad mayor a 0)'
+      }))
+      return false
+    }
+
+    const ingredientIds = validIngredients.map(ing => ing.ingredientId)
+    const hasDuplicates = ingredientIds.length !== new Set(ingredientIds).size
+
+    if (hasDuplicates) {
+      setFormErrors(prev => ({
+        ...prev,
+        ingredients: 'No puedes agregar el mismo ingrediente más de una vez'
+      }))
+      return false
+    }
+
+    setFormErrors(prev => ({ ...prev, ingredients: '' }))
+    return true
+  }
+
+  const handleSave = async () => {
     setModalLoading(true)
+
+    if (hasRecipe && !validateRecipeIngredients(recipeIngredients)) {
+      setModalLoading(false)
+      return
+    }
 
     const dishData = {
       name: selectedDish.name,
@@ -348,7 +505,40 @@ export function Dishes () {
         }
         return response.json()
       })
-      .then(() => {
+      .then(async (result) => {
+        const dishId = result.data?.id || selectedDish.id
+
+        if (hasRecipe) {
+          const ingredientsPayload = {
+            ingredients: recipeIngredients
+              .filter(ing => ing.ingredientId && ing.quantityUsed && parseFloat(ing.quantityUsed) > 0)
+              .map(ing => ({
+                ingredient_id: ing.ingredientId,
+                quantity_used: parseFloat(ing.quantityUsed)
+              }))
+          }
+
+          const recipeResponse = await fetch(`${API_URL}${dishId}/recipe`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(ingredientsPayload)
+          })
+
+          if (!recipeResponse.ok) {
+            throw new Error('Error al guardar la receta del plato')
+          }
+        } else {
+          await fetch(`${API_URL}${dishId}/recipe`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ ingredients: [] })
+          })
+        }
+
         refetch()
         setModalSuccess(modalMode === 'create' ? 'create' : 'save')
         setTimeout(() => {
@@ -396,6 +586,9 @@ export function Dishes () {
     setModalLoading(false)
     setModalSuccess(null)
     setModalError(null)
+    setHasRecipe(false)
+    setRecipeIngredients([])
+    setRecipeLoading(false)
   }
 
   return (
@@ -522,7 +715,9 @@ export function Dishes () {
                 </div>
               )}
               {modalError && (
-                <ErrorModal message={modalError} onClose={handleCloseError} />
+                <div ref={errorModalRef}>
+                  <ErrorModal message={modalError} onClose={handleCloseError} />
+                </div>
               )}
               {modalMode === 'delete' && (
                 <DeleteConfirmation
@@ -588,7 +783,9 @@ export function Dishes () {
                   </div>
                   <div className='input-group'>
                     <label htmlFor='modal-price'>Precio <RequiredSpan /></label>
-                    <input
+                    <InputWithLabel
+                      label='S/.'
+                      position='left'
                       className={formErrors.price ? 'input-error' : ''}
                       type='number'
                       id='modal-price'
@@ -596,6 +793,8 @@ export function Dishes () {
                       value={selectedDish?.price || ''}
                       disabled={modalMode === 'view' || modalLoading}
                       onChange={handleChange}
+                      min='0'
+                      step='0.01'
                     />
                     <small className='info-error'>{formErrors.price}</small>
                   </div>
@@ -621,6 +820,21 @@ export function Dishes () {
                     </select>
                     <small className='info-error'>{formErrors.status}</small>
                   </div>
+
+                  <RecipeSection
+                    hasRecipe={hasRecipe}
+                    onRecipeToggle={handleRecipeToggle}
+                    ingredients={recipeIngredients}
+                    onIngredientsChange={handleRecipeIngredientsChange}
+                    availableIngredients={allIngredients}
+                    ingredientsLoading={ingredientsLoading || recipeLoading}
+                    disabled={modalMode === 'view' || modalLoading || recipeLoading}
+                  />
+                  {formErrors.ingredients && (
+                    <small className='info-error' style={{ display: 'block', marginTop: '0.5rem' }}>
+                      {formErrors.ingredients}
+                    </small>
+                  )}
                 </div>
               )}
             </CardBody>
@@ -640,7 +854,13 @@ export function Dishes () {
                   type='button'
                   className='primary'
                   onClick={handleSave}
-                  disabled={modalLoading || Object.values(formErrors).some((error) => error !== '') || !selectedDish?.name || !selectedDish?.price}
+                  disabled={
+                    modalLoading ||
+                    Object.values(formErrors).some((error) => error !== '') ||
+                    !selectedDish?.name ||
+                    !selectedDish?.price ||
+                    (hasRecipe && recipeIngredients.filter(ing => ing.ingredientId && ing.quantityUsed && parseFloat(ing.quantityUsed) > 0).length === 0)
+                  }
                 >
                   <AddIcon />
                   {modalMode === 'create' ? 'Crear Plato' : 'Guardar Cambios'}
