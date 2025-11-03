@@ -253,7 +253,7 @@ function RecipeIngredientItem ({
               value={ingredient.quantityUsed || ''}
               onChange={(e) => onChange(index, 'quantityUsed', e.target.value)}
               disabled={disabled}
-              step='0.01'
+              step='1'
               min='0'
               placeholder='0.00'
               className={!ingredient.quantityUsed || parseFloat(ingredient.quantityUsed) <= 0 ? 'input-error' : ''}
