@@ -798,7 +798,7 @@ export function Ingredients () {
                       name='stock'
                       placeholder='ej: 100.50'
                       min='0'
-                      step='0.01'
+                      step='1'
                       value={selectedIngredient?.stock || ''}
                       disabled={modalMode === 'view' || modalLoading}
                       onChange={handleChange}
@@ -814,7 +814,7 @@ export function Ingredients () {
                       name='minimumStock'
                       placeholder='ej: 10.00'
                       min='0'
-                      step='0.01'
+                      step='1'
                       value={selectedIngredient?.minimumStock || ''}
                       disabled={modalMode === 'view' || modalLoading}
                       onChange={handleChange}

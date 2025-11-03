@@ -794,7 +794,7 @@ export function Dishes () {
                       disabled={modalMode === 'view' || modalLoading}
                       onChange={handleChange}
                       min='0'
-                      step='0.01'
+                      step='1'
                     />
                     <small className='info-error'>{formErrors.price}</small>
                   </div>
