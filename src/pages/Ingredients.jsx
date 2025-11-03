@@ -9,7 +9,7 @@ import { DataTable } from '@/components/DataTable'
 import { DeleteConfirmation } from '@/components/DeleteConfirmation'
 import { ErrorModal } from '@/components/ErrorModal'
 import { FilterSection } from '@/components/FilterSection'
-import { AddIcon, AdjustIcon, CancelIcon, CheckIcon, CubeIcon, DownloadIcon, EditIcon, SearchIcon, TrashBinIcon, ViewIcon } from '@/components/Icons'
+import { AddIcon, AdjustIcon, CancelIcon, CheckIcon, CubeAltIcon, DownloadIcon, EditIcon, SearchIcon, TrashBinIcon, ViewIcon } from '@/components/Icons'
 import { Loader } from '@/components/Loader'
 import { Modal } from '@/components/Modal'
 import { PageHeader } from '@/components/PageHeader'
@@ -630,7 +630,7 @@ export function Ingredients () {
       <section>
         <DataTable
           title='Lista de Ingredientes'
-          icon={CubeIcon}
+          icon={CubeAltIcon}
           columns={tableColumns}
           data={ingredients}
           loading={loading}
@@ -648,7 +648,7 @@ export function Ingredients () {
           refreshLabel='Recargar Ingredientes'
           itemName='ingrediente'
           itemNamePlural='ingredientes'
-          emptyIcon={CubeIcon}
+          emptyIcon={CubeAltIcon}
           emptyMessage='No se encontraron ingredientes'
           emptyDescription='Intenta ajustar los filtros o crear un nuevo ingrediente'
           actions={tableActions}
