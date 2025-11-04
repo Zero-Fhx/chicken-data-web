@@ -5,7 +5,8 @@ import '@/styles/DeleteConfirmation.css'
 export function DeleteConfirmation ({
   title = '¿Estás seguro de que deseas eliminar este elemento?',
   description = 'Esta acción no se puede deshacer. El elemento será eliminado permanentemente.',
-  details = []
+  details = [],
+  detailsTable = null
 }) {
   return (
     <div className='delete-confirmation'>
@@ -28,6 +29,12 @@ export function DeleteConfirmation ({
           </div>
         ))}
       </div>
+
+      {detailsTable && (
+        <div className='details-table-container'>
+          {detailsTable}
+        </div>
+      )}
     </div>
   )
 }

@@ -127,6 +127,21 @@ export function FilterSection ({
           </div>
         )
 
+      case 'date':
+        return (
+          <div key={name} className='filter-input'>
+            <label htmlFor={fieldId}>{label}:</label>
+            <input
+              type='date'
+              id={fieldId}
+              name={name}
+              value={value}
+              onChange={handleChange}
+              disabled={disabled}
+            />
+          </div>
+        )
+
       case 'text':
       default:
         return (

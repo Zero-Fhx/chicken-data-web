@@ -469,6 +469,7 @@ export function Suppliers () {
                         type='text'
                         id='modal-name'
                         name='name'
+                        placeholder='Ingrese el nombre del proveedor'
                         value={selectedSupplier?.name || ''}
                         disabled={modalMode === 'view' || modalLoading}
                         onChange={handleChange}
@@ -482,6 +483,7 @@ export function Suppliers () {
                         type='text'
                         id='modal-ruc'
                         name='ruc'
+                        placeholder='Ingrese el RUC (opcional)'
                         maxLength={20}
                         value={selectedSupplier?.ruc || ''}
                         disabled={modalMode === 'view' || modalLoading}
@@ -496,6 +498,7 @@ export function Suppliers () {
                         type='text'
                         id='modal-contactPerson'
                         name='contactPerson'
+                        placeholder='Ingrese el nombre de la persona de contacto'
                         maxLength={100}
                         value={selectedSupplier?.contactPerson || ''}
                         disabled={modalMode === 'view' || modalLoading}
@@ -510,6 +513,7 @@ export function Suppliers () {
                         type='text'
                         id='modal-phone'
                         name='phone'
+                        placeholder='Ingrese el teléfono'
                         maxLength={20}
                         value={selectedSupplier?.phone || ''}
                         disabled={modalMode === 'view' || modalLoading}
@@ -524,6 +528,7 @@ export function Suppliers () {
                         type='email'
                         id='modal-email'
                         name='email'
+                        placeholder='Ingrese el email'
                         value={selectedSupplier?.email || ''}
                         disabled={modalMode === 'view' || modalLoading}
                         onChange={handleChange}
@@ -536,6 +541,7 @@ export function Suppliers () {
                         className={formErrors.address ? 'input-error' : ''}
                         id='modal-address'
                         name='address'
+                        placeholder='Ingrese la dirección'
                         maxLength={150}
                         value={selectedSupplier?.address || ''}
                         disabled={modalMode === 'view' || modalLoading}
@@ -553,7 +559,6 @@ export function Suppliers () {
                         value={selectedSupplier?.status || ''}
                         onChange={handleChange}
                       >
-                        <option value=''>Seleccionar estado</option>
                         {statusOptions.map((option) => (
                           <option
                             key={option.value}
