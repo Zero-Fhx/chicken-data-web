@@ -1,0 +1,81 @@
+.details-table-wrapper {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.details-table-wrapper.with-margin {
+  margin-top: 0.5rem;
+}
+
+.details-table-scroll {
+  overflow: auto;
+}
+
+.details-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.details-table thead {
+  background: #f3f4f6;
+}
+
+.details-table th {
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.details-table th.align-left {
+  text-align: left;
+  min-width: 120px;
+}
+
+.details-table th.align-center {
+  text-align: center;
+}
+
+.details-table th.col-quantity {
+  width: 100px;
+}
+
+.details-table th.col-price,
+.details-table th.col-discount,
+.details-table th.col-subtotal {
+  width: 120px;
+}
+
+.details-table tbody tr {
+  border-top: 1px solid #e5e7eb;
+}
+
+.details-table td {
+  padding: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.details-table td.align-left {
+  text-align: left;
+}
+
+.details-table td.align-center {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.details-table td.subtotal {
+  font-weight: 600;
+}
+
+.details-loading {
+  padding: 2rem;
+  text-align: center;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+}
+
+.details-loading.with-margin {
+  margin-top: 0.5rem;
+}

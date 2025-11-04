@@ -3,6 +3,7 @@
   border-radius: 0.75rem;
   background-color: #ffffff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
 .card-header {
@@ -13,7 +14,6 @@
   padding: 1.5rem 2rem;
   border-bottom: 1px solid #eee;
   background-color: #f9fafb;
-  border-radius: 0.75rem 0.75rem 0 0;
 }
 
 .card-body {
