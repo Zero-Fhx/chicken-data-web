@@ -21,6 +21,7 @@ import { TestStatePanel } from '@/components/TestStatePanel'
 import '@/styles/DetailsTable.css'
 
 import API_ENDPOINTS from '@/services/api'
+import { parseLocalDate } from '@/services/dateUtils'
 import trunc from '@/services/trunc'
 
 const API_URL = `${API_ENDPOINTS.sales}/`
@@ -106,7 +107,7 @@ export function Sales () {
       label: 'Fecha',
       align: 'center',
       render: (row) => {
-        const date = new Date(row.saleDate)
+        const date = parseLocalDate(row.saleDate)
         return date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })
       }
     },
@@ -693,7 +694,7 @@ export function Sales () {
                     {
                       label: 'Fecha',
                       value: selectedSale?.saleDate
-                        ? new Date(selectedSale.saleDate).toLocaleDateString('es-ES', {
+                        ? parseLocalDate(selectedSale.saleDate).toLocaleDateString('es-ES', {
                           day: '2-digit',
                           month: '2-digit',
                           year: 'numeric'

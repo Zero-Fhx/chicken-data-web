@@ -19,6 +19,7 @@ import { TestStatePanel } from '@/components/TestStatePanel'
 
 import API_ENDPOINTS from '@/services/api'
 
+import { parseLocalDate } from '@/services/dateUtils'
 import trunc from '@/services/trunc'
 import '@/styles/DetailsTable.css'
 
@@ -117,7 +118,7 @@ export function Purchases () {
       label: 'Fecha',
       align: 'center',
       render: (row) => {
-        const date = new Date(row.purchaseDate)
+        const date = parseLocalDate(row.purchaseDate)
         return date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })
       }
     },
@@ -728,7 +729,7 @@ export function Purchases () {
                     {
                       label: 'Fecha',
                       value: selectedPurchase?.purchaseDate
-                        ? new Date(selectedPurchase.purchaseDate).toLocaleDateString('es-ES', {
+                        ? parseLocalDate(selectedPurchase.purchaseDate).toLocaleDateString('es-ES', {
                           day: '2-digit',
                           month: '2-digit',
                           year: 'numeric'
