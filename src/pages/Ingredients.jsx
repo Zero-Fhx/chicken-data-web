@@ -10,6 +10,7 @@ import { DeleteConfirmation } from '@/components/DeleteConfirmation'
 import { ErrorModal } from '@/components/ErrorModal'
 import { FilterSection } from '@/components/FilterSection'
 import { AddIcon, AdjustIcon, CancelIcon, CheckIcon, CubeAltIcon, DownloadIcon, EditIcon, SearchIcon, TrashBinIcon, ViewIcon } from '@/components/Icons'
+import { InputWithLabel } from '@/components/InputWithLabel'
 import { Loader } from '@/components/Loader'
 import { Modal } from '@/components/Modal'
 import { PageHeader } from '@/components/PageHeader'
@@ -798,7 +799,9 @@ export function Ingredients () {
                   </div>
                   <div className='input-group'>
                     <label htmlFor='modal-stock'>Stock Actual</label>
-                    <input
+                    <InputWithLabel
+                      label={selectedIngredient?.unit || ''}
+                      position='right'
                       className={formErrors.stock ? 'input-error' : ''}
                       type='number'
                       id='modal-stock'
@@ -814,7 +817,9 @@ export function Ingredients () {
                   </div>
                   <div className='input-group'>
                     <label htmlFor='modal-minimumStock'>Stock Mínimo</label>
-                    <input
+                    <InputWithLabel
+                      label={selectedIngredient?.unit || ''}
+                      position='right'
                       className={formErrors.minimumStock ? 'input-error' : ''}
                       type='number'
                       id='modal-minimumStock'
