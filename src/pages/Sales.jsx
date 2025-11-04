@@ -24,6 +24,8 @@ import API_ENDPOINTS from '@/services/api'
 import { parseLocalDate } from '@/services/dateUtils'
 import trunc from '@/services/trunc'
 
+const ENVIRONMENT = import.meta.env.VITE_ENV || 'development'
+
 const API_URL = `${API_ENDPOINTS.sales}/`
 const API_DISHES_URL = API_ENDPOINTS.dishes
 
@@ -562,14 +564,18 @@ export function Sales () {
 
   return (
     <>
-      <TestStatePanel
-        loading={loading}
-        setLoading={setLoading}
-        error={error}
-        setError={setError}
-      />
+      {ENVIRONMENT === 'development' && (
+        <>
+          <TestStatePanel
+            loading={loading}
+            setLoading={setLoading}
+            error={error}
+            setError={setError}
+          />
 
-      <Separator />
+          <Separator />
+        </>
+      )}
 
       <PageHeader
         title='Gestión de Ventas'

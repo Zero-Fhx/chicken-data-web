@@ -23,6 +23,8 @@ import { parseLocalDate } from '@/services/dateUtils'
 import trunc from '@/services/trunc'
 import '@/styles/DetailsTable.css'
 
+const ENVIRONMENT = import.meta.env.VITE_ENV || 'development'
+
 const API_URL = `${API_ENDPOINTS.purchases}/`
 const API_SUPPLIERS_URL = API_ENDPOINTS.suppliers
 const API_INGREDIENTS_URL = API_ENDPOINTS.ingredients
@@ -597,14 +599,18 @@ export function Purchases () {
 
   return (
     <>
-      <TestStatePanel
-        loading={loading}
-        setLoading={setLoading}
-        error={error}
-        setError={setError}
-      />
+      {ENVIRONMENT === 'development' && (
+        <>
+          <TestStatePanel
+            loading={loading}
+            setLoading={setLoading}
+            error={error}
+            setError={setError}
+          />
 
-      <Separator />
+          <Separator />
+        </>
+      )}
 
       <PageHeader
         title='Gestión de Compras'

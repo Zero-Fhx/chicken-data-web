@@ -22,6 +22,8 @@ import { TestStatePanel } from '@/components/TestStatePanel'
 import API_ENDPOINTS from '@/services/api'
 import trunc from '@/services/trunc'
 
+const ENVIRONMENT = import.meta.env.VITE_ENV || 'development'
+
 const API_URL = `${API_ENDPOINTS.dishes}/`
 const API_CATEGORIES_URL = API_ENDPOINTS.dishCategories
 const API_INGREDIENTS_URL = API_ENDPOINTS.ingredients
@@ -633,14 +635,18 @@ export function Dishes () {
 
   return (
     <>
-      <TestStatePanel
-        loading={loading}
-        setLoading={setLoading}
-        error={error}
-        setError={setError}
-      />
+      {ENVIRONMENT === 'development' && (
+        <>
+          <TestStatePanel
+            loading={loading}
+            setLoading={setLoading}
+            error={error}
+            setError={setError}
+          />
 
-      <Separator />
+          <Separator />
+        </>
+      )}
 
       <PageHeader
         title='Gestión de Platos'
