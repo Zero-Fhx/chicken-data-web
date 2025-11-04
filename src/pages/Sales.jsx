@@ -494,8 +494,6 @@ export function Sales () {
       }))
     }
 
-    console.log('🛒 Datos de venta a enviar (POST):', saleData)
-
     fetch(API_URL, {
       method: 'POST',
       headers: {

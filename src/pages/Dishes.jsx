@@ -541,8 +541,6 @@ export function Dishes () {
     const url = modalMode === 'create' ? API_URL : `${API_URL}${selectedDish.id}`
     const method = modalMode === 'create' ? 'POST' : 'PATCH'
 
-    console.log(`🍽️ Datos de platillo a enviar (${method}):`, dishData)
-
     fetch(url, {
       method,
       headers: {
@@ -567,8 +565,6 @@ export function Dishes () {
               quantityUsed: parseFloat(ing.quantityUsed)
             }))
         }
-
-        console.log('🍽️ Datos de receta a enviar (PUT):', ingredientsPayload)
 
         const recipeResponse = await fetch(`${API_URL}${dishId}/recipe`, {
           method: 'PUT',

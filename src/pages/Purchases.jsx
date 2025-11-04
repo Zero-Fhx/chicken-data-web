@@ -529,8 +529,6 @@ export function Purchases () {
       }))
     }
 
-    console.log('📦 Datos de compra a enviar (POST):', purchaseData)
-
     fetch(API_URL, {
       method: 'POST',
       headers: {
