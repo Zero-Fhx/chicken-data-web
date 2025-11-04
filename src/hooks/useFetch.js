@@ -41,9 +41,7 @@ export function useFetch (url) {
           setData(result)
         }
       } catch (error) {
-        if (error.name === 'AbortError') {
-          console.log('Fetch abortado exitosamente.')
-        } else {
+        if (error.name !== 'AbortError') {
           if (!signal.aborted) {
             setError({
               message: error.message || 'Error de red',
