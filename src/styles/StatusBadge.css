@@ -15,3 +15,11 @@
 .badge-status.inactive {
   background-color: #6b7280;
 }
+
+.badge-status.completed {
+  background-color: #10b981;
+}
+
+.badge-status.cancelled {
+  background-color: #ef4444;
+}

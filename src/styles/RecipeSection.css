@@ -101,6 +101,7 @@
 
 .btn-add-ingredient:hover:not(:disabled) {
   background-color: #2563eb;
+  transform: scale(1);
 }
 
 .btn-add-ingredient:disabled {
@@ -209,6 +210,10 @@
   animation: expandContent 0.2s ease-out;
 }
 
+.recipe-ingredient-content.closing {
+  animation: collapseContent 0.2s ease-in;
+}
+
 @keyframes expandContent {
   from {
     opacity: 0;
@@ -217,6 +222,17 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes collapseContent {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
   }
 }
 
