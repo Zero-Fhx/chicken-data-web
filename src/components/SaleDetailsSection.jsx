@@ -1,0 +1,357 @@
+import trunc from '@/services/trunc'
+import { useEffect, useState } from 'react'
+import '../styles/RecipeSection.css'
+import { AddIcon, TrashBinIcon } from './Icons'
+import { InputWithLabel } from './InputWithLabel'
+import { Loader } from './Loader'
+import { RequiredSpan } from './RequiredSpan'
+
+export function SaleDetailsSection ({
+  details,
+  onDetailsChange,
+  availableDishes,
+  dishesLoading,
+  detailsLoading = false,
+  disabled = false
+}) {
+  const [expandedDetails, setExpandedDetails] = useState({})
+  const [touchedFields, setTouchedFields] = useState({})
+  const [closingDetails, setClosingDetails] = useState({})
+
+  useEffect(() => {
+    if (details.length > 0 && Object.keys(expandedDetails).length === 0) {
+      const initialExpanded = {}
+      details.forEach((_, index) => {
+        initialExpanded[index] = true
+      })
+      setExpandedDetails(initialExpanded)
+    }
+  }, [details, expandedDetails])
+
+  const handleToggleExpand = (index) => {
+    if (expandedDetails[index]) {
+      setClosingDetails(prev => ({ ...prev, [index]: true }))
+
+      setTimeout(() => {
+        setExpandedDetails(prev => ({
+          ...prev,
+          [index]: false
+        }))
+        setClosingDetails(prev => ({ ...prev, [index]: false }))
+      }, 200)
+    } else {
+      setExpandedDetails(prev => ({
+        ...prev,
+        [index]: true
+      }))
+    }
+  }
+
+  const handleAddDetail = () => {
+    const hasIncompleteDetail = details.some(
+      detail => !detail.dish_id || !detail.quantity || parseFloat(detail.quantity) <= 0 || !detail.unit_price || parseFloat(detail.unit_price) < 0
+    )
+
+    if (hasIncompleteDetail) {
+      return
+    }
+
+    const newDetails = [
+      ...details,
+      {
+        dish_id: '',
+        dishName: '',
+        quantity: 1,
+        unit_price: '',
+        discount: 0,
+        subtotal: '0.00'
+      }
+    ]
+    onDetailsChange(newDetails)
+
+    setExpandedDetails(prev => ({
+      ...prev,
+      [details.length]: true
+    }))
+  }
+
+  const handleRemoveDetail = (index) => {
+    const newDetails = details.filter((_, i) => i !== index)
+    onDetailsChange(newDetails)
+
+    const newExpanded = {}
+    Object.keys(expandedDetails).forEach(key => {
+      const keyIndex = parseInt(key)
+      if (keyIndex < index) {
+        newExpanded[keyIndex] = expandedDetails[keyIndex]
+      } else if (keyIndex > index) {
+        newExpanded[keyIndex - 1] = expandedDetails[keyIndex]
+      }
+    })
+    setExpandedDetails(newExpanded)
+
+    const newTouched = {}
+    Object.keys(touchedFields).forEach(key => {
+      const [touchedIndex, field] = key.split('-')
+      const touchedIndexNum = parseInt(touchedIndex)
+      if (touchedIndexNum < index) {
+        newTouched[key] = touchedFields[key]
+      } else if (touchedIndexNum > index) {
+        newTouched[`${touchedIndexNum - 1}-${field}`] = touchedFields[key]
+      }
+    })
+    setTouchedFields(newTouched)
+  }
+
+  const handleDetailChange = (index, field, value) => {
+    const newDetails = [...details]
+
+    if (field === 'dish_id') {
+      const selectedDish = availableDishes.find(d => d.id === parseInt(value))
+      newDetails[index].dish_id = value
+      if (selectedDish) {
+        newDetails[index].unit_price = trunc(selectedDish.price.toString(), 2)
+        newDetails[index].dishName = selectedDish.name
+      }
+    } else if (field === 'quantity') {
+      const intValue = parseInt(value) || ''
+      newDetails[index].quantity = intValue
+    } else if (field === 'unit_price' || field === 'discount') {
+      const formattedValue = value === '' ? '' : trunc(value, 2)
+      newDetails[index][field] = formattedValue
+    }
+
+    const quantity = parseFloat(newDetails[index].quantity) || 0
+    const unitPrice = parseFloat(newDetails[index].unit_price) || 0
+    const discount = parseFloat(newDetails[index].discount) || 0
+    newDetails[index].subtotal = trunc(((quantity * unitPrice) - discount).toString(), 2)
+
+    onDetailsChange(newDetails)
+  }
+
+  const handleFieldTouch = (index, field) => {
+    setTouchedFields(prev => ({
+      ...prev,
+      [`${index}-${field}`]: true
+    }))
+  }
+
+  return (
+    <div className='recipe-section'>
+      <div className='recipe-ingredients-container'>
+        <div className='recipe-header'>
+          <h4>Platillos Vendidos <RequiredSpan /></h4>
+          <button
+            type='button'
+            className='btn-add-ingredient'
+            onClick={handleAddDetail}
+            disabled={disabled || dishesLoading}
+          >
+            <AddIcon width={16} height={16} />
+            Agregar Platillo
+          </button>
+        </div>
+
+        {dishesLoading && (
+          <div className='recipe-loading'>
+            <Loader width={32} height={32} />
+          </div>
+        )}
+
+        {detailsLoading && !dishesLoading && (
+          <div className='recipe-loading'>
+            <Loader width={32} height={32} />
+          </div>
+        )}
+
+        {!dishesLoading && !detailsLoading && details.length === 0 && (
+          <div className='recipe-empty'>
+            <span>No hay platillos agregados. Haz clic en "Agregar Platillo" para comenzar.</span>
+          </div>
+        )}
+
+        {!dishesLoading && !detailsLoading && details.length > 0 && (
+          <div className='recipe-ingredients-list'>
+            {details.map((detail, index) => (
+              <SaleDetailItem
+                key={index}
+                detail={detail}
+                index={index}
+                isExpanded={expandedDetails[index] || false}
+                isClosing={closingDetails[index] || false}
+                onToggleExpand={handleToggleExpand}
+                onRemove={handleRemoveDetail}
+                onChange={handleDetailChange}
+                onFieldTouch={handleFieldTouch}
+                touchedFields={touchedFields}
+                availableDishes={availableDishes}
+                disabled={disabled}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function SaleDetailItem ({
+  detail,
+  index,
+  isExpanded,
+  isClosing,
+  onToggleExpand,
+  onRemove,
+  onChange,
+  onFieldTouch,
+  touchedFields,
+  availableDishes,
+  disabled
+}) {
+  const hasValidData = detail.dishName && detail.quantity && detail.unit_price !== ''
+
+  const summaryText = hasValidData
+    ? (() => {
+        const quantity = detail.quantity
+        const price = `S/. ${parseFloat(detail.unit_price).toFixed(2)}`
+        const discount = parseFloat(detail.discount) || 0
+        const subtotal = `S/. ${parseFloat(detail.subtotal).toFixed(2)}`
+
+        if (discount > 0) {
+          return `${quantity} x ${price} - S/. ${discount.toFixed(2)} = ${subtotal}`
+        } else {
+          return `${quantity} x ${price} = ${subtotal}`
+        }
+      })()
+    : null
+
+  const isTouched = (field) => touchedFields[`${index}-${field}`] || false
+
+  return (
+    <div className='recipe-ingredient-item'>
+      <div
+        className='recipe-ingredient-header'
+        onClick={() => onToggleExpand(index)}
+      >
+        <span className='recipe-ingredient-toggle'>
+          {isExpanded ? '▼' : '▶'}
+        </span>
+        <div className='recipe-ingredient-title-wrapper'>
+          <span className='recipe-ingredient-title'>
+            {hasValidData ? detail.dishName : 'Nuevo platillo - Configura los datos'}
+          </span>
+          {!isExpanded && summaryText && (
+            <span className='recipe-ingredient-summary'>{summaryText}</span>
+          )}
+        </div>
+        {!disabled && (
+          <button
+            type='button'
+            className='recipe-ingredient-remove'
+            onClick={(e) => {
+              e.stopPropagation()
+              onRemove(index)
+            }}
+            title='Eliminar platillo'
+          >
+            <TrashBinIcon width={20} height={20} />
+          </button>
+        )}
+      </div>
+
+      {isExpanded && (
+        <div className={`recipe-ingredient-content ${isClosing ? 'closing' : ''}`}>
+          <div className='recipe-ingredient-field'>
+            <label htmlFor={`dish-select-${index}`}>
+              Platillo <RequiredSpan />
+            </label>
+            <select
+              id={`dish-select-${index}`}
+              value={detail.dish_id || ''}
+              onChange={(e) => onChange(index, 'dish_id', e.target.value)}
+              onBlur={() => onFieldTouch(index, 'dish_id')}
+              disabled={disabled}
+              className={isTouched('dish_id') && !detail.dish_id ? 'input-error' : ''}
+            >
+              <option value=''>Seleccionar platillo</option>
+              {availableDishes.map((dish) => (
+                <option key={dish.id} value={dish.id}>
+                  {dish.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className='recipe-ingredient-field'>
+            <label htmlFor={`dish-quantity-${index}`}>
+              Cantidad <RequiredSpan />
+            </label>
+            <InputWithLabel
+              label='unidades'
+              position='right'
+              type='number'
+              id={`dish-quantity-${index}`}
+              value={detail.quantity || ''}
+              onChange={(e) => onChange(index, 'quantity', e.target.value)}
+              onBlur={() => onFieldTouch(index, 'quantity')}
+              disabled={disabled}
+              step='1'
+              min='1'
+              placeholder='1'
+              className={isTouched('quantity') && (!detail.quantity || parseFloat(detail.quantity) <= 0) ? 'input-error' : ''}
+            />
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div className='recipe-ingredient-field'>
+              <label htmlFor={`dish-price-${index}`}>
+                Precio Unitario <RequiredSpan />
+              </label>
+              <InputWithLabel
+                label='S/.'
+                position='left'
+                type='number'
+                id={`dish-price-${index}`}
+                value={detail.unit_price || ''}
+                onChange={(e) => onChange(index, 'unit_price', e.target.value)}
+                onBlur={() => onFieldTouch(index, 'unit_price')}
+                disabled={disabled}
+                step='0.01'
+                min='0'
+                placeholder='0.00'
+                className={isTouched('unit_price') && (!detail.unit_price || parseFloat(detail.unit_price) < 0) ? 'input-error' : ''}
+              />
+            </div>
+
+            <div className='recipe-ingredient-field'>
+              <label htmlFor={`dish-discount-${index}`}>
+                Descuento
+              </label>
+              <InputWithLabel
+                label='S/.'
+                position='left'
+                type='number'
+                id={`dish-discount-${index}`}
+                value={detail.discount || ''}
+                onChange={(e) => onChange(index, 'discount', e.target.value)}
+                disabled={disabled}
+                step='0.01'
+                min='0'
+                placeholder='0.00'
+              />
+            </div>
+          </div>
+
+          <div className='recipe-ingredient-field' style={{ background: '#f3f4f6', padding: '0.75rem', borderRadius: '6px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontWeight: '600' }}>Subtotal:</span>
+              <span style={{ fontWeight: '600', color: '#059669' }}>
+                S/. {detail.subtotal || '0.00'}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
