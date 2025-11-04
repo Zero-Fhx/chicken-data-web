@@ -747,6 +747,7 @@ export function Ingredients () {
                       type='text'
                       id='modal-name'
                       name='name'
+                      placeholder='Ej: Arroz, Pollo, Aceite'
                       value={selectedIngredient?.name || ''}
                       disabled={modalMode === 'view' || modalLoading}
                       onChange={handleChange}
@@ -760,7 +761,7 @@ export function Ingredients () {
                       type='text'
                       id='modal-unit'
                       name='unit'
-                      placeholder='ej: kg, L, unidad'
+                      placeholder='Ej: kg, L, unidad'
                       value={selectedIngredient?.unit || ''}
                       disabled={modalMode === 'view' || modalLoading}
                       onChange={handleChange}
@@ -796,7 +797,7 @@ export function Ingredients () {
                       type='number'
                       id='modal-stock'
                       name='stock'
-                      placeholder='ej: 100.50'
+                      placeholder='0.00'
                       min='0'
                       step='1'
                       value={selectedIngredient?.stock || ''}
@@ -812,7 +813,7 @@ export function Ingredients () {
                       type='number'
                       id='modal-minimumStock'
                       name='minimumStock'
-                      placeholder='ej: 10.00'
+                      placeholder='0.00'
                       min='0'
                       step='1'
                       value={selectedIngredient?.minimumStock || ''}
@@ -831,7 +832,6 @@ export function Ingredients () {
                       value={selectedIngredient?.status || ''}
                       onChange={handleChange}
                     >
-                      <option value=''>Seleccionar estado</option>
                       {statusOptions.map((option) => (
                         <option
                           key={option.value}

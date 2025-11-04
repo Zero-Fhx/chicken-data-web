@@ -3,19 +3,21 @@ import { useEffect, useState } from 'react'
 import '../styles/RecipeSection.css'
 import { AddIcon, TrashBinIcon } from './Icons'
 import { InputWithLabel } from './InputWithLabel'
+import { Loader } from './Loader'
 import { RequiredSpan } from './RequiredSpan'
 import { Separator } from './Separator'
 
 export function RecipeSection ({
-  hasRecipe,
-  onRecipeToggle,
   ingredients,
   onIngredientsChange,
   availableIngredients,
   ingredientsLoading,
+  mode = 'edit',
   disabled = false
 }) {
   const [expandedIngredients, setExpandedIngredients] = useState({})
+  const [touchedFields, setTouchedFields] = useState({})
+  const [closingIngredients, setClosingIngredients] = useState({})
 
   useEffect(() => {
     if (ingredients.length > 0 && Object.keys(expandedIngredients).length === 0) {
@@ -27,11 +29,31 @@ export function RecipeSection ({
     }
   }, [ingredients, expandedIngredients])
 
+  useEffect(() => {
+    if (ingredients.length === 0) {
+      setTouchedFields({})
+      setExpandedIngredients({})
+      setClosingIngredients({})
+    }
+  }, [ingredients.length])
+
   const handleToggleExpand = (index) => {
-    setExpandedIngredients(prev => ({
-      ...prev,
-      [index]: !prev[index]
-    }))
+    if (expandedIngredients[index]) {
+      setClosingIngredients(prev => ({ ...prev, [index]: true }))
+
+      setTimeout(() => {
+        setExpandedIngredients(prev => ({
+          ...prev,
+          [index]: false
+        }))
+        setClosingIngredients(prev => ({ ...prev, [index]: false }))
+      }, 200)
+    } else {
+      setExpandedIngredients(prev => ({
+        ...prev,
+        [index]: true
+      }))
+    }
   }
 
   const handleAddIngredient = () => {
@@ -99,74 +121,79 @@ export function RecipeSection ({
     onIngredientsChange(newIngredients)
   }
 
+  const handleFieldBlur = (index, field) => {
+    setTouchedFields(prev => ({
+      ...prev,
+      [`${index}-${field}`]: true
+    }))
+  }
+
+  const isFieldTouched = (index, field) => {
+    return touchedFields[`${index}-${field}`] || false
+  }
+
   return (
     <div className='recipe-section'>
       <Separator />
 
-      <div className='recipe-checkbox-container'>
-        <label className='recipe-checkbox-label'>
-          <input
-            type='checkbox'
-            checked={hasRecipe}
-            onChange={(e) => onRecipeToggle(e.target.checked)}
+      <div className='recipe-ingredients-container'>
+        <div className='recipe-header'>
+          <h4>Ingredientes de la Receta</h4>
+          <button
+            type='button'
+            className='btn-add-ingredient'
+            onClick={handleAddIngredient}
             disabled={disabled || ingredientsLoading}
-          />
-          <span className='checkbox-text'>
-            Tiene receta asociada
-            {ingredientsLoading && <span className='loading-indicator'> (Cargando...)</span>}
-          </span>
-        </label>
-        <small className='recipe-info-text'>
-          Activa si este plato requiere ingredientes del inventario.
-        </small>
-      </div>
-
-      {hasRecipe && (
-        <div className='recipe-ingredients-container'>
-          <div className='recipe-header'>
-            <h4>Ingredientes de la Receta</h4>
-            <button
-              type='button'
-              className='btn-add-ingredient'
-              onClick={handleAddIngredient}
-              disabled={disabled || ingredientsLoading}
-            >
-              <AddIcon width={16} height={16} />
-              Agregar Ingrediente
-            </button>
-          </div>
-
-          {ingredientsLoading && (
-            <div className='recipe-loading'>
-              <span>Cargando ingredientes...</span>
-            </div>
-          )}
-
-          {!ingredientsLoading && ingredients.length === 0 && (
-            <div className='recipe-empty'>
-              <span>No hay ingredientes en la receta. Haz clic en "Agregar Ingrediente" para comenzar.</span>
-            </div>
-          )}
-
-          {!ingredientsLoading && ingredients.length > 0 && (
-            <div className='recipe-ingredients-list'>
-              {ingredients.map((ingredient, index) => (
-                <RecipeIngredientItem
-                  key={index}
-                  ingredient={ingredient}
-                  index={index}
-                  isExpanded={expandedIngredients[index] || false}
-                  onToggleExpand={handleToggleExpand}
-                  onRemove={handleRemoveIngredient}
-                  onChange={handleIngredientChange}
-                  availableIngredients={availableIngredients}
-                  disabled={disabled}
-                />
-              ))}
-            </div>
-          )}
+          >
+            <AddIcon width={16} height={16} />
+            Agregar Ingrediente
+          </button>
         </div>
-      )}
+
+        {ingredientsLoading && (
+          <div className='recipe-loading'>
+            <Loader width={32} height={32} />
+          </div>
+        )}
+
+        {!ingredientsLoading && ingredients.length === 0 && (
+          <div className='recipe-empty'>
+            {mode === 'view'
+              ? (
+                <span>Este platillo no tiene receta asociada.</span>
+                )
+              : (
+                <>
+                  <span>Este platillo no tiene receta asociada. Haz clic en "Agregar Ingrediente" para comenzar.</span>
+                  <span style={{ display: 'block', marginTop: '0.5rem', fontSize: '0.875rem', color: '#6b7280', fontStyle: 'italic' }}>
+                    Si no agregas ingredientes, el platillo se guardará sin receta.
+                  </span>
+                </>
+                )}
+          </div>
+        )}
+
+        {!ingredientsLoading && ingredients.length > 0 && (
+          <div className='recipe-ingredients-list'>
+            {ingredients.map((ingredient, index) => (
+              <RecipeIngredientItem
+                key={index}
+                ingredient={ingredient}
+                index={index}
+                isExpanded={expandedIngredients[index] || false}
+                isClosing={closingIngredients[index] || false}
+                onToggleExpand={handleToggleExpand}
+                onRemove={handleRemoveIngredient}
+                onChange={handleIngredientChange}
+                onFieldBlur={handleFieldBlur}
+                isFieldTouched={isFieldTouched}
+                availableIngredients={availableIngredients}
+                disabled={disabled}
+              />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   )
 }
@@ -175,9 +202,12 @@ function RecipeIngredientItem ({
   ingredient,
   index,
   isExpanded,
+  isClosing,
   onToggleExpand,
   onRemove,
   onChange,
+  onFieldBlur,
+  isFieldTouched,
   availableIngredients,
   disabled
 }) {
@@ -220,7 +250,7 @@ function RecipeIngredientItem ({
       </div>
 
       {isExpanded && (
-        <div className='recipe-ingredient-content'>
+        <div className={`recipe-ingredient-content ${isClosing ? 'closing' : ''}`}>
           <div className='recipe-ingredient-field'>
             <label htmlFor={`ingredient-select-${index}`}>
               Ingrediente <RequiredSpan />
@@ -229,8 +259,9 @@ function RecipeIngredientItem ({
               id={`ingredient-select-${index}`}
               value={ingredient.ingredientId || ''}
               onChange={(e) => onChange(index, 'ingredientId', e.target.value)}
+              onBlur={() => onFieldBlur(index, 'ingredientId')}
               disabled={disabled}
-              className={!ingredient.ingredientId ? 'input-error' : ''}
+              className={isFieldTouched(index, 'ingredientId') && !ingredient.ingredientId ? 'input-error' : ''}
             >
               <option value=''>Seleccionar ingrediente</option>
               {availableIngredients.map((availableIng) => (
@@ -252,11 +283,12 @@ function RecipeIngredientItem ({
               id={`ingredient-quantity-${index}`}
               value={ingredient.quantityUsed || ''}
               onChange={(e) => onChange(index, 'quantityUsed', e.target.value)}
+              onBlur={() => onFieldBlur(index, 'quantityUsed')}
               disabled={disabled}
               step='1'
               min='0'
               placeholder='0.00'
-              className={!ingredient.quantityUsed || parseFloat(ingredient.quantityUsed) <= 0 ? 'input-error' : ''}
+              className={isFieldTouched(index, 'quantityUsed') && (!ingredient.quantityUsed || parseFloat(ingredient.quantityUsed) <= 0) ? 'input-error' : ''}
             />
           </div>
         </div>
