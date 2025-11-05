@@ -73,7 +73,7 @@ export function Sidebar () {
             <img src='https://avatar.iran.liara.run/public' alt='User Avatar' />
           </div>
           <div className='user-info'>
-            <span className='user-name'>Erick Flores</span>
+            <span className='user-name'>Usuario</span>
             <span className='user-role'>Administrador</span>
           </div>
         </div>
