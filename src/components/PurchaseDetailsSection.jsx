@@ -218,7 +218,7 @@ function PurchaseDetailItem ({
 
     const quantity = parseFloat(newDetails[index].quantity) || 0
     const unitPrice = parseFloat(newDetails[index].unit_price) || 0
-    newDetails[index].subtotal = trunc((quantity * unitPrice).toString(), 2)
+    newDetails[index].subtotal = (quantity * unitPrice).toFixed(2)
 
     onChange(newDetails)
   }
@@ -313,9 +313,9 @@ function PurchaseDetailItem ({
                 onBlur={() => onFieldTouch(index, 'unit_price')}
                 disabled={disabled}
                 step='0.01'
-                min='0'
+                min='0.01'
                 placeholder='0.00'
-                className={isTouched('unit_price') && (!detail.unit_price || parseFloat(detail.unit_price) < 0) ? 'input-error' : ''}
+                className={isTouched('unit_price') && (!detail.unit_price || parseFloat(detail.unit_price) <= 0) ? 'input-error' : ''}
               />
             </div>
           </div>
@@ -323,10 +323,20 @@ function PurchaseDetailItem ({
           <div className='recipe-ingredient-field' style={{ background: '#f3f4f6', padding: '0.75rem', borderRadius: '6px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{ fontWeight: '600' }}>Subtotal:</span>
-              <span style={{ fontWeight: '600', color: '#059669' }}>
+              <span
+                style={{
+                  fontWeight: '600',
+                  color: parseFloat(detail.subtotal) <= 0 && detail.ingredient_id && detail.quantity && detail.unit_price ? '#dc2626' : '#059669'
+                }}
+              >
                 S/. {detail.subtotal || '0.00'}
               </span>
             </div>
+            {parseFloat(detail.subtotal) <= 0 && detail.ingredient_id && detail.quantity && detail.unit_price && (
+              <div style={{ marginTop: '0.5rem', fontSize: '0.875rem', color: '#dc2626' }}>
+                El subtotal debe ser mayor a 0
+              </div>
+            )}
           </div>
         </div>
       )}

@@ -382,10 +382,16 @@ export function Purchases () {
 
   const handleCloseWithX = () => {
     setIsModalOpen(false)
+    setModalSuccess(null)
+    setModalError(null)
+    setFormErrors(initialFormErrors)
   }
 
   const handleCancel = () => {
     setIsModalOpen(false)
+    setModalSuccess(null)
+    setModalError(null)
+    setFormErrors(initialFormErrors)
   }
 
   const handleCloseError = () => {
@@ -410,7 +416,7 @@ export function Purchases () {
     }
 
     const validDetails = purchaseDetails.filter(
-      detail => detail.ingredient_id && parseFloat(detail.quantity) > 0 && parseFloat(detail.unit_price) >= 0
+      detail => detail.ingredient_id && parseFloat(detail.quantity) > 0 && parseFloat(detail.unit_price) > 0
     )
 
     if (validDetails.length === 0) {
@@ -423,7 +429,7 @@ export function Purchases () {
 
     const hasIncompleteDetails = purchaseDetails.some(
       detail => (detail.ingredient_id || detail.quantity || detail.unit_price) &&
-               (!detail.ingredient_id || !detail.quantity || parseFloat(detail.quantity) <= 0 || !detail.unit_price || parseFloat(detail.unit_price) < 0)
+               (!detail.ingredient_id || !detail.quantity || parseFloat(detail.quantity) <= 0 || !detail.unit_price || parseFloat(detail.unit_price) <= 0)
     )
 
     if (hasIncompleteDetails) {
@@ -441,6 +447,24 @@ export function Purchases () {
       setFormErrors((prev) => ({
         ...prev,
         details: 'No puedes agregar el mismo ingrediente más de una vez'
+      }))
+      return false
+    }
+
+    const hasInvalidSubtotal = validDetails.some(detail => parseFloat(detail.subtotal) <= 0)
+    if (hasInvalidSubtotal) {
+      setFormErrors((prev) => ({
+        ...prev,
+        details: 'Todos los subtotales deben ser mayores a 0'
+      }))
+      return false
+    }
+
+    const total = calculateTotal()
+    if (total <= 0) {
+      setFormErrors((prev) => ({
+        ...prev,
+        details: 'El total de la compra debe ser mayor a 0'
       }))
       return false
     }
@@ -941,7 +965,20 @@ export function Purchases () {
                   )}
 
                   <div className='input-group'>
-                    <label style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>Total: S/. {calculateTotal().toFixed(2)}</label>
+                    <label
+                      style={{
+                        fontWeight: 'bold',
+                        fontSize: '1.1rem',
+                        color: calculateTotal() <= 0 && purchaseDetails.some(d => d.ingredient_id && d.quantity && d.unit_price) ? '#dc2626' : 'inherit'
+                      }}
+                    >
+                      Total: S/. {calculateTotal().toFixed(2)}
+                    </label>
+                    {calculateTotal() <= 0 && purchaseDetails.some(d => d.ingredient_id && d.quantity && d.unit_price) && (
+                      <span style={{ color: '#dc2626', fontSize: '0.875rem', marginTop: '0.25rem' }}>
+                        El total debe ser mayor a 0
+                      </span>
+                    )}
                   </div>
                 </div>
               )}
@@ -968,7 +1005,9 @@ export function Purchases () {
                     !selectedPurchase?.status ||
                     (modalMode === 'create' && (
                       purchaseDetails.length === 0 ||
-                      purchaseDetails.filter(d => d.ingredient_id && parseFloat(d.quantity) > 0).length === 0
+                      purchaseDetails.filter(d => d.ingredient_id && parseFloat(d.quantity) > 0).length === 0 ||
+                      calculateTotal() <= 0 ||
+                      purchaseDetails.some(d => d.ingredient_id && parseFloat(d.subtotal) <= 0)
                     ))
                   }
                 >

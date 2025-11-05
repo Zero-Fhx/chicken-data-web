@@ -110,13 +110,13 @@ export function SaleDetailsSection ({
       const selectedDish = availableDishes.find(d => d.id === parseInt(value))
       newDetails[index].dish_id = value
       if (selectedDish) {
-        newDetails[index].unit_price = trunc(selectedDish.price.toString(), 2)
+        newDetails[index].unit_price = parseFloat(selectedDish.price).toFixed(2)
         newDetails[index].dishName = selectedDish.name
       }
     } else if (field === 'quantity') {
       const intValue = parseInt(value) || ''
       newDetails[index].quantity = intValue
-    } else if (field === 'unit_price' || field === 'discount') {
+    } else if (field === 'discount') {
       const formattedValue = value === '' ? '' : trunc(value, 2)
       newDetails[index][field] = formattedValue
     }
@@ -124,7 +124,7 @@ export function SaleDetailsSection ({
     const quantity = parseFloat(newDetails[index].quantity) || 0
     const unitPrice = parseFloat(newDetails[index].unit_price) || 0
     const discount = parseFloat(newDetails[index].discount) || 0
-    newDetails[index].subtotal = trunc(((quantity * unitPrice) - discount).toString(), 2)
+    newDetails[index].subtotal = ((quantity * unitPrice) - discount).toFixed(2)
 
     onDetailsChange(newDetails)
   }
@@ -287,7 +287,7 @@ function SaleDetailItem ({
               Cantidad <RequiredSpan />
             </label>
             <InputWithLabel
-              label='unidades'
+              label={!detail.quantity || detail.quantity === 1 ? 'unidad' : 'unidades'}
               position='right'
               type='number'
               id={`dish-quantity-${index}`}
@@ -310,12 +310,13 @@ function SaleDetailItem ({
               <InputWithLabel
                 label='S/.'
                 position='left'
-                type='number'
+                type='text'
                 id={`dish-price-${index}`}
                 value={detail.unit_price || ''}
                 onChange={(e) => onChange(index, 'unit_price', e.target.value)}
                 onBlur={() => onFieldTouch(index, 'unit_price')}
-                disabled={disabled}
+                disabled
+                readOnly
                 step='0.01'
                 min='0'
                 placeholder='0.00'
@@ -345,10 +346,20 @@ function SaleDetailItem ({
           <div className='recipe-ingredient-field' style={{ background: '#f3f4f6', padding: '0.75rem', borderRadius: '6px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{ fontWeight: '600' }}>Subtotal:</span>
-              <span style={{ fontWeight: '600', color: '#059669' }}>
+              <span
+                style={{
+                  fontWeight: '600',
+                  color: parseFloat(detail.subtotal) <= 0 && detail.dish_id && detail.quantity && detail.unit_price ? '#dc2626' : '#059669'
+                }}
+              >
                 S/. {detail.subtotal || '0.00'}
               </span>
             </div>
+            {parseFloat(detail.subtotal) <= 0 && detail.dish_id && detail.quantity && detail.unit_price && (
+              <div style={{ marginTop: '0.5rem', fontSize: '0.875rem', color: '#dc2626' }}>
+                El subtotal debe ser mayor a 0
+              </div>
+            )}
           </div>
         </div>
       )}
