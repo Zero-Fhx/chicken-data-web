@@ -8,7 +8,7 @@ const MENU = [
   {
     label: 'Dashboard',
     items: [
-      { name: 'Home', label: 'Inicio', icon: ChartIcon }
+      { name: '', label: 'Inicio', icon: ChartIcon }
     ]
   },
   {
@@ -52,10 +52,7 @@ export function Sidebar () {
                   <li key={item.name} name={item.name} className='nav-item'>
                     <NavLink
                       to={'/' + item.name.toLowerCase()}
-                      className={({ isActive }) => {
-                        const isHomeActive = item.name === 'Home' && (isActive || window.location.pathname === '/')
-                        return 'nav-link' + (isActive || isHomeActive ? ' active' : '')
-                      }}
+                      className={({ isActive }) => 'nav-link' + (isActive ? ' active' : '')}
                     >
                       {item.icon && <item.icon />}
                       <span className='nav-text'>{item.label}</span>
