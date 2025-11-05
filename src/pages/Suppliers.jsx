@@ -17,7 +17,7 @@ import { Separator } from '@/components/Separator'
 import { StatusBadge } from '@/components/StatusBadge'
 import { TestStatePanel } from '@/components/TestStatePanel'
 
-const ENVIRONMENT = import.meta.env.VITE_ENV || 'development'
+const ENVIRONMENT = import.meta.env.VITE_ENV || 'production'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
 const API_URL = `${API_BASE_URL}/suppliers/`

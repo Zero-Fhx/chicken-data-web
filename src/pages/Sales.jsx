@@ -24,7 +24,7 @@ import API_ENDPOINTS from '@/services/api'
 import { parseLocalDate } from '@/services/dateUtils'
 import trunc from '@/services/trunc'
 
-const ENVIRONMENT = import.meta.env.VITE_ENV || 'development'
+const ENVIRONMENT = import.meta.env.VITE_ENV || 'production'
 
 const API_URL = `${API_ENDPOINTS.sales}/`
 const API_DISHES_URL = API_ENDPOINTS.dishes
