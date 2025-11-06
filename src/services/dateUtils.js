@@ -1,14 +1,16 @@
-const TIMEZONE = import.meta.env.VITE_TIMEZONE || 'America/Lima'
-const LOCALE = import.meta.env.VITE_LOCALE || 'es-PE'
+const DEFAULT_TIMEZONE = import.meta.env.VITE_TIMEZONE || 'America/Lima'
+const DEFAULT_LOCALE = import.meta.env.VITE_LOCALE || 'es-PE'
 
 /**
  * Formatea una fecha y hora a un formato legible.
  * * Devuelve una cadena con el año, mes, día, hora, minutos y zona horaria.
  *
- * @param {string|Date} dateString - La fecha a formatear, puede ser un string ISO o un objeto Date.
- * @returns {string} La fecha y hora formateada (ej: "5 de noviembre de 2025, 10:30 AM GMT-5") o "-" si la fecha no es válida.
+ * @param {string|Date} dateString - La fecha a formatear.
+ * @param {string} [locale] - El locale a usar (ej: 'es-PE'). Por defecto usa DEFAULT_LOCALE.
+ * @param {string} [timezone] - La zona horaria (ej: 'America/Lima'). Por defecto usa DEFAULT_TIMEZONE.
+ * @returns {string} La fecha y hora formateada o "-".
  */
-export const formatDateTime = (dateString) => {
+export const formatDateTime = (dateString, locale = DEFAULT_LOCALE, timezone = DEFAULT_TIMEZONE) => {
   if (!dateString) return '-'
 
   const date = typeof dateString === 'string' ? new Date(dateString) : dateString
@@ -21,10 +23,10 @@ export const formatDateTime = (dateString) => {
     hour: 'numeric',
     minute: '2-digit',
     timeZoneName: 'short',
-    timeZone: TIMEZONE
+    timeZone: timezone
   }
 
-  const formatter = new Intl.DateTimeFormat(LOCALE, options)
+  const formatter = new Intl.DateTimeFormat(locale, options)
   return formatter.format(date)
 }
 
@@ -32,10 +34,12 @@ export const formatDateTime = (dateString) => {
  * Formatea una fecha a un formato legible.
  * * Devuelve una cadena con el día de la semana, día, mes y año.
  *
- * @param {string|Date} dateString - La fecha a formatear, puede ser un string ISO o un objeto Date.
- * @returns {string} La fecha formateada (ej: "miércoles, 5 de noviembre de 2025") o "-" si la fecha no es válida.
+ * @param {string|Date} dateString - La fecha a formatear.
+ * @param {string} [locale] - El locale a usar. Por defecto usa DEFAULT_LOCALE.
+ * @param {string} [timezone] - La zona horaria. Por defecto usa DEFAULT_TIMEZONE.
+ * @returns {string} La fecha formateada o "-".
  */
-export const formatDate = (dateString) => {
+export const formatDate = (dateString, locale = DEFAULT_LOCALE, timezone = DEFAULT_TIMEZONE) => {
   if (!dateString) return '-'
 
   const date = typeof dateString === 'string' ? new Date(dateString) : dateString
@@ -46,10 +50,10 @@ export const formatDate = (dateString) => {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
-    timeZone: TIMEZONE
+    timeZone: timezone
   }
 
-  const formatter = new Intl.DateTimeFormat(LOCALE, options)
+  const formatter = new Intl.DateTimeFormat(locale, options)
   return formatter.format(date)
 }
 
@@ -57,10 +61,12 @@ export const formatDate = (dateString) => {
  * Formatea la hora de una fecha a un formato legible.
  * * Devuelve una cadena con la hora y minutos en formato de 12 horas.
  *
- * @param {string|Date} dateString - La fecha de la que se extraerá la hora, puede ser un string ISO o un objeto Date.
- * @returns {string} La hora formateada (ej: "10:30 AM") o "-" si la fecha no es válida.
+ * @param {string|Date} dateString - La fecha de la que se extraerá la hora.
+ * @param {string} [locale] - El locale a usar. Por defecto usa DEFAULT_LOCALE.
+ * @param {string} [timezone] - La zona horaria. Por defecto usa DEFAULT_TIMEZONE.
+ * @returns {string} La hora formateada o "-".
  */
-export const formatTime = (dateString) => {
+export const formatTime = (dateString, locale = DEFAULT_LOCALE, timezone = DEFAULT_TIMEZONE) => {
   if (!dateString) return '-'
 
   const date = typeof dateString === 'string' ? new Date(dateString) : dateString
@@ -70,10 +76,10 @@ export const formatTime = (dateString) => {
     hour: '2-digit',
     minute: '2-digit',
     hour12: true,
-    timeZone: TIMEZONE
+    timeZone: timezone
   }
 
-  const formatter = new Intl.DateTimeFormat(LOCALE, options)
+  const formatter = new Intl.DateTimeFormat(locale, options)
   return formatter.format(date)
 }
 
@@ -81,10 +87,12 @@ export const formatTime = (dateString) => {
  * Formatea una fecha a un formato corto (dd/mm/yyyy).
  * * Devuelve una cadena con el día, mes y año en formato numérico.
  *
- * @param {string|Date} dateString - La fecha a formatear, puede ser un string ISO o un objeto Date.
- * @returns {string} La fecha formateada en formato corto (ej: "05/11/2025") o "-" si la fecha no es válida.
+ * @param {string|Date} dateString - La fecha a formatear.
+ * @param {string} [locale] - El locale a usar. Por defecto usa DEFAULT_LOCALE.
+ * @param {string} [timezone] - La zona horaria. Por defecto usa DEFAULT_TIMEZONE.
+ * @returns {string} La fecha formateada en formato corto o "-".
  */
-export const formatDateShort = (dateString) => {
+export const formatDateShort = (dateString, locale = DEFAULT_LOCALE, timezone = DEFAULT_TIMEZONE) => {
   if (!dateString) return '-'
 
   const date = typeof dateString === 'string' ? new Date(dateString) : dateString
@@ -94,10 +102,10 @@ export const formatDateShort = (dateString) => {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
-    timeZone: TIMEZONE
+    timeZone: timezone
   }
 
-  const formatter = new Intl.DateTimeFormat(LOCALE, options)
+  const formatter = new Intl.DateTimeFormat(locale, options)
   return formatter.format(date)
 }
 
@@ -105,10 +113,11 @@ export const formatDateShort = (dateString) => {
  * Formatea una fecha al formato requerido por los inputs de tipo `date` (yyyy-mm-dd).
  * * Utiliza el locale 'en-CA' para asegurar el formato correcto.
  *
- * @param {string|Date} dateString - La fecha a formatear, puede ser un string ISO o un objeto Date.
- * @returns {string} La fecha formateada en formato yyyy-mm-dd (ej: "2025-11-05") o una cadena vacía si la fecha no es válida.
+ * @param {string|Date} dateString - La fecha a formatear.
+ * @param {string} [timezone] - La zona horaria. Por defecto usa DEFAULT_TIMEZONE.
+ * @returns {string} La fecha formateada en formato yyyy-mm-dd o una cadena vacía.
  */
-export const formatDateInput = (dateString) => {
+export const formatDateInput = (dateString, timezone = DEFAULT_TIMEZONE) => {
   if (!dateString) return ''
 
   const date = typeof dateString === 'string' ? new Date(dateString) : dateString
@@ -118,7 +127,7 @@ export const formatDateInput = (dateString) => {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
-    timeZone: TIMEZONE
+    timeZone: timezone
   })
 
   return formatter.format(date)
@@ -128,15 +137,17 @@ export const formatDateInput = (dateString) => {
  * Obtiene la fecha actual en el formato requerido por los inputs de tipo `date` (yyyy-mm-dd).
  * * Devuelve la fecha de hoy según la zona horaria configurada.
  *
- * @returns {string} La fecha actual en formato yyyy-mm-dd (ej: "2025-11-05").
+ * @param {string} [timezone] - La zona horaria. Por defecto usa DEFAULT_TIMEZONE.
+ * @returns {string} La fecha actual en formato yyyy-mm-dd.
  */
-export const getToday = () => {
+export const getToday = (timezone = DEFAULT_TIMEZONE) => {
   const now = new Date()
+
   const formatter = new Intl.DateTimeFormat('en-CA', {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
-    timeZone: TIMEZONE
+    timeZone: timezone
   })
 
   return formatter.format(now)
