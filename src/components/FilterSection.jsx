@@ -2,6 +2,23 @@ import { Card, CardBody, CardHeader } from '@/components/Card'
 import { SearchIcon, TrashBinIcon } from '@/components/Icons'
 import { InputWithLabel } from '@/components/InputWithLabel'
 
+/**
+ * Componente para renderizar una sección de filtros personalizable.
+ * * Renderiza dinámicamente campos de formulario (inputs, selects, etc.) basados en una configuración y gestiona los cambios y la limpieza de los filtros.
+ *
+ * @param {Object} props - Objeto de propiedades del componente.
+ * @param {string} [props.title='Filtros'] - Título de la sección de filtros.
+ * @param {React.ComponentType} [props.icon=SearchIcon] - Componente de ícono para el título.
+ * @param {Array<Object>} [props.fields=[]] - Array de objetos que definen cada campo del filtro.
+ * @param {Object} [props.values={}] - Objeto con los valores actuales de los campos del filtro.
+ * @param {Object} [props.errors={}] - Objeto con los mensajes de error para cada campo.
+ * @param {function} props.onFilterChange - Callback que se ejecuta cuando el valor de un filtro cambia.
+ * @param {function} props.onClearFilters - Callback que se ejecuta al hacer clic en el botón de limpiar.
+ * @param {boolean} [props.hasActiveFilters=false] - Indica si hay algún filtro activo para habilitar el botón de limpiar.
+ * @param {string} [props.clearButtonLabel='Limpiar Filtros'] - Etiqueta para el botón de limpiar filtros.
+ *
+ * @returns {React.ReactElement} El elemento JSX renderizado.
+ */
 export function FilterSection ({
   title = 'Filtros',
   icon: Icon = SearchIcon,

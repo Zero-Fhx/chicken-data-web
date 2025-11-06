@@ -6,6 +6,20 @@ import { InputWithLabel } from './InputWithLabel'
 import { Loader } from './Loader'
 import { RequiredSpan } from './RequiredSpan'
 
+/**
+ * Sección para gestionar los detalles de una compra (ingredientes, cantidades, precios).
+ * * Permite agregar, editar y eliminar dinámicamente los ingredientes de una compra, mostrando un resumen y campos de edición para cada uno.
+ *
+ * @param {Object} props - Objeto de propiedades del componente.
+ * @param {Array<Object>} props.details - Array con los detalles de la compra.
+ * @param {function} props.onDetailsChange - Callback que se ejecuta cuando los detalles cambian.
+ * @param {Array<Object>} props.availableIngredients - Lista de ingredientes disponibles para seleccionar.
+ * @param {boolean} props.ingredientsLoading - Indica si la lista de ingredientes se está cargando.
+ * @param {boolean} [props.detailsLoading=false] - Indica si los detalles de la compra se están cargando.
+ * @param {boolean} [props.disabled=false] - Deshabilita la sección completa.
+ *
+ * @returns {React.ReactElement} El elemento JSX renderizado.
+ */
 export function PurchaseDetailsSection ({
   details,
   onDetailsChange,
@@ -174,6 +188,26 @@ export function PurchaseDetailsSection ({
   )
 }
 
+/**
+ * Componente para un item individual dentro de la PurchaseDetailsSection.
+ * * Muestra un resumen del ingrediente y se expande para mostrar los campos de edición (selección de ingrediente, cantidad, precio).
+ *
+ * @param {Object} props - Objeto de propiedades del componente.
+ * @param {Object} props.detail - Objeto con los datos del ingrediente.
+ * @param {number} props.index - Índice del item en la lista.
+ * @param {boolean} props.isExpanded - Controla si el item está expandido.
+ * @param {boolean} props.isClosing - Indica si el item se está cerrando (para animación).
+ * @param {function} props.onToggleExpand - Callback para cambiar el estado de expansión.
+ * @param {function} props.onRemove - Callback para eliminar el item.
+ * @param {function} props.onChange - Callback para manejar cambios en los campos del item.
+ * @param {function} props.onFieldTouch - Callback para registrar que un campo ha sido "tocado".
+ * @param {Object} props.touchedFields - Objeto que registra los campos que han sido tocados.
+ * @param {Array<Object>} props.availableIngredients - Lista de ingredientes disponibles.
+ * @param {boolean} props.disabled - Deshabilita los campos del item.
+ * @param {Array<Object>} props.allDetails - Array completo de todos los detalles de la compra.
+ *
+ * @returns {React.ReactElement} El elemento JSX renderizado.
+ */
 function PurchaseDetailItem ({
   detail,
   index,

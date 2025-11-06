@@ -1,5 +1,20 @@
 import { useCallback, useEffect, useState } from 'react'
 
+/**
+ * Hook para realizar peticiones de datos a una URL.
+ * * Encapsula la lógica de fetch, incluyendo el manejo de estados de carga, errores, y la posibilidad de re-lanzar la petición.
+ *
+ * @param {string} url - La URL del endpoint al que se realizará la petición.
+ * @returns {{
+ *   data: any,
+ *   loading: boolean,
+ *   error: Object | null,
+ *   setData: (data: any) => void,
+ *   setLoading: (loading: boolean) => void,
+ *   setError: (error: Object | null) => void,
+ *   refetch: () => void
+ * }} Un objeto que contiene los datos, el estado de carga, el error, y funciones para manipular el estado y re-lanzar la petición.
+ */
 export function useFetch (url) {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)

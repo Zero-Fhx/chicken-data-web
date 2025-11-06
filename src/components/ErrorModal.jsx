@@ -4,6 +4,16 @@ import { CancelIcon } from './Icons'
 
 import '@/styles/ErrorModal.css'
 
+/**
+ * Componente modal para mostrar un mensaje de error.
+ * * Aparece como una notificación flotante en la parte inferior de la pantalla y se cierra con una animación.
+ *
+ * @param {Object} props - Objeto de propiedades del componente.
+ * @param {string} props.message - El mensaje de error a mostrar.
+ * @param {function} props.onClose - Callback que se ejecuta para cerrar el modal.
+ *
+ * @returns {React.ReactElement} El elemento JSX renderizado.
+ */
 export function ErrorModal ({ message, onClose }) {
   const [isClosing, setIsClosing] = useState(false)
 

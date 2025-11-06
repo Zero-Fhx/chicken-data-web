@@ -2,6 +2,22 @@ import { WarningIcon } from '@/components/Icons'
 import { RequiredSpan } from '@/components/RequiredSpan'
 import '@/styles/AdjustStockForm.css'
 
+/**
+ * Formulario para ajustar el stock de un ingrediente.
+ * * Permite incrementar, decrementar o establecer una nueva cantidad de stock, mostrando visualmente el stock actual y el resultante.
+ *
+ * @param {Object} props - Objeto de propiedades del componente.
+ * @param {string} props.ingredientName - Nombre del ingrediente que se está ajustando.
+ * @param {number|string} props.currentStock - La cantidad de stock actual del ingrediente.
+ * @param {string} props.unit - La unidad de medida del ingrediente (ej: "kg", "unidades").
+ * @param {'add'|'subtract'|'set'} props.adjustmentType - El tipo de ajuste a realizar.
+ * @param {string} props.adjustmentValue - El valor numérico del ajuste (como string).
+ * @param {function} props.onAdjustmentTypeChange - Callback que se ejecuta al cambiar el tipo de ajuste.
+ * @param {function} props.onAdjustmentValueChange - Callback que se ejecuta al cambiar el valor del ajuste.
+ * @param {string} [props.error] - Mensaje de error a mostrar en el campo de valor de ajuste.
+ *
+ * @returns {React.ReactElement} El elemento JSX renderizado.
+ */
 export function AdjustStockForm ({
   ingredientName,
   currentStock,

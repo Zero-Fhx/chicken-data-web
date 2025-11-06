@@ -30,6 +30,12 @@ const MENU = [
   }
 ]
 
+/**
+ * Componente de la barra lateral de navegación.
+ * * Muestra el logo, el menú principal de la aplicación organizado por secciones y la información del usuario logueado.
+ *
+ * @returns {React.ReactElement} El elemento JSX renderizado.
+ */
 export function Sidebar () {
   return (
     <aside className='sidebar'>

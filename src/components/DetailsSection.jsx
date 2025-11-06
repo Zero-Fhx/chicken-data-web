@@ -5,6 +5,26 @@ import { AddIcon, TrashBinIcon } from './Icons'
 import { InputWithLabel } from './InputWithLabel'
 import { RequiredSpan } from './RequiredSpan'
 
+/**
+ * Sección para gestionar una lista de detalles (items) con cantidad y precio.
+ * * Se utiliza en formularios de compras o ventas para agregar, editar y eliminar productos o ingredientes, calculando subtotales y un total general.
+ *
+ * @param {Object} props - Objeto de propiedades del componente.
+ * @param {Array<Object>} props.details - Array de objetos que representan los detalles (items) de la lista.
+ * @param {function} props.onDetailsChange - Callback que se ejecuta cuando la lista de detalles cambia.
+ * @param {Array<Object>} props.availableItems - Array de items disponibles para seleccionar en el dropdown.
+ * @param {boolean} props.itemsLoading - Indica si los items disponibles se están cargando.
+ * @param {boolean} [props.disabled=false] - Deshabilita toda la sección.
+ * @param {string} [props.itemIdField='id'] - Nombre del campo de ID en los objetos de `availableItems`.
+ * @param {string} [props.itemNameField='name'] - Nombre del campo de nombre en los objetos de `availableItems`.
+ * @param {string} [props.itemUnitField='unit'] - Nombre del campo de unidad en los objetos de `availableItems`.
+ * @param {string} [props.itemLabel='Item'] - Etiqueta para el item (ej: "Producto", "Ingrediente").
+ * @param {string} [props.quantityLabel='Cantidad'] - Etiqueta para el campo de cantidad.
+ * @param {string} [props.priceLabel='Precio Unitario'] - Etiqueta para el campo de precio.
+ * @param {string} [props.currency='S/.'] - Símbolo de la moneda.
+ *
+ * @returns {React.ReactElement} El elemento JSX renderizado.
+ */
 export function DetailsSection ({
   details,
   onDetailsChange,
@@ -183,6 +203,29 @@ export function DetailsSection ({
   )
 }
 
+/**
+ * Componente para un item individual dentro de la DetailsSection.
+ * * Muestra un resumen del item y se expande para mostrar los campos de edición (selección de item, cantidad, precio).
+ *
+ * @param {Object} props - Objeto de propiedades del componente.
+ * @param {Object} props.detail - Objeto con los datos del item.
+ * @param {number} props.index - Índice del item en la lista.
+ * @param {boolean} props.isExpanded - Controla si el item está expandido o colapsado.
+ * @param {function} props.onToggleExpand - Callback para cambiar el estado de expansión.
+ * @param {function} props.onRemove - Callback para eliminar el item.
+ * @param {function} props.onChange - Callback para manejar cambios en los campos del item.
+ * @param {Array<Object>} props.availableItems - Lista de items disponibles para seleccionar.
+ * @param {boolean} props.disabled - Deshabilita los campos del item.
+ * @param {string} props.itemIdField - Nombre del campo de ID.
+ * @param {string} props.itemNameField - Nombre del campo de nombre.
+ * @param {string} props.itemUnitField - Nombre del campo de unidad.
+ * @param {string} props.itemLabel - Etiqueta para el item.
+ * @param {string} props.quantityLabel - Etiqueta para la cantidad.
+ * @param {string} props.priceLabel - Etiqueta para el precio.
+ * @param {string} props.currency - Símbolo de la moneda.
+ *
+ * @returns {React.ReactElement} El elemento JSX renderizado.
+ */
 function DetailItem ({
   detail,
   index,

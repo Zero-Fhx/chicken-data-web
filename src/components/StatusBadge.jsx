@@ -1,5 +1,16 @@
 import '@/styles/StatusBadge.css'
 
+/**
+ * Componente para mostrar una insignia de estado con colores.
+ * * Se utiliza para representar visualmente estados como 'Activo', 'Inactivo', 'Completado' o 'Cancelado'.
+ *
+ * @param {Object} props - Objeto de propiedades del componente.
+ * @param {'Active'|'Completed'|'Cancelled'|string} props.status - El estado a representar.
+ * @param {string} [props.activeLabel='Activo'] - Etiqueta para los estados 'Active' y 'Completed'.
+ * @param {string} [props.inactiveLabel='Inactivo'] - Etiqueta para el estado 'Cancelled' y otros.
+ *
+ * @returns {React.ReactElement} El elemento JSX renderizado.
+ */
 export function StatusBadge ({ status, activeLabel = 'Activo', inactiveLabel = 'Inactivo' }) {
   let badgeClass = 'inactive'
 

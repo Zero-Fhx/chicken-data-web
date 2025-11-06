@@ -3,14 +3,16 @@ import { WarningIcon } from './Icons'
 import { Separator } from './Separator'
 
 /**
- * Panel de Control de Estados para Testing
- * Permite simular diferentes estados de la aplicación (loading, error)
+ * Panel de control para simular estados de la aplicación durante el desarrollo.
+ * * Permite forzar estados de carga y de error para probar la resiliencia de la UI sin depender de la respuesta real de una API.
  *
- * @param {Object} props
- * @param {boolean} props.loading - Estado actual de carga
- * @param {function} props.setLoading - Función para cambiar el estado de carga
- * @param {Object|null} props.error - Estado actual de error (null si no hay error)
- * @param {function} props.setError - Función para cambiar el estado de error
+ * @param {Object} props - Objeto de propiedades del componente.
+ * @param {boolean} props.loading - El estado de carga actual.
+ * @param {function} props.setLoading - Callback para actualizar el estado de carga.
+ * @param {Object|null} props.error - El objeto de error actual.
+ * @param {function} props.setError - Callback para actualizar el estado de error.
+ *
+ * @returns {React.ReactElement} El elemento JSX renderizado.
  */
 export function TestStatePanel ({ loading, setLoading, error, setError }) {
   return (

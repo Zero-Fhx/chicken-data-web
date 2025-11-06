@@ -6,6 +6,20 @@ import { InputWithLabel } from './InputWithLabel'
 import { Loader } from './Loader'
 import { RequiredSpan } from './RequiredSpan'
 
+/**
+ * Sección para gestionar los detalles de una venta (platillos, cantidades, precios, descuentos).
+ * * Permite agregar, editar y eliminar dinámicamente los platillos de una venta.
+ *
+ * @param {Object} props - Objeto de propiedades del componente.
+ * @param {Array<Object>} props.details - Array con los detalles de la venta.
+ * @param {function} props.onDetailsChange - Callback que se ejecuta cuando los detalles cambian.
+ * @param {Array<Object>} props.availableDishes - Lista de platillos disponibles para seleccionar.
+ * @param {boolean} props.dishesLoading - Indica si la lista de platillos se está cargando.
+ * @param {boolean} [props.detailsLoading=false] - Indica si los detalles de la venta se están cargando.
+ * @param {boolean} [props.disabled=false] - Deshabilita la sección completa.
+ *
+ * @returns {React.ReactElement} El elemento JSX renderizado.
+ */
 export function SaleDetailsSection ({
   details,
   onDetailsChange,
@@ -195,6 +209,25 @@ export function SaleDetailsSection ({
   )
 }
 
+/**
+ * Componente para un item individual dentro de la SaleDetailsSection.
+ * * Muestra un resumen del platillo y se expande para mostrar los campos de edición.
+ *
+ * @param {Object} props - Objeto de propiedades del componente.
+ * @param {Object} props.detail - Objeto con los datos del platillo.
+ * @param {number} props.index - Índice del item en la lista.
+ * @param {boolean} props.isExpanded - Controla si el item está expandido.
+ * @param {boolean} props.isClosing - Indica si el item se está cerrando (para animación).
+ * @param {function} props.onToggleExpand - Callback para cambiar el estado de expansión.
+ * @param {function} props.onRemove - Callback para eliminar el item.
+ * @param {function} props.onChange - Callback para manejar cambios en los campos del item.
+ * @param {function} props.onFieldTouch - Callback para registrar que un campo ha sido "tocado".
+ * @param {Object} props.touchedFields - Objeto que registra los campos que han sido tocados.
+ * @param {Array<Object>} props.availableDishes - Lista de platillos disponibles.
+ * @param {boolean} props.disabled - Deshabilita los campos del item.
+ *
+ * @returns {React.ReactElement} El elemento JSX renderizado.
+ */
 function SaleDetailItem ({
   detail,
   index,

@@ -7,6 +7,20 @@ import { Loader } from './Loader'
 import { RequiredSpan } from './RequiredSpan'
 import { Separator } from './Separator'
 
+/**
+ * Sección para gestionar los ingredientes de una receta.
+ * * Permite agregar, editar y eliminar dinámicamente los ingredientes de la receta de un platillo.
+ *
+ * @param {Object} props - Objeto de propiedades del componente.
+ * @param {Array<Object>} props.ingredients - Array con los ingredientes de la receta.
+ * @param {function} props.onIngredientsChange - Callback que se ejecuta cuando la lista de ingredientes cambia.
+ * @param {Array<Object>} props.availableIngredients - Lista de ingredientes disponibles para seleccionar.
+ * @param {boolean} props.ingredientsLoading - Indica si la lista de ingredientes se está cargando.
+ * @param {'edit'|'view'} [props.mode='edit'] - Modo del componente, 'edit' para editar, 'view' para solo lectura.
+ * @param {boolean} [props.disabled=false] - Deshabilita la sección completa.
+ *
+ * @returns {React.ReactElement} El elemento JSX renderizado.
+ */
 export function RecipeSection ({
   ingredients,
   onIngredientsChange,
@@ -198,6 +212,25 @@ export function RecipeSection ({
   )
 }
 
+/**
+ * Componente para un ingrediente individual dentro de la RecipeSection.
+ * * Muestra un resumen del ingrediente y se expande para mostrar los campos de edición.
+ *
+ * @param {Object} props - Objeto de propiedades del componente.
+ * @param {Object} props.ingredient - Objeto con los datos del ingrediente.
+ * @param {number} props.index - Índice del ingrediente en la lista.
+ * @param {boolean} props.isExpanded - Controla si el item está expandido.
+ * @param {boolean} props.isClosing - Indica si el item se está cerrando (para animación).
+ * @param {function} props.onToggleExpand - Callback para cambiar el estado de expansión.
+ * @param {function} props.onRemove - Callback para eliminar el ingrediente.
+ * @param {function} props.onChange - Callback para manejar cambios en los campos del ingrediente.
+ * @param {function} props.onFieldBlur - Callback para registrar que un campo ha sido "tocado".
+ * @param {function} props.isFieldTouched - Función que devuelve si un campo ha sido "tocado".
+ * @param {Array<Object>} props.availableIngredients - Lista de ingredientes disponibles.
+ * @param {boolean} props.disabled - Deshabilita los campos del item.
+ *
+ * @returns {React.ReactElement} El elemento JSX renderizado.
+ */
 function RecipeIngredientItem ({
   ingredient,
   index,

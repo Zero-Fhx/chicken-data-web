@@ -2,6 +2,22 @@ import { Loader } from '@/components/Loader'
 
 import '@/styles/ResultsCounter.css'
 
+/**
+ * Componente que muestra un contador de resultados para una lista o tabla.
+ * * Indica el rango de elementos que se están mostrando y el total, y también maneja los estados de carga, error o si no hay resultados.
+ *
+ * @param {Object} props - Objeto de propiedades del componente.
+ * @param {boolean} props.loading - Indica si los datos se están cargando.
+ * @param {Object} [props.error] - Objeto de error, si ocurrió alguno durante la carga.
+ * @param {Array<Object>} [props.items=[]] - El array de datos a contar.
+ * @param {Object} [props.meta] - Metadatos de paginación de la API.
+ * @param {number} props.pageSize - El tamaño de la página actual.
+ * @param {React.ComponentType} props.icon - Componente de ícono para mostrar junto al contador.
+ * @param {string} [props.itemName='elemento'] - Nombre del item en singular.
+ * @param {string} [props.itemNamePlural='elementos'] - Nombre del item en plural.
+ *
+ * @returns {React.ReactElement} El elemento JSX renderizado.
+ */
 export function ResultsCounter ({
   loading,
   error,

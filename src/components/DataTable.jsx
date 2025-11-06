@@ -6,6 +6,35 @@ import { Pagination } from '@/components/Pagination'
 import { ResultsCounter } from '@/components/ResultsCounter'
 import { TableControls } from '@/components/TableControls'
 
+/**
+ * Componente genérico para renderizar una tabla de datos paginada y con controles.
+ * * Maneja estados de carga, error y vacío, y permite la personalización de columnas, acciones y renderizado de celdas.
+ *
+ * @param {Object} props - Objeto de propiedades del componente.
+ * @param {string} [props.title='Lista'] - Título que se muestra en la cabecera de la tabla.
+ * @param {React.ComponentType} [props.icon] - Componente de ícono para mostrar junto al título.
+ * @param {Array<Object>} [props.columns=[]] - Array de objetos que definen las columnas de la tabla.
+ * @param {Array<Object>} [props.data=[]] - Array de objetos que representan los datos de las filas.
+ * @param {boolean} [props.loading=false] - Controla si se muestra el estado de carga.
+ * @param {Object} [props.error=null] - Objeto de error para mostrar el estado de error.
+ * @param {Object} [props.meta=null] - Metadatos de la respuesta de la API, usualmente para paginación.
+ * @param {number} [props.page=1] - El número de la página actual.
+ * @param {number} [props.pageSize=10] - La cantidad de elementos por página.
+ * @param {function} props.onPageChange - Callback que se ejecuta cuando cambia la página.
+ * @param {function} props.onPageSizeChange - Callback que se ejecuta cuando cambia el tamaño de la página.
+ * @param {function} props.onRefresh - Callback que se ejecuta para recargar los datos.
+ * @param {Array<number>} [props.pageSizeOptions=[5, 10, 20, 50]] - Opciones para el selector de tamaño de página.
+ * @param {string} [props.refreshLabel='Recargar'] - Etiqueta para el botón de recargar.
+ * @param {string} [props.itemName='elemento'] - Nombre del item en singular.
+ * @param {string} [props.itemNamePlural='elementos'] - Nombre del item en plural.
+ * @param {React.ComponentType} [props.emptyIcon] - Componente de ícono para el estado vacío.
+ * @param {string} [props.emptyMessage='No se encontraron resultados'] - Mensaje para el estado vacío.
+ * @param {string} [props.emptyDescription=''] - Descripción adicional para el estado vacío.
+ * @param {Array<Object>} [props.actions=[]] - Array de objetos que definen las acciones por fila.
+ * @param {function} [props.renderCell] - Función opcional para personalizar el renderizado de todas las celdas.
+ *
+ * @returns {React.ReactElement} El elemento JSX renderizado.
+ */
 export function DataTable ({
   title = 'Lista',
   icon: Icon,
