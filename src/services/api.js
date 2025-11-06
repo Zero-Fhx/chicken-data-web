@@ -1,4 +1,5 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+const API_URL = `${API_BASE_URL}/api`
 
 /**
  * @typedef {Object} ApiEndpoints
@@ -22,17 +23,17 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
  * @type {ApiEndpoints}
  */
 export const API_ENDPOINTS = {
-  dashboard: `${API_BASE_URL}/dashboard`,
-  dishes: `${API_BASE_URL}/dishes`,
-  dishCategories: `${API_BASE_URL}/dish-categories`,
-  dishIngredients: `${API_BASE_URL}/dish-ingredients`,
-  ingredients: `${API_BASE_URL}/ingredients`,
-  ingredientCategories: `${API_BASE_URL}/ingredient-categories`,
-  suppliers: `${API_BASE_URL}/suppliers`,
-  purchases: `${API_BASE_URL}/purchases`,
-  sales: `${API_BASE_URL}/sales`,
-  users: `${API_BASE_URL}/users`,
-  health: `${API_BASE_URL}/health`
+  dashboard: `${API_URL}/dashboard`, // /api/dashboard
+  dishes: `${API_URL}/dishes`, // /api/dishes
+  dishCategories: `${API_URL}/dish-categories`, // /api/dish-categories
+  dishIngredients: `${API_URL}/dish-ingredients`, // /api/dish-ingredients
+  ingredients: `${API_URL}/ingredients`, // /api/ingredients
+  ingredientCategories: `${API_URL}/ingredient-categories`, // /api/ingredient-categories
+  suppliers: `${API_URL}/suppliers`, // /api/suppliers
+  purchases: `${API_URL}/purchases`, // /api/purchases
+  sales: `${API_URL}/sales`, // /api/sales
+  users: `${API_URL}/users`, // /api/users
+  health: `${API_BASE_URL}/health` // /health
 }
 
 export default API_ENDPOINTS
