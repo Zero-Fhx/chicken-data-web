@@ -19,7 +19,7 @@ import { TestStatePanel } from '@/components/TestStatePanel'
 
 import API_ENDPOINTS from '@/services/api'
 
-import { parseLocalDate } from '@/services/dateUtils'
+import { formatDateShort, getToday } from '@/services/dateUtils'
 import trunc from '@/services/trunc'
 import '@/styles/DetailsTable.css'
 
@@ -119,10 +119,7 @@ export function Purchases () {
       key: 'purchaseDate',
       label: 'Fecha',
       align: 'center',
-      render: (row) => {
-        const date = parseLocalDate(row.purchaseDate)
-        return date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })
-      }
+      render: (row) => formatDateShort(row.purchaseDate)
     },
     {
       key: 'supplier',
@@ -364,7 +361,7 @@ export function Purchases () {
   }
 
   const handleCreateNew = () => {
-    const today = new Date().toISOString().split('T')[0]
+    const today = getToday()
     setSelectedPurchase({
       purchaseDate: today,
       supplierId: '',
@@ -756,13 +753,7 @@ export function Purchases () {
                   details={[
                     {
                       label: 'Fecha',
-                      value: selectedPurchase?.purchaseDate
-                        ? parseLocalDate(selectedPurchase.purchaseDate).toLocaleDateString('es-ES', {
-                          day: '2-digit',
-                          month: '2-digit',
-                          year: 'numeric'
-                        })
-                        : '-'
+                      value: formatDateShort(selectedPurchase?.purchaseDate)
                     },
                     { label: 'Proveedor', value: selectedPurchase?.supplier?.name || '-' },
                     { label: 'Total', value: `S/. ${selectedPurchase?.total?.toFixed(2)}` },

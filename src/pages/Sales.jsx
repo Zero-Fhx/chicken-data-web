@@ -21,7 +21,7 @@ import { TestStatePanel } from '@/components/TestStatePanel'
 import '@/styles/DetailsTable.css'
 
 import API_ENDPOINTS from '@/services/api'
-import { parseLocalDate } from '@/services/dateUtils'
+import { formatDateShort, getToday } from '@/services/dateUtils'
 import trunc from '@/services/trunc'
 
 const ENVIRONMENT = import.meta.env.VITE_ENV || 'production'
@@ -108,10 +108,7 @@ export function Sales () {
       key: 'saleDate',
       label: 'Fecha',
       align: 'center',
-      render: (row) => {
-        const date = parseLocalDate(row.saleDate)
-        return date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })
-      }
+      render: (row) => formatDateShort(row.saleDate)
     },
     {
       key: 'customer',
@@ -328,7 +325,7 @@ export function Sales () {
   }
 
   const handleCreateNew = () => {
-    const today = new Date().toISOString().split('T')[0]
+    const today = getToday()
     setSelectedSale({
       saleDate: today,
       customer: '',
@@ -721,13 +718,7 @@ export function Sales () {
                   details={[
                     {
                       label: 'Fecha',
-                      value: selectedSale?.saleDate
-                        ? parseLocalDate(selectedSale.saleDate).toLocaleDateString('es-ES', {
-                          day: '2-digit',
-                          month: '2-digit',
-                          year: 'numeric'
-                        })
-                        : '-'
+                      value: formatDateShort(selectedSale?.saleDate)
                     },
                     { label: 'Cliente', value: selectedSale?.customer || '-' },
                     { label: 'Total', value: `S/. ${selectedSale?.total?.toFixed(2)}` },
