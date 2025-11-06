@@ -108,7 +108,7 @@ export function Sales () {
       key: 'saleDate',
       label: 'Fecha',
       align: 'center',
-      render: (row) => formatDateShort(row.saleDate)
+      render: (row) => formatDateShort(row.saleDate, undefined, 'UTC')
     },
     {
       key: 'customer',

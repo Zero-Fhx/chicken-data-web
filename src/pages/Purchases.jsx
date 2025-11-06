@@ -119,7 +119,7 @@ export function Purchases () {
       key: 'purchaseDate',
       label: 'Fecha',
       align: 'center',
-      render: (row) => formatDateShort(row.purchaseDate)
+      render: (row) => formatDateShort(row.purchaseDate, undefined, 'UTC')
     },
     {
       key: 'supplier',
