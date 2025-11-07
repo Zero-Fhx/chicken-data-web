@@ -18,9 +18,10 @@ import { StatusBadge } from '@/components/StatusBadge'
 import { TestStatePanel } from '@/components/TestStatePanel'
 
 import API_ENDPOINTS from '@/services/api'
-
 import { formatDateShort, getToday } from '@/services/dateUtils'
+import { removeExtraSpaces } from '@/services/normalize'
 import trunc from '@/services/trunc'
+
 import '@/styles/DetailsTable.css'
 
 const ENVIRONMENT = import.meta.env.VITE_ENV || 'production'
@@ -495,7 +496,7 @@ export function Purchases () {
       const purchaseData = {
         purchaseDate: selectedPurchase.purchaseDate,
         supplierId: selectedPurchase.supplierId ? parseInt(selectedPurchase.supplierId) : null,
-        notes: selectedPurchase.notes.removeExtraSpaces() || null,
+        notes: removeExtraSpaces(selectedPurchase.notes).trim() || null,
         status: selectedPurchase.status
       }
 
@@ -541,7 +542,7 @@ export function Purchases () {
     const purchaseData = {
       purchaseDate: selectedPurchase.purchaseDate,
       supplierId: selectedPurchase.supplierId ? parseInt(selectedPurchase.supplierId) : null,
-      notes: selectedPurchase.notes.removeExtraSpaces() || null,
+      notes: removeExtraSpaces(selectedPurchase.notes).trim() || null,
       status: selectedPurchase.status,
       details: validDetails.map(detail => ({
         ingredientId: parseInt(detail.ingredient_id),

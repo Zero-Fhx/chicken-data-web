@@ -20,6 +20,7 @@ import { StatusBadge } from '@/components/StatusBadge'
 import { TestStatePanel } from '@/components/TestStatePanel'
 
 import API_ENDPOINTS from '@/services/api'
+import { removeExtraSpaces } from '@/services/normalize'
 import trunc from '@/services/trunc'
 
 const ENVIRONMENT = import.meta.env.VITE_ENV || 'production'
@@ -531,8 +532,8 @@ export function Dishes () {
     }
 
     const dishData = {
-      name: selectedDish.name.removeExtraSpaces(),
-      description: selectedDish.description.removeExtraSpaces() || null,
+      name: removeExtraSpaces(selectedDish.name),
+      description: removeExtraSpaces(selectedDish.description).trim() || null,
       categoryId: selectedDish.category?.id || null,
       price: parseFloat(selectedDish.price),
       status: selectedDish.status

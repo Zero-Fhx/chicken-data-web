@@ -17,6 +17,8 @@ import { Separator } from '@/components/Separator'
 import { StatusBadge } from '@/components/StatusBadge'
 import { TestStatePanel } from '@/components/TestStatePanel'
 
+import { removeExtraSpaces } from '@/services/normalize'
+
 const ENVIRONMENT = import.meta.env.VITE_ENV || 'production'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
@@ -250,12 +252,12 @@ export function Suppliers () {
     setModalLoading(true)
 
     const supplierData = {
-      name: selectedSupplier.name.removeExtraSpaces(),
-      ruc: selectedSupplier.ruc.removeExtraSpaces() || null,
-      phone: selectedSupplier.phone.removeExtraSpaces() || null,
-      email: selectedSupplier.email.removeExtraSpaces() || null,
-      address: selectedSupplier.address.removeExtraSpaces() || null,
-      contactPerson: selectedSupplier.contactPerson.removeExtraSpaces() || null,
+      name: removeExtraSpaces(selectedSupplier.name).trim(),
+      ruc: removeExtraSpaces(selectedSupplier.ruc).trim() || null,
+      phone: removeExtraSpaces(selectedSupplier.phone).trim() || null,
+      email: removeExtraSpaces(selectedSupplier.email).trim() || null,
+      address: removeExtraSpaces(selectedSupplier.address).trim() || null,
+      contactPerson: removeExtraSpaces(selectedSupplier.contactPerson).trim() || null,
       status: selectedSupplier.status
     }
 

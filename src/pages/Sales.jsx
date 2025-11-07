@@ -18,11 +18,12 @@ import { Separator } from '@/components/Separator'
 import { StatusBadge } from '@/components/StatusBadge'
 import { TestStatePanel } from '@/components/TestStatePanel'
 
-import '@/styles/DetailsTable.css'
-
 import API_ENDPOINTS from '@/services/api'
 import { formatDateShort, getToday } from '@/services/dateUtils'
+import { removeExtraSpaces } from '@/services/normalize'
 import trunc from '@/services/trunc'
+
+import '@/styles/DetailsTable.css'
 
 const ENVIRONMENT = import.meta.env.VITE_ENV || 'production'
 
@@ -458,8 +459,8 @@ export function Sales () {
     if (modalMode === 'edit') {
       const saleData = {
         saleDate: selectedSale.saleDate,
-        customer: selectedSale.customer.removeExtraSpaces() || null,
-        notes: selectedSale.notes.removeExtraSpaces() || null,
+        customer: removeExtraSpaces(selectedSale.customer).trim() || null,
+        notes: removeExtraSpaces(selectedSale.notes).trim() || null,
         status: selectedSale.status
       }
 
@@ -504,8 +505,8 @@ export function Sales () {
 
     const saleData = {
       saleDate: selectedSale.saleDate,
-      customer: selectedSale.customer.removeExtraSpaces() || null,
-      notes: selectedSale.notes.removeExtraSpaces() || null,
+      customer: removeExtraSpaces(selectedSale.customer).trim() || null,
+      notes: removeExtraSpaces(selectedSale.notes).trim() || null,
       status: selectedSale.status,
       details: validDetails.map(detail => ({
         dishId: parseInt(detail.dish_id),

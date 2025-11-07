@@ -20,6 +20,7 @@ import { StatusBadge } from '@/components/StatusBadge'
 import { TestStatePanel } from '@/components/TestStatePanel'
 
 import API_ENDPOINTS from '@/services/api'
+import { removeExtraSpaces } from '@/services/normalize'
 import trunc from '@/services/trunc'
 
 const ENVIRONMENT = import.meta.env.VITE_ENV || 'production'
@@ -511,8 +512,8 @@ export function Ingredients () {
     }
 
     const ingredientData = {
-      name: selectedIngredient.name.removeExtraSpaces(),
-      unit: selectedIngredient.unit.removeExtraSpaces(),
+      name: removeExtraSpaces(selectedIngredient.name).trim(),
+      unit: removeExtraSpaces(selectedIngredient.unit).trim(),
       categoryId: selectedIngredient.category?.id || null,
       stock: parseFloat(selectedIngredient.stock) || 0,
       minimumStock: parseFloat(selectedIngredient.minimumStock) || 0,
