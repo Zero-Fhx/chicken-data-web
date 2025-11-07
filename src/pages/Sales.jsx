@@ -904,7 +904,7 @@ export function Sales () {
                       gap: '0.5rem'
                     }}
                     >
-                      <WarningIcon width={28} height={28} color='#f59e0b' />
+                      <WarningIcon width={48} height={48} color='#f59e0b' />
                       <span>
                         <strong>Importante:</strong> Una vez creada la venta, los detalles de los platillos no podrán ser modificados.
                       </span>
