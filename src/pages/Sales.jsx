@@ -891,8 +891,6 @@ export function Sales () {
 
                   {modalMode === 'create' && (
                     <div style={{
-                      marginTop: '0.75rem',
-                      marginBottom: '0.75rem',
                       padding: '0.75rem',
                       background: '#fef3c7',
                       border: '1px solid #f59e0b',
