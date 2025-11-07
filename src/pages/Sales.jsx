@@ -30,7 +30,7 @@ const API_URL = `${API_ENDPOINTS.sales}/`
 const API_DISHES_URL = API_ENDPOINTS.dishes
 
 const initialFilters = {
-  customer: '',
+  search: '',
   startDate: '',
   endDate: '',
   status: ''
@@ -73,9 +73,9 @@ export function Sales () {
   const filterFields = [
     {
       type: 'text',
-      name: 'customer',
-      label: 'Cliente',
-      placeholder: 'Buscar por nombre del cliente'
+      name: 'search',
+      label: 'Cliente o Nota',
+      placeholder: 'Buscar por cliente o nota'
     },
     {
       type: 'date',
@@ -176,7 +176,7 @@ export function Sales () {
     }
   ]
 
-  const debouncedCustomer = useDebounce(filters.customer, 500)
+  const debouncedSearch = useDebounce(filters.search, 500)
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target
@@ -212,13 +212,13 @@ export function Sales () {
     url.searchParams.set('page', page)
     url.searchParams.set('pageSize', pageSize)
 
-    if (debouncedCustomer) url.searchParams.set('customer', debouncedCustomer.trim())
+    if (debouncedSearch) url.searchParams.set('search', debouncedSearch.trim())
     if (filters.startDate && !filterErrors.startDate) url.searchParams.set('startDate', filters.startDate)
     if (filters.endDate && !filterErrors.endDate) url.searchParams.set('endDate', filters.endDate)
     if (filters.status) url.searchParams.set('status', filters.status)
 
     return url.toString()
-  }, [page, pageSize, debouncedCustomer, filters.startDate, filters.endDate, filters.status, filterErrors])
+  }, [page, pageSize, debouncedSearch, filters.startDate, filters.endDate, filters.status, filterErrors])
 
   const { data, loading, setLoading, error, setError, refetch } = useFetch(buildURL)
 
