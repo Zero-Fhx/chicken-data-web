@@ -458,8 +458,8 @@ export function Sales () {
     if (modalMode === 'edit') {
       const saleData = {
         saleDate: selectedSale.saleDate,
-        customer: selectedSale.customer || null,
-        notes: selectedSale.notes || null,
+        customer: selectedSale.customer.removeExtraSpaces() || null,
+        notes: selectedSale.notes.removeExtraSpaces() || null,
         status: selectedSale.status
       }
 
@@ -504,8 +504,8 @@ export function Sales () {
 
     const saleData = {
       saleDate: selectedSale.saleDate,
-      customer: selectedSale.customer || null,
-      notes: selectedSale.notes || null,
+      customer: selectedSale.customer.removeExtraSpaces() || null,
+      notes: selectedSale.notes.removeExtraSpaces() || null,
       status: selectedSale.status,
       details: validDetails.map(detail => ({
         dishId: parseInt(detail.dish_id),

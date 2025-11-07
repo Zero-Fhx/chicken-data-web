@@ -511,8 +511,8 @@ export function Ingredients () {
     }
 
     const ingredientData = {
-      name: selectedIngredient.name,
-      unit: selectedIngredient.unit,
+      name: selectedIngredient.name.removeExtraSpaces(),
+      unit: selectedIngredient.unit.removeExtraSpaces(),
       categoryId: selectedIngredient.category?.id || null,
       stock: parseFloat(selectedIngredient.stock) || 0,
       minimumStock: parseFloat(selectedIngredient.minimumStock) || 0,

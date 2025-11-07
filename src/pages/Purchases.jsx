@@ -495,7 +495,7 @@ export function Purchases () {
       const purchaseData = {
         purchaseDate: selectedPurchase.purchaseDate,
         supplierId: selectedPurchase.supplierId ? parseInt(selectedPurchase.supplierId) : null,
-        notes: selectedPurchase.notes || null,
+        notes: selectedPurchase.notes.removeExtraSpaces() || null,
         status: selectedPurchase.status
       }
 
@@ -541,7 +541,7 @@ export function Purchases () {
     const purchaseData = {
       purchaseDate: selectedPurchase.purchaseDate,
       supplierId: selectedPurchase.supplierId ? parseInt(selectedPurchase.supplierId) : null,
-      notes: selectedPurchase.notes || null,
+      notes: selectedPurchase.notes.removeExtraSpaces() || null,
       status: selectedPurchase.status,
       details: validDetails.map(detail => ({
         ingredientId: parseInt(detail.ingredient_id),

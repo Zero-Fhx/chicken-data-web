@@ -250,12 +250,12 @@ export function Suppliers () {
     setModalLoading(true)
 
     const supplierData = {
-      name: selectedSupplier.name,
-      ruc: selectedSupplier.ruc || null,
-      phone: selectedSupplier.phone || null,
-      email: selectedSupplier.email || null,
-      address: selectedSupplier.address || null,
-      contactPerson: selectedSupplier.contactPerson || null,
+      name: selectedSupplier.name.removeExtraSpaces(),
+      ruc: selectedSupplier.ruc.removeExtraSpaces() || null,
+      phone: selectedSupplier.phone.removeExtraSpaces() || null,
+      email: selectedSupplier.email.removeExtraSpaces() || null,
+      address: selectedSupplier.address.removeExtraSpaces() || null,
+      contactPerson: selectedSupplier.contactPerson.removeExtraSpaces() || null,
       status: selectedSupplier.status
     }
 

@@ -531,8 +531,8 @@ export function Dishes () {
     }
 
     const dishData = {
-      name: selectedDish.name,
-      description: selectedDish.description || null,
+      name: selectedDish.name.removeExtraSpaces(),
+      description: selectedDish.description.removeExtraSpaces() || null,
       categoryId: selectedDish.category?.id || null,
       price: parseFloat(selectedDish.price),
       status: selectedDish.status
