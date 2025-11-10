@@ -1,0 +1,40 @@
+.tabs-container {
+  width: 100%;
+}
+
+.tabs-header {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
+/* Radio-style tab (structure: label > input + span) */
+.tab-radio {
+  display: inline-flex;
+  align-items: center;
+  background: #f5f5f5;
+  padding: 0.4rem 1.2rem;
+  border-radius: 20px;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, transform 0.12s;
+}
+
+.tab-radio input {
+  display: none;
+}
+
+.tab-radio .tab-label {
+  user-select: none;
+}
+
+.tab-radio.active {
+  background: #4f8a8b;
+  color: #fff;
+}
+
+.tabs-content {
+  width: 100%;
+}

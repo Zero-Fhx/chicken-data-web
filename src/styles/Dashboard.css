@@ -1,0 +1,87 @@
+/*
+ * styles/Dashboard.css
+ * Estilos para el layout principal del Bento Grid del Dashboard.
+ */
+
+/* 1. El Contenedor del Grid */
+.dashboard-grid {
+  display: grid;
+  /* Define un grid de 4 columnas de igual tamaño */
+  grid-template-columns: repeat(4, 1fr);
+  /* Espacio entre las tarjetas */
+  gap: 20px;
+}
+
+/* Evita que los hijos del grid crezcan más allá de su celda cuando
+   contienen elementos con min-width (por ejemplo nuestro carrusel). */
+.dashboard-grid > * {
+  min-width: 0;
+}
+
+/* 3. Clases de Span para el Grid */
+
+/* Tarjetas que ocupan 4 columnas */
+.span-4 {
+  grid-column: span 4;
+}
+
+/* Tarjetas que ocupan 3 columnas */
+.span-3 {
+  grid-column: span 3;
+}
+
+/* Tarjetas que ocupan 2 columnas */
+.span-2 {
+  grid-column: span 2;
+}
+
+/* Tarjetas que ocupan 1 columna */
+.span-1 {
+  grid-column: span 1;
+}
+
+/* 4. Responsividad (Opcional pero recomendado) */
+@media (max-width: 1200px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .span-4,
+  .span-3,
+  .span-2 {
+    grid-column: span 2;
+  }
+}
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  .span-4,
+  .span-2 {
+    grid-column: span 1;
+  }
+}
+
+/* Ajuste de responsividad para la nueva Fila 1 */
+@media (max-width: 1200px) {
+  /* En tablets, hacemos que las nuevas tarjetas de feed ocupen 1 columna */
+  .span-1 {
+    grid-column: span 1;
+  }
+  /* (Las .span-2 y .span-4 ya están configuradas para span 2) */
+}
+
+@media (max-width: 768px) {
+  /* En móviles, todo va a 1 columna de todas formas */
+  .span-1 {
+    grid-column: span 1;
+  }
+}
+
+/*
+ * --- CORRECCIÓN DE TOOLTIP (FASE 9.7) ---
+ * Fuerza al tooltip de Recharts a aparecer por encima
+ * de otros elementos de la tarjeta, como la leyenda.
+ */
+.recharts-tooltip-wrapper {
+  z-index: 999 !important;
+}

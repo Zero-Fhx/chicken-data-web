@@ -1,0 +1,107 @@
+/* styles/FinancialSummary.css */
+
+/* Contenedor principal del componente */
+.financial-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* Espacio entre la sección dinámica y la estática */
+}
+
+/* Projections specific */
+.projections-summary {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.proj-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.proj-label {
+  color: #6c757d;
+  font-size: 0.85rem;
+}
+.proj-value {
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+.proj-value.highlight {
+  color: #1b6b6b;
+}
+.proj-range {
+  grid-column: 1 / -1;
+  margin-top: 8px;
+}
+.range-conservative {
+  color: #9b2226;
+}
+.range-optimistic {
+  color: #116530;
+}
+
+/* Sección para los items que SÍ cambian */
+.financial-dynamic-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 2 columnas */
+  gap: 12px;
+  width: 100%;
+}
+
+/* Sección para los items que NO cambian */
+.financial-static-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 2x2 para los 4 items */
+  gap: 12px;
+  width: 100%;
+}
+
+/* El estilo de cada cajita gris */
+.financial-item {
+  background-color: #f8f9fa;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.financial-title {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #6c757d;
+  margin: 0 0 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.financial-value {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #212529;
+  margin: 0;
+}
+
+.help-tooltip {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  color: #adb5bd;
+  border: 1px solid #adb5bd;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 13px;
+  cursor: help;
+}
+
+/* Separador simple */
+.financial-separator {
+  border: 0;
+  border-top: 1px solid #e9ecef;
+  margin: 4px 0;
+}
+
+.financial-summary .period-selector {
+  align-self: flex-start; /* Se encoge a su ancho natural */
+}

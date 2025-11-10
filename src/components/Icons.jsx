@@ -372,3 +372,13 @@ export function WarningIcon ({ width = 24, height = 24, color = 'currentColor', 
     </svg>
   )
 }
+
+export function CriticalIcon ({ width = 24, height = 24, color = 'currentColor' }) {
+  return (
+    <svg width={width} height={height} viewBox='0 0 24 24' fill='none'>
+      <circle cx='12' cy='12' r='9' stroke={color} strokeWidth='2' />
+      <path d='M12 7L12 13' stroke={color} strokeWidth='2' strokeLinecap='round' />
+      <circle cx='12' cy='16.2' r='0.8' fill={color} />
+    </svg>
+  )
+}

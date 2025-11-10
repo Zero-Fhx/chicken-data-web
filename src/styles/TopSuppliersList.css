@@ -1,0 +1,36 @@
+/* styles/TopSuppliersList.css */
+.top-suppliers-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+.top-suppliers-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 4px;
+  border-bottom: 1px solid #f1f3f5;
+}
+.top-suppliers-item:last-child {
+  border-bottom: none;
+}
+.top-suppliers-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.top-suppliers-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #343a40;
+}
+.top-suppliers-count {
+  font-size: 0.8rem;
+  color: #868e96;
+}
+.top-suppliers-spent {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #212529;
+}

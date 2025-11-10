@@ -1,0 +1,31 @@
+.inventory-comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.inventory-comparison-table th,
+.inventory-comparison-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #f1f3f5;
+  font-size: 0.9rem;
+  vertical-align: middle;
+}
+
+.inventory-comparison-table th {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #868e96;
+  text-transform: uppercase;
+  background-color: #f8f9fa;
+}
+
+.inventory-comparison-table td:first-child {
+  font-weight: 600;
+  color: #343a40;
+}
+
+.inventory-comparison-table.compact th,
+.inventory-comparison-table.compact td {
+  padding: 12px;
+}

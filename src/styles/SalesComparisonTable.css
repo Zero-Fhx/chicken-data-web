@@ -1,0 +1,71 @@
+/* styles/SalesComparisonTable.css */
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.comparison-table th,
+.comparison-table td {
+  padding: 12px;
+  text-align: right;
+  border-bottom: 1px solid #f1f3f5;
+  font-size: 0.9rem;
+  vertical-align: middle;
+}
+
+.comparison-table th {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #868e96;
+  text-transform: uppercase;
+  background-color: #f8f9fa;
+  text-align: right;
+}
+
+.comparison-table th:first-child,
+.comparison-table td:first-child {
+  text-align: left;
+}
+
+.comparison-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.comparison-period {
+  font-weight: 600;
+  color: #343a40;
+}
+
+.comparison-current {
+  font-weight: 600;
+  color: #212529;
+  font-size: 1rem;
+  text-align: right;
+}
+
+.comparison-change {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.comparison-value {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #495057;
+}
+
+.comparison-percentage {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.comparison-percentage.positive {
+  color: #28a745; /* Verde */
+}
+.comparison-percentage.negative {
+  color: #e63946; /* Rojo */
+}
+.comparison-percentage.no-change {
+  color: #868e96; /* Gris */
+}

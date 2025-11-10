@@ -1,0 +1,51 @@
+/*
+ * styles/DashboardCard.css
+ * Estilos para el contenedor genérico de tarjetas.
+ */
+.dashboard-card {
+  background-color: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  /* Evita que la tarjeta crezca fuera del grid cuando hijos tengan min-width */
+  min-width: 0;
+}
+.dashboard-card-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f1f3f5;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+  gap: 16px;
+}
+.dashboard-card-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #343a40;
+}
+.dashboard-card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+  /* Permite que hijos con min-width no estiren el contenedor del grid/flex
+     sin esta regla, elementos internos (como nuestro carrusel con min-widths)
+     pueden forzar que la tarjeta crezca y el scroll no aparezca. */
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Centrar verticalmente el wrapper del carrusel para tarjetas que contienen el resumen de inventario */
+.dashboard-card .inventory-carousel-wrapper {
+  margin: auto 0;
+}
+/* footer de fuente eliminado */

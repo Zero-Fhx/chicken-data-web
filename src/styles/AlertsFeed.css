@@ -1,0 +1,75 @@
+/* styles/AlertsFeed.css */
+.alerts-feed {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 350px;
+  overflow-y: auto;
+
+  /* (Opcional) Mejora visual del padding para el scrollbar */
+  padding-right: 8px;
+}
+
+.alert-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+}
+
+/* Estilo para Alertas Críticas (Rojo) */
+.alert-item.critical {
+  background-color: #fff5f5;
+  border-color: #fcebeb;
+}
+.alert-item.critical .alert-icon {
+  color: #e63946;
+}
+.alert-item.critical .alert-title {
+  color: #c92a2a;
+}
+
+/* Estilo para Alertas de Advertencia (Naranja/Amarillo) */
+.alert-item.warning {
+  background-color: #fff9db;
+  border-color: #fff3bf;
+}
+.alert-item.warning .alert-icon {
+  color: #ffbb28;
+}
+.alert-item.warning .alert-title {
+  color: #fab005;
+}
+
+.alert-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.alert-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.alert-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.alert-message {
+  font-size: 0.85rem;
+  color: #495057;
+  line-height: 1.4;
+}
+
+.alert-message-sub {
+  font-size: 0.8rem;
+  color: #6c757d;
+  margin-top: 6px;
+}

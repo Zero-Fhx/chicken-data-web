@@ -1,0 +1,50 @@
+/* styles/TopDishesList.css */
+.top-dishes-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+.top-dishes-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 4px;
+  border-bottom: 1px solid #f1f3f5;
+}
+.top-dishes-item:last-child {
+  border-bottom: none;
+}
+.top-dishes-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.top-dishes-rank {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #adb5bd;
+  min-width: 16px;
+  text-align: right;
+}
+.top-dishes-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #343a40;
+}
+.top-dishes-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+.top-dishes-revenue {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #212529;
+}
+.top-dishes-percentage {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #00c49f; /* Verde */
+}

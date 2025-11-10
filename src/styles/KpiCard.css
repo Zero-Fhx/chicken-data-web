@@ -1,0 +1,63 @@
+/* styles/KpiCard.css */
+
+/* --- TAREA 20: Fusionar estilos de .dashboard-card --- */
+.kpi-card-wrapper {
+  /* Apariencia de la tarjeta (de DashboardCard.css) */
+  background-color: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+  padding: 20px;
+
+  /* Layout interno */
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Para que coincida con la altura de la fila */
+}
+
+/* Encabezado (Título + Selector) */
+.kpi-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px; /* Espacio antes del valor */
+  min-height: 28px; /* Altura fija para el selector */
+  border-bottom: 1px solid #f1f3f5; /* línea bajo el título, similar a otras cards */
+  padding-bottom: 8px;
+}
+
+.kpi-card-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #343a40;
+}
+
+/* Contenido (Valor + Crecimiento) */
+.kpi-card-content {
+  flex: 1; /* Ocupa el espacio restante */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centra el valor verticalmente */
+}
+
+.kpi-card-value {
+  margin: 0;
+  font-size: 2.25rem;
+  font-weight: 600;
+  color: #212529;
+}
+
+.kpi-card-growth {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-top: 4px;
+}
+.kpi-card-growth.positive {
+  color: #28a745; /* Verde */
+}
+.kpi-card-growth.negative {
+  color: #dc3545; /* Rojo */
+}
+
+/* Pie de página (Fuente) eliminado */

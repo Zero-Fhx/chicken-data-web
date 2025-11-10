@@ -42,10 +42,26 @@ export function useFetch (url) {
 
           if (signal.aborted) return
 
+          let parsed = { message: errorText }
+          try {
+            parsed = JSON.parse(errorText)
+          } catch {
+            parsed = { message: errorText }
+          }
+
           setError({
             status: response.status,
-            ...JSON.parse(errorText)
+            ...parsed
           })
+          setData(null)
+          return
+        }
+
+        const contentType = response.headers.get('content-type') || ''
+        if (!contentType.includes('application/json')) {
+          const text = await response.text()
+          if (signal.aborted) return
+          setError({ message: 'Respuesta no-JSON del servidor', details: text.slice(0, 100) })
           setData(null)
           return
         }
