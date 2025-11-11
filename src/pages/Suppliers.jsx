@@ -16,13 +16,16 @@ import { RequiredSpan } from '@/components/RequiredSpan'
 import { Separator } from '@/components/Separator'
 import { StatusBadge } from '@/components/StatusBadge'
 import { TestStatePanel } from '@/components/TestStatePanel'
+import { Button } from '@/components/ui/Button'
+import { Input } from '@/components/ui/Input'
+import { Select } from '@/components/ui/Select'
 
+import API_ENDPOINTS from '@/services/api'
 import { removeExtraSpaces } from '@/services/normalize'
 
 const ENVIRONMENT = import.meta.env.VITE_ENV || 'production'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
-const API_URL = `${API_BASE_URL}/suppliers/`
+const API_URL = `${API_ENDPOINTS.suppliers}/`
 
 const initialFilters = {
   search: '',
@@ -420,9 +423,9 @@ export function Suppliers () {
                   {modalMode === 'create' && 'Crear Proveedor'}
                 </h3>
               </div>
-              <button type='button' className='modal-close-button no-transform' onClick={handleCloseWithX}>
+              <Button type='button' className='modal-close-button no-transform' onClick={handleCloseWithX}>
                 <CancelIcon />
-              </button>
+              </Button>
             </CardHeader>
             <CardBody className='modal-body'>
               {modalLoading && (
@@ -472,7 +475,7 @@ export function Suppliers () {
                   <div className='modal-input-group'>
                     <div className='input-group'>
                       <label htmlFor='modal-name'>Nombre <RequiredSpan /></label>
-                      <input
+                      <Input
                         className={formErrors.name ? 'input-error' : ''}
                         type='text'
                         id='modal-name'
@@ -486,7 +489,7 @@ export function Suppliers () {
                     </div>
                     <div className='input-group'>
                       <label htmlFor='modal-ruc'>RUC</label>
-                      <input
+                      <Input
                         className={formErrors.ruc ? 'input-error' : ''}
                         type='text'
                         id='modal-ruc'
@@ -501,7 +504,7 @@ export function Suppliers () {
                     </div>
                     <div className='input-group'>
                       <label htmlFor='modal-contactPerson'>Persona de Contacto</label>
-                      <input
+                      <Input
                         className={formErrors.contactPerson ? 'input-error' : ''}
                         type='text'
                         id='modal-contactPerson'
@@ -516,7 +519,7 @@ export function Suppliers () {
                     </div>
                     <div className='input-group'>
                       <label htmlFor='modal-phone'>Teléfono</label>
-                      <input
+                      <Input
                         className={formErrors.phone ? 'input-error' : ''}
                         type='text'
                         id='modal-phone'
@@ -531,7 +534,7 @@ export function Suppliers () {
                     </div>
                     <div className='input-group'>
                       <label htmlFor='modal-email'>Email</label>
-                      <input
+                      <Input
                         className={formErrors.email ? 'input-error' : ''}
                         type='email'
                         id='modal-email'
@@ -559,41 +562,33 @@ export function Suppliers () {
                     </div>
                     <div className='input-group'>
                       <label htmlFor='modal-status'>Estado <RequiredSpan /></label>
-                      <select
+                      <Select
                         className={formErrors.status ? 'input-error' : ''}
                         name='status'
                         id='modal-status'
                         disabled={modalMode === 'view' || modalLoading}
-                        value={selectedSupplier?.status || ''}
-                        onChange={handleChange}
-                      >
-                        {statusOptions.map((option) => (
-                          <option
-                            key={option.value}
-                            value={option.value}
-                          >
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
+                        value={String(selectedSupplier?.status || '')}
+                        onChange={(val) => handleChange({ target: { name: 'status', value: val } })}
+                        options={statusOptions.map(o => ({ label: o.label, value: String(o.value) }))}
+                      />
                       <small className='info-error'>{formErrors.status}</small>
                     </div>
                   </div>
                   )}
             </CardBody>
             <CardFooter className='modal-footer'>
-              <button type='button' onClick={handleCancel} disabled={modalLoading}>
+              <Button type='button' onClick={handleCancel} disabled={modalLoading}>
                 <CancelIcon />
                 Cancelar
-              </button>
+              </Button>
               {modalMode === 'view' && (
-                <button type='button' className='edit' onClick={() => setModalMode('edit')} disabled={modalLoading}>
+                <Button type='button' className='edit' onClick={() => setModalMode('edit')} disabled={modalLoading}>
                   <EditIcon />
                   Editar
-                </button>
+                </Button>
               )}
               {(modalMode === 'edit' || modalMode === 'create') && (
-                <button
+                <Button
                   type='button'
                   className='primary'
                   onClick={handleSave}
@@ -601,13 +596,13 @@ export function Suppliers () {
                 >
                   <AddIcon />
                   {modalMode === 'create' ? 'Crear Proveedor' : 'Guardar Cambios'}
-                </button>
+                </Button>
               )}
               {modalMode === 'delete' && (
-                <button type='button' className='delete' onClick={handleDelete} disabled={modalLoading}>
+                <Button type='button' className='delete' onClick={handleDelete} disabled={modalLoading}>
                   <TrashBinIcon />
                   Confirmar Eliminación
-                </button>
+                </Button>
               )}
             </CardFooter>
           </Card>

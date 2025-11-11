@@ -12,6 +12,7 @@ import { SalesKpiCard } from '@/components/Dashboard/SalesKpiCard'
 import { TrendChart } from '@/components/Dashboard/TrendChart'
 import { PageHeader } from '@/components/PageHeader'
 import { Separator } from '@/components/Separator'
+import { Select } from '@/components/ui/Select'
 import { useFetch } from '@/hooks/useFetch'
 import API_ENDPOINTS from '@/services/api'
 import { useState } from 'react'
@@ -73,36 +74,27 @@ export function Home () {
 
   const trendControls = (
     <div className='card-controls' style={{ gap: '0.5rem', display: 'flex', flexDirection: 'row' }}>
-      <select
+      <Select
         value={trendGranularity}
-        onChange={(e) => setTrendGranularity(e.target.value)}
-      >
-        <option value='daily'>Diario</option>
-        <option value='weekly'>Semanal</option>
-        <option value='monthly'>Mensual</option>
-      </select>
-      <select
+        onChange={(val) => setTrendGranularity(val)}
+        options={[{ label: 'Diario', value: 'daily' }, { label: 'Semanal', value: 'weekly' }, { label: 'Mensual', value: 'monthly' }]}
+      />
+      <Select
         value={trendPeriod}
-        onChange={(e) => setTrendPeriod(e.target.value)}
-      >
-        <option value='7d'>7 días</option>
-        <option value='30d'>30 días</option>
-        <option value='90d'>90 días</option>
-      </select>
+        onChange={(val) => setTrendPeriod(val)}
+        options={[{ label: '7 días', value: '7d' }, { label: '30 días', value: '30d' }, { label: '90 días', value: '90d' }]}
+      />
     </div>
   )
 
   const _projectionControls = (
     <div className='card-controls'>
       <span>Proyectar:</span>
-      <select
-        value={projectionDays}
-        onChange={(e) => setProjectionDays(Number(e.target.value))}
-      >
-        {/* <option value={15}>15 días</option> */}
-        <option value={30}>30 días</option>
-        <option value={60}>60 días</option>
-      </select>
+      <Select
+        value={String(projectionDays)}
+        onChange={(val) => setProjectionDays(Number(val))}
+        options={[{ label: '30 días', value: '30' }, { label: '60 días', value: '60' }]}
+      />
     </div>
   )
 

@@ -16,6 +16,9 @@ import { RequiredSpan } from '@/components/RequiredSpan'
 import { Separator } from '@/components/Separator'
 import { StatusBadge } from '@/components/StatusBadge'
 import { TestStatePanel } from '@/components/TestStatePanel'
+import { Button } from '@/components/ui/Button'
+import { Input } from '@/components/ui/Input'
+import { Select } from '@/components/ui/Select'
 
 import API_ENDPOINTS from '@/services/api'
 import { formatDateShort, getToday } from '@/services/dateUtils'
@@ -713,9 +716,9 @@ export function Purchases () {
                   {modalMode === 'create' && 'Crear Compra'}
                 </h3>
               </div>
-              <button type='button' className='modal-close-button no-transform' onClick={handleCloseWithX}>
+              <Button type='button' className='modal-close-button no-transform' onClick={handleCloseWithX}>
                 <CancelIcon />
-              </button>
+              </Button>
             </CardHeader>
             <CardBody className='modal-body'>
               {modalLoading && (
@@ -800,7 +803,7 @@ export function Purchases () {
                 <div className='modal-input-group'>
                   <div className='input-group'>
                     <label htmlFor='modal-purchaseDate'>Fecha <RequiredSpan /></label>
-                    <input
+                    <Input
                       className={formErrors.purchaseDate ? 'input-error' : ''}
                       type='date'
                       id='modal-purchaseDate'
@@ -813,24 +816,15 @@ export function Purchases () {
                   </div>
                   <div className='input-group'>
                     <label htmlFor='modal-supplierId'>Proveedor</label>
-                    <select
+                    <Select
                       className={formErrors.supplierId ? 'input-error' : ''}
                       name='supplierId'
                       id='modal-supplierId'
                       disabled={modalMode === 'view' || modalLoading}
-                      value={selectedPurchase?.supplierId || selectedPurchase?.supplier?.id || ''}
-                      onChange={handleChange}
-                    >
-                      <option value=''>Ninguno</option>
-                      {suppliers.map((supplier) => (
-                        <option
-                          key={supplier.id}
-                          value={supplier.id}
-                        >
-                          {supplier.name}
-                        </option>
-                      ))}
-                    </select>
+                      value={String(selectedPurchase?.supplierId || selectedPurchase?.supplier?.id || '')}
+                      onChange={(val) => handleChange({ target: { name: 'supplierId', value: val } })}
+                      options={[{ label: 'Ninguno', value: '' }, ...suppliers.map(s => ({ label: s.name, value: String(s.id) }))]}
+                    />
                     <small className='info-error'>{formErrors.supplierId}</small>
                   </div>
                   <div className='input-group'>
@@ -848,23 +842,15 @@ export function Purchases () {
                   </div>
                   <div className='input-group'>
                     <label htmlFor='modal-status'>Estado <RequiredSpan /></label>
-                    <select
+                    <Select
                       className={formErrors.status ? 'input-error' : ''}
                       name='status'
                       id='modal-status'
                       disabled={modalMode === 'view' || modalLoading}
-                      value={selectedPurchase?.status || ''}
-                      onChange={handleChange}
-                    >
-                      {statusOptions.map((option) => (
-                        <option
-                          key={option.value}
-                          value={option.value}
-                        >
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
+                      value={String(selectedPurchase?.status || '')}
+                      onChange={(val) => handleChange({ target: { name: 'status', value: val } })}
+                      options={statusOptions.map(o => ({ label: o.label, value: String(o.value) }))}
+                    />
                     <small className='info-error'>{formErrors.status}</small>
                   </div>
 
@@ -976,18 +962,18 @@ export function Purchases () {
               )}
             </CardBody>
             <CardFooter className='modal-footer'>
-              <button type='button' onClick={handleCancel} disabled={modalLoading}>
+              <Button type='button' onClick={handleCancel} disabled={modalLoading}>
                 <CancelIcon />
                 Cancelar
-              </button>
+              </Button>
               {modalMode === 'view' && (
-                <button type='button' className='edit' onClick={() => setModalMode('edit')} disabled={modalLoading}>
+                <Button type='button' className='edit' onClick={() => setModalMode('edit')} disabled={modalLoading}>
                   <EditIcon />
                   Editar
-                </button>
+                </Button>
               )}
               {(modalMode === 'edit' || modalMode === 'create') && (
-                <button
+                <Button
                   type='button'
                   className='primary'
                   onClick={handleSave}
@@ -1005,13 +991,13 @@ export function Purchases () {
                 >
                   <AddIcon />
                   {modalMode === 'create' ? 'Crear Compra' : 'Guardar Cambios'}
-                </button>
+                </Button>
               )}
               {modalMode === 'delete' && (
-                <button type='button' className='delete' onClick={handleDelete} disabled={modalLoading}>
+                <Button type='button' className='delete' onClick={handleDelete} disabled={modalLoading}>
                   <TrashBinIcon />
                   Confirmar Eliminación
-                </button>
+                </Button>
               )}
             </CardFooter>
           </Card>

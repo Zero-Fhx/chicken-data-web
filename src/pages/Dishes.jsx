@@ -18,6 +18,9 @@ import { RequiredSpan } from '@/components/RequiredSpan'
 import { Separator } from '@/components/Separator'
 import { StatusBadge } from '@/components/StatusBadge'
 import { TestStatePanel } from '@/components/TestStatePanel'
+import { Button } from '@/components/ui/Button'
+import { Input } from '@/components/ui/Input'
+import { Select } from '@/components/ui/Select'
 
 import API_ENDPOINTS from '@/services/api'
 import { removeExtraSpaces } from '@/services/normalize'
@@ -726,9 +729,9 @@ export function Dishes () {
                   {modalMode === 'create' && 'Crear Plato'}
                 </h3>
               </div>
-              <button type='button' className='modal-close-button no-transform' onClick={handleCloseWithX}>
+              <Button type='button' className='modal-close-button no-transform' onClick={handleCloseWithX}>
                 <CancelIcon />
-              </button>
+              </Button>
             </CardHeader>
             <CardBody className='modal-body'>
               {modalLoading && (
@@ -779,7 +782,7 @@ export function Dishes () {
                 <div className='modal-input-group'>
                   <div className='input-group'>
                     <label htmlFor='modal-name'>Nombre <RequiredSpan /></label>
-                    <input
+                    <Input
                       className={formErrors.name ? 'input-error' : ''}
                       type='text'
                       id='modal-name'
@@ -806,24 +809,18 @@ export function Dishes () {
                   </div>
                   <div className='input-group'>
                     <label htmlFor='modal-category'>Categoría <RequiredSpan /></label>
-                    <select
+                    <Select
                       className={formErrors.category ? 'input-error' : ''}
                       name='category'
                       id='modal-category'
                       disabled={modalMode === 'view' || modalLoading}
-                      value={selectedDish?.category?.id || ''}
-                      onChange={handleChange}
-                    >
-                      <option value=''>Seleccionar categoría</option>
-                      {categoryOptions.map((option) => (
-                        <option
-                          key={option.value}
-                          value={option.value}
-                        >
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
+                      value={String(selectedDish?.category?.id || '')}
+                      onChange={(val) => handleChange({ target: { name: 'category', value: val } })}
+                      options={[
+                        { label: null, items: [{ label: 'Seleccionar categoría', value: '' }] },
+                        { label: 'Categorías', items: categoryOptions.map(o => ({ label: o.label, value: String(o.value) })) }
+                      ]}
+                    />
                     <small className='info-error'>{formErrors.category}</small>
                   </div>
                   <div className='input-group'>
@@ -846,23 +843,15 @@ export function Dishes () {
                   </div>
                   <div className='input-group'>
                     <label htmlFor='modal-status'>Estado <RequiredSpan /></label>
-                    <select
+                    <Select
                       className={formErrors.status ? 'input-error' : ''}
                       name='status'
                       id='modal-status'
                       disabled={modalMode === 'view' || modalLoading}
-                      value={selectedDish?.status || ''}
-                      onChange={handleChange}
-                    >
-                      {statusOptions.map((option) => (
-                        <option
-                          key={option.value}
-                          value={option.value}
-                        >
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
+                      value={String(selectedDish?.status || '')}
+                      onChange={(val) => handleChange({ target: { name: 'status', value: val } })}
+                      options={statusOptions.map(o => ({ label: o.label, value: String(o.value) }))}
+                    />
                     <small className='info-error'>{formErrors.status}</small>
                   </div>
 
@@ -883,18 +872,18 @@ export function Dishes () {
               )}
             </CardBody>
             <CardFooter className='modal-footer'>
-              <button type='button' onClick={handleCancel} disabled={modalLoading}>
+              <Button type='button' onClick={handleCancel} disabled={modalLoading}>
                 <CancelIcon />
                 Cancelar
-              </button>
+              </Button>
               {modalMode === 'view' && (
-                <button type='button' className='edit' onClick={() => setModalMode('edit')} disabled={modalLoading}>
+                <Button type='button' className='edit' onClick={() => setModalMode('edit')} disabled={modalLoading}>
                   <EditIcon />
                   Editar
-                </button>
+                </Button>
               )}
               {(modalMode === 'edit' || modalMode === 'create') && (
-                <button
+                <Button
                   type='button'
                   className='primary'
                   onClick={handleSave}
@@ -908,13 +897,13 @@ export function Dishes () {
                 >
                   <AddIcon />
                   {modalMode === 'create' ? 'Crear Plato' : 'Guardar Cambios'}
-                </button>
+                </Button>
               )}
               {modalMode === 'delete' && (
-                <button type='button' className='delete' onClick={handleDelete} disabled={modalLoading}>
+                <Button type='button' className='delete' onClick={handleDelete} disabled={modalLoading}>
                   <TrashBinIcon />
                   Confirmar Eliminación
-                </button>
+                </Button>
               )}
             </CardFooter>
           </Card>

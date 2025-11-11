@@ -17,6 +17,9 @@ import { SaleDetailsSection } from '@/components/SaleDetailsSection'
 import { Separator } from '@/components/Separator'
 import { StatusBadge } from '@/components/StatusBadge'
 import { TestStatePanel } from '@/components/TestStatePanel'
+import { Button } from '@/components/ui/Button'
+import { Input } from '@/components/ui/Input'
+import { Select } from '@/components/ui/Select'
 
 import API_ENDPOINTS from '@/services/api'
 import { formatDateShort, getToday } from '@/services/dateUtils'
@@ -678,9 +681,9 @@ export function Sales () {
                   {modalMode === 'create' && 'Crear Venta'}
                 </h3>
               </div>
-              <button type='button' className='modal-close-button no-transform' onClick={handleCloseWithX}>
+              <Button type='button' className='modal-close-button no-transform' onClick={handleCloseWithX}>
                 <CancelIcon />
-              </button>
+              </Button>
             </CardHeader>
             <CardBody className='modal-body'>
               {modalLoading && (
@@ -767,7 +770,7 @@ export function Sales () {
                 <div className='modal-input-group'>
                   <div className='input-group'>
                     <label htmlFor='modal-saleDate'>Fecha <RequiredSpan /></label>
-                    <input
+                    <Input
                       className={formErrors.saleDate ? 'input-error' : ''}
                       type='date'
                       id='modal-saleDate'
@@ -780,7 +783,7 @@ export function Sales () {
                   </div>
                   <div className='input-group'>
                     <label htmlFor='modal-customer'>Cliente</label>
-                    <input
+                    <Input
                       className={formErrors.customer ? 'input-error' : ''}
                       type='text'
                       id='modal-customer'
@@ -807,23 +810,15 @@ export function Sales () {
                   </div>
                   <div className='input-group'>
                     <label htmlFor='modal-status'>Estado <RequiredSpan /></label>
-                    <select
+                    <Select
                       className={formErrors.status ? 'input-error' : ''}
                       name='status'
                       id='modal-status'
                       disabled={modalMode === 'view' || modalLoading}
-                      value={selectedSale?.status || ''}
-                      onChange={handleChange}
-                    >
-                      {statusOptions.map((option) => (
-                        <option
-                          key={option.value}
-                          value={option.value}
-                        >
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
+                      value={String(selectedSale?.status || '')}
+                      onChange={(val) => handleChange({ target: { name: 'status', value: val } })}
+                      options={statusOptions.map(o => ({ label: o.label, value: String(o.value) }))}
+                    />
                     <small className='info-error'>{formErrors.status}</small>
                   </div>
 
@@ -930,18 +925,18 @@ export function Sales () {
               )}
             </CardBody>
             <CardFooter className='modal-footer'>
-              <button type='button' onClick={handleCancel} disabled={modalLoading}>
+              <Button type='button' onClick={handleCancel} disabled={modalLoading}>
                 <CancelIcon />
                 Cancelar
-              </button>
+              </Button>
               {modalMode === 'view' && (
-                <button type='button' className='edit' onClick={() => setModalMode('edit')} disabled={modalLoading}>
+                <Button type='button' className='edit' onClick={() => setModalMode('edit')} disabled={modalLoading}>
                   <EditIcon />
                   Editar
-                </button>
+                </Button>
               )}
               {(modalMode === 'edit' || modalMode === 'create') && (
-                <button
+                <Button
                   type='button'
                   className='primary'
                   onClick={handleSave}
@@ -959,13 +954,13 @@ export function Sales () {
                 >
                   <AddIcon />
                   {modalMode === 'create' ? 'Crear Venta' : 'Guardar Cambios'}
-                </button>
+                </Button>
               )}
               {modalMode === 'delete' && (
-                <button type='button' className='delete' onClick={handleDelete} disabled={modalLoading}>
+                <Button type='button' className='delete' onClick={handleDelete} disabled={modalLoading}>
                   <TrashBinIcon />
                   Confirmar Eliminación
-                </button>
+                </Button>
               )}
             </CardFooter>
           </Card>
