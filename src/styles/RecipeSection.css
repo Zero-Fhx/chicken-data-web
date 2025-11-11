@@ -253,6 +253,11 @@
   background-color: #ffffff !important;
 }
 
+/* Ensure Radix Select trigger also inherits the same background in this context */
+.recipe-ingredient-field .form-select-trigger {
+  background-color: #ffffff !important;
+}
+
 .quantity-input-wrapper {
   position: relative;
   display: flex;
