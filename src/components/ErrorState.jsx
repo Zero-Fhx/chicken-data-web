@@ -1,4 +1,5 @@
 import { RefreshIcon, WarningIcon } from '@/components/Icons'
+import { Button } from '@/components/ui/Button'
 
 import '@/styles/ErrorState.css'
 
@@ -36,13 +37,13 @@ export function ErrorState ({
         </div>
       )}
       {onRetry && (
-        <button
+        <Button
           className='outline-danger error-state-retry'
           onClick={onRetry}
         >
           <RefreshIcon />
           {retryLabel}
-        </button>
+        </Button>
       )}
     </div>
   )

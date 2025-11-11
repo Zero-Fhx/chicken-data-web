@@ -1,4 +1,5 @@
 import { ArrowLeftIcon, ArrowRightIcon } from '@/components/Icons'
+import { Button } from '@/components/ui/Button'
 import '@/styles/InventorySummary.css'
 import { useEffect, useRef, useState } from 'react'
 
@@ -46,7 +47,7 @@ export function InventorySummary ({ loading, data }) {
   return (
     // Wrapper con controles prev/next y el carrusel
     <div className={`inventory-carousel-wrapper ${isCentered ? 'is-centered' : ''}`}>
-      <button
+      <Button
         type='button'
         className='inventory-prev'
         aria-label='Anterior'
@@ -55,7 +56,7 @@ export function InventorySummary ({ loading, data }) {
         hidden={false}
       >
         <ArrowLeftIcon width={14} height={14} color='#6c757d' />
-      </button>
+      </Button>
 
       <div
         ref={carouselRef}
@@ -84,7 +85,7 @@ export function InventorySummary ({ loading, data }) {
 
       </div>
 
-      <button
+      <Button
         type='button'
         className='inventory-next'
         aria-label='Siguiente'
@@ -93,7 +94,7 @@ export function InventorySummary ({ loading, data }) {
         hidden={false}
       >
         <ArrowRightIcon width={14} height={14} color='#6c757d' />
-      </button>
+      </Button>
     </div>
   )
 }

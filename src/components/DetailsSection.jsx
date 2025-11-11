@@ -1,3 +1,5 @@
+import { Button } from '@/components/ui/Button'
+import { Select } from '@/components/ui/Select'
 import trunc from '@/services/trunc'
 import { useEffect, useState } from 'react'
 import '../styles/RecipeSection.css'
@@ -140,7 +142,7 @@ export function DetailsSection ({
       <div className='recipe-ingredients-container'>
         <div className='recipe-header'>
           <h4>{itemLabel}s <RequiredSpan /></h4>
-          <button
+          <Button
             type='button'
             className='btn-add-ingredient'
             onClick={handleAddDetail}
@@ -148,7 +150,7 @@ export function DetailsSection ({
           >
             <AddIcon width={16} height={16} />
             Agregar {itemLabel}
-          </button>
+          </Button>
         </div>
 
         {itemsLoading && (
@@ -267,7 +269,7 @@ function DetailItem ({
           )}
         </div>
         {!disabled && (
-          <button
+          <Button
             type='button'
             className='recipe-ingredient-remove'
             onClick={(e) => {
@@ -277,7 +279,7 @@ function DetailItem ({
             title={`Eliminar ${itemLabel.toLowerCase()}`}
           >
             <TrashBinIcon width={20} height={20} />
-          </button>
+          </Button>
         )}
       </div>
 
@@ -287,20 +289,14 @@ function DetailItem ({
             <label htmlFor={`detail-select-${index}`}>
               {itemLabel} <RequiredSpan />
             </label>
-            <select
+            <Select
               id={`detail-select-${index}`}
-              value={detail[itemIdField] || ''}
-              onChange={(e) => onChange(index, itemIdField, e.target.value)}
+              value={String(detail[itemIdField] || '')}
+              onChange={(val) => onChange(index, itemIdField, val)}
               disabled={disabled}
               className={!detail[itemIdField] ? 'input-error' : ''}
-            >
-              <option value=''>Seleccionar {itemLabel.toLowerCase()}</option>
-              {availableItems.map((item) => (
-                <option key={item[itemIdField]} value={item[itemIdField]}>
-                  {item[itemNameField]} {item[itemUnitField] && `(${item[itemUnitField]})`}
-                </option>
-              ))}
-            </select>
+              options={[{ label: `Seleccionar ${itemLabel.toLowerCase()}`, value: '' }, ...availableItems.map(it => ({ label: `${it[itemNameField]}${it[itemUnitField] ? ` (${it[itemUnitField]})` : ''}`, value: String(it[itemIdField]) }))]}
+            />
           </div>
 
           <div className='recipe-ingredient-field'>

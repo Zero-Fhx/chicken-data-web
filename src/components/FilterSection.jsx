@@ -1,6 +1,9 @@
 import { Card, CardBody, CardHeader } from '@/components/Card'
 import { SearchIcon, TrashBinIcon } from '@/components/Icons'
 import { InputWithLabel } from '@/components/InputWithLabel'
+import { Button } from '@/components/ui/Button'
+import { Input } from '@/components/ui/Input'
+import { Select } from '@/components/ui/Select'
 
 /**
  * Componente para renderizar una sección de filtros personalizable.
@@ -61,26 +64,44 @@ export function FilterSection ({
     const hasError = !!error
 
     switch (type) {
-      case 'select':
+      case 'select': {
+        // Preparamos las opciones que vamos a pasar al Select.
+        // Si el campo es de categoría (name === 'category' o label contiene 'categor')
+        // transformamos la lista plana en un formato agrupado:
+        //  - primer grupo (label: null) con el placeholder
+        //  - segundo grupo 'Categorías' con las opciones reales
+        const rawOptions = options || []
+        let selectOptionsToPass
+
+        const isCategoryField = name === 'category' || (String(label).toLowerCase().includes('categor'))
+
+        if (rawOptions.length > 0 && rawOptions[0].items) {
+          // Ya viene agrupado: lo pasamos tal cual
+          selectOptionsToPass = rawOptions
+        } else if (isCategoryField) {
+          selectOptionsToPass = [
+            { label: null, items: [{ label: placeholder || `Seleccionar ${label}`, value: '' }] },
+            { label: 'Categorías', items: rawOptions.map(o => ({ label: o.label, value: String(o.value) })) }
+          ]
+        } else {
+          // comportamiento por defecto: lista plana con placeholder como primer ítem
+          selectOptionsToPass = [{ label: placeholder || `Seleccionar ${label}`, value: '' }, ...rawOptions.map(o => ({ label: o.label, value: String(o.value) }))]
+        }
+
         return (
           <div key={name} className='filter-input'>
             <label htmlFor={fieldId}>{label}:</label>
-            <select
-              id={fieldId}
-              name={name}
-              value={value}
-              onChange={handleChange}
+            <Select
+              className=''
+              value={String(value)}
+              placeholder={placeholder || `Seleccionar ${label}`}
+              onChange={(val) => handleChange({ target: { name, value: val } })}
               disabled={disabled}
-            >
-              <option value=''>{placeholder || `Seleccionar ${label}`}</option>
-              {options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+              options={selectOptionsToPass}
+            />
           </div>
         )
+      }
 
       case 'number':
         if (name.toLowerCase().includes('price') || name.toLowerCase().includes('precio')) {
@@ -110,7 +131,7 @@ export function FilterSection ({
         return (
           <div key={name} className='filter-input'>
             <label htmlFor={fieldId}>{label}:</label>
-            <input
+            <Input
               type='number'
               id={fieldId}
               name={name}
@@ -131,7 +152,7 @@ export function FilterSection ({
         return (
           <div key={name} className='filter-input filter-checkbox'>
             <label htmlFor={fieldId}>
-              <input
+              <Input
                 type='checkbox'
                 id={fieldId}
                 name={name}
@@ -148,7 +169,7 @@ export function FilterSection ({
         return (
           <div key={name} className='filter-input'>
             <label htmlFor={fieldId}>{label}:</label>
-            <input
+            <Input
               type='date'
               id={fieldId}
               name={name}
@@ -164,7 +185,7 @@ export function FilterSection ({
         return (
           <div key={name} className='filter-input'>
             <label htmlFor={fieldId}>{label}:</label>
-            <input
+            <Input
               type='text'
               id={fieldId}
               name={name}
@@ -187,14 +208,14 @@ export function FilterSection ({
             <h3>{title}</h3>
           </div>
 
-          <button
+          <Button
             className='muted'
             onClick={handleClear}
             disabled={!hasActiveFilters}
           >
             <TrashBinIcon />
             {clearButtonLabel}
-          </button>
+          </Button>
         </CardHeader>
 
         <CardBody className='filter-form'>

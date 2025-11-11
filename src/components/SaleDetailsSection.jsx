@@ -1,3 +1,5 @@
+import { Button } from '@/components/ui/Button'
+import { Select } from '@/components/ui/Select'
 import trunc from '@/services/trunc'
 import { useEffect, useState } from 'react'
 import '../styles/RecipeSection.css'
@@ -155,7 +157,7 @@ export function SaleDetailsSection ({
       <div className='recipe-ingredients-container'>
         <div className='recipe-header'>
           <h4>Platillos Vendidos <RequiredSpan /></h4>
-          <button
+          <Button
             type='button'
             className='btn-add-ingredient'
             onClick={handleAddDetail}
@@ -163,7 +165,7 @@ export function SaleDetailsSection ({
           >
             <AddIcon width={16} height={16} />
             Agregar Platillo
-          </button>
+          </Button>
         </div>
 
         {dishesLoading && (
@@ -278,7 +280,7 @@ function SaleDetailItem ({
           )}
         </div>
         {!disabled && (
-          <button
+          <Button
             type='button'
             className='recipe-ingredient-remove'
             onClick={(e) => {
@@ -288,7 +290,7 @@ function SaleDetailItem ({
             title='Eliminar platillo'
           >
             <TrashBinIcon width={20} height={20} />
-          </button>
+          </Button>
         )}
       </div>
 
@@ -298,21 +300,17 @@ function SaleDetailItem ({
             <label htmlFor={`dish-select-${index}`}>
               Platillo <RequiredSpan />
             </label>
-            <select
+            <Select
               id={`dish-select-${index}`}
-              value={detail.dish_id || ''}
-              onChange={(e) => onChange(index, 'dish_id', e.target.value)}
-              onBlur={() => onFieldTouch(index, 'dish_id')}
+              value={String(detail.dish_id || '')}
+              onChange={(val) => {
+                onChange(index, 'dish_id', val)
+                onFieldTouch(index, 'dish_id')
+              }}
               disabled={disabled}
               className={isTouched('dish_id') && !detail.dish_id ? 'input-error' : ''}
-            >
-              <option value=''>Seleccionar platillo</option>
-              {availableDishes.map((dish) => (
-                <option key={dish.id} value={dish.id}>
-                  {dish.name}
-                </option>
-              ))}
-            </select>
+              options={[{ label: 'Seleccionar platillo', value: '' }, ...availableDishes.map(d => ({ label: d.name, value: String(d.id) }))]}
+            />
           </div>
 
           <div className='recipe-ingredient-field'>

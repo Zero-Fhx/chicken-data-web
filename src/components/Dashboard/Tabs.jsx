@@ -1,3 +1,4 @@
+import { Input } from '@/components/ui/Input'
 import { useId, useState } from 'react'
 import '../../styles/Tabs.css'
 
@@ -10,7 +11,7 @@ export function Tabs ({ tabs, children, groupName = 'tabs-group' }) {
       <div className='tabs-header'>
         {tabs.map((tab, idx) => (
           <label key={tab} className={`tab-radio ${activeTab === idx ? 'active' : ''}`}>
-            <input
+            <Input
               type='radio'
               name={`${groupName}-${id}`}
               value={idx}

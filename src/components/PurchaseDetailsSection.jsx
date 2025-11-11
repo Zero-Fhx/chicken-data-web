@@ -1,3 +1,5 @@
+import { Button } from '@/components/ui/Button'
+import { Select } from '@/components/ui/Select'
 import trunc from '@/services/trunc'
 import { useEffect, useState } from 'react'
 import '../styles/RecipeSection.css'
@@ -133,7 +135,7 @@ export function PurchaseDetailsSection ({
       <div className='recipe-ingredients-container'>
         <div className='recipe-header'>
           <h4>Ingredientes Comprados <RequiredSpan /></h4>
-          <button
+          <Button
             type='button'
             className='btn-add-ingredient'
             onClick={handleAddDetail}
@@ -141,7 +143,7 @@ export function PurchaseDetailsSection ({
           >
             <AddIcon width={16} height={16} />
             Agregar Ingrediente
-          </button>
+          </Button>
         </div>
 
         {ingredientsLoading && (
@@ -275,7 +277,7 @@ function PurchaseDetailItem ({
           )}
         </div>
         {!disabled && (
-          <button
+          <Button
             type='button'
             className='recipe-ingredient-remove'
             onClick={(e) => {
@@ -285,7 +287,7 @@ function PurchaseDetailItem ({
             title='Eliminar ingrediente'
           >
             <TrashBinIcon width={20} height={20} />
-          </button>
+          </Button>
         )}
       </div>
 
@@ -295,21 +297,17 @@ function PurchaseDetailItem ({
             <label htmlFor={`ingredient-select-${index}`}>
               Ingrediente <RequiredSpan />
             </label>
-            <select
+            <Select
               id={`ingredient-select-${index}`}
-              value={detail.ingredient_id || ''}
-              onChange={(e) => handleFieldChange('ingredient_id', e.target.value)}
-              onBlur={() => onFieldTouch(index, 'ingredient_id')}
+              value={String(detail.ingredient_id || '')}
+              onChange={(val) => {
+                handleFieldChange('ingredient_id', val)
+                onFieldTouch(index, 'ingredient_id')
+              }}
               disabled={disabled}
               className={isTouched('ingredient_id') && !detail.ingredient_id ? 'input-error' : ''}
-            >
-              <option value=''>Seleccionar ingrediente</option>
-              {availableIngredients.map((ingredient) => (
-                <option key={ingredient.id} value={ingredient.id}>
-                  {ingredient.name} ({ingredient.unit})
-                </option>
-              ))}
-            </select>
+              options={[{ label: 'Seleccionar ingrediente', value: '' }, ...availableIngredients.map(ing => ({ label: `${ing.name} (${ing.unit})`, value: String(ing.id) }))]}
+            />
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>

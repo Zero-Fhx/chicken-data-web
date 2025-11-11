@@ -1,3 +1,4 @@
+import { Input } from '@/components/ui/Input'
 import '@/styles/PeriodSelector.css'
 import { useId } from 'react'
 
@@ -34,7 +35,7 @@ export function PeriodSelector ({
       <div className='period-selector'>
         {items.map((opt) => (
           <label key={opt.value} className='period-option'>
-            <input
+            <Input
               type='radio'
               name={name}
               value={opt.value}

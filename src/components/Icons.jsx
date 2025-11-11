@@ -26,6 +26,20 @@ export function AdjustIcon ({ width = 24, height = 24, color = 'currentColor', }
   )
 }
 
+export function ArrowDownIcon ({ width = 24, height = 24, color = 'currentColor', }) {
+  return (
+    <svg width={width} height={height} viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+      <path
+        d='M6 9L12 15L18 9'
+        stroke={color}
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+    </svg>
+  )
+}
+
 export function ArrowLeftIcon ({ width = 24, height = 24, color = 'currentColor', }) {
   return (
     <svg width={width} height={height} viewBox='0 0 24 24' fill='none'>
@@ -45,6 +59,20 @@ export function ArrowRightIcon ({ width = 24, height = 24, color = 'currentColor
     <svg width={width} height={height} viewBox='0 0 24 24' fill='none'>
       <path
         d='M9 6L15 12L9 18'
+        stroke={color}
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+    </svg>
+  )
+}
+
+export function ArrowUpIcon ({ width = 24, height = 24, color = 'currentColor', }) {
+  return (
+    <svg width={width} height={height} viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+      <path
+        d='M6 15L12 9L18 15'
         stroke={color}
         strokeWidth='2'
         strokeLinecap='round'

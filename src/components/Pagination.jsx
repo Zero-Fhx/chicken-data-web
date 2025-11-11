@@ -1,4 +1,5 @@
 import { ArrowLeftIcon, ArrowRightIcon } from '@/components/Icons'
+import { Button } from '@/components/ui/Button'
 
 import '@/styles/Pagination.css'
 
@@ -29,34 +30,34 @@ export function Pagination ({ currentPage, totalPages, onPageChange, disabled = 
 
   return (
     <div className='pagination'>
-      <button
+      <Button
         className='pagination-btn'
         onClick={handlePrevious}
         disabled={currentPage === 1 || disabled}
       >
         <ArrowLeftIcon />
         Anterior
-      </button>
+      </Button>
 
       {[...Array(totalPages || 1)].map((_, i) => (
-        <button
+        <Button
           key={i}
           className={`pagination-btn ${currentPage === i + 1 ? 'active' : ''}`}
           onClick={() => onPageChange(i + 1)}
           disabled={disabled}
         >
           {i + 1}
-        </button>
+        </Button>
       ))}
 
-      <button
+      <Button
         className='pagination-btn'
         onClick={handleNext}
         disabled={currentPage === totalPages || disabled}
       >
         Siguiente
         <ArrowRightIcon />
-      </button>
+      </Button>
     </div>
   )
 }

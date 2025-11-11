@@ -1,3 +1,4 @@
+import { Input } from '@/components/ui/Input'
 import { useEffect, useRef } from 'react'
 import '../styles/InputWithLabel.css'
 
@@ -51,7 +52,7 @@ export function InputWithLabel ({
       {position === 'left' && displayLabel && (
         <span ref={labelRef} className='input-label left'>{displayLabel}</span>
       )}
-      <input
+      <Input
         {...restInputProps}
         className={`input-with-label ${className}`}
       />

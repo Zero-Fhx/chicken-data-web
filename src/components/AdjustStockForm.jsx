@@ -1,5 +1,7 @@
 import { WarningIcon } from '@/components/Icons'
 import { RequiredSpan } from '@/components/RequiredSpan'
+import { Button } from '@/components/ui/Button'
+import { Input } from '@/components/ui/Input'
 import '@/styles/AdjustStockForm.css'
 
 /**
@@ -117,30 +119,30 @@ export function AdjustStockForm ({
             Tipo de Ajuste <RequiredSpan />
           </label>
           <div className='adjustment-type-selector'>
-            <button
+            <Button
               type='button'
               className={`type-button type-add ${adjustmentType === 'add' ? 'active' : ''}`}
               onClick={() => onAdjustmentTypeChange('add')}
             >
               <span className='type-icon'>+</span>
               <span className='type-label'>Incrementar</span>
-            </button>
-            <button
+            </Button>
+            <Button
               type='button'
               className={`type-button type-subtract ${adjustmentType === 'subtract' ? 'active' : ''}`}
               onClick={() => onAdjustmentTypeChange('subtract')}
             >
               <span className='type-icon'>−</span>
               <span className='type-label'>Decrementar</span>
-            </button>
-            <button
+            </Button>
+            <Button
               type='button'
               className={`type-button type-set ${adjustmentType === 'set' ? 'active' : ''}`}
               onClick={() => onAdjustmentTypeChange('set')}
             >
               <span className='type-icon'>=</span>
               <span className='type-label'>Establecer</span>
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -149,7 +151,7 @@ export function AdjustStockForm ({
             {getAdjustmentLabel()} <RequiredSpan />
           </label>
           <div className='adjustment-input-wrapper'>
-            <input
+            <Input
               type='number'
               id='adjustment-value'
               className={error ? 'error' : ''}

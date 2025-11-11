@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+import { Button } from '@/components/ui/Button'
 import { CancelIcon } from './Icons'
 
 import '@/styles/ErrorModal.css'
@@ -35,9 +36,9 @@ export function ErrorModal ({ message, onClose }) {
         </div>
       </div>
       <div className='error-modal-actions'>
-        <button type='button' className='error-close-button' onClick={handleClose}>
+        <Button type='button' className='error-close-button' onClick={handleClose}>
           Cerrar
-        </button>
+        </Button>
       </div>
     </div>
   )

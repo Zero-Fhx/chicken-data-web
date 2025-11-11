@@ -5,6 +5,7 @@ import { Loader } from '@/components/Loader'
 import { Pagination } from '@/components/Pagination'
 import { ResultsCounter } from '@/components/ResultsCounter'
 import { TableControls } from '@/components/TableControls'
+import { Button } from '@/components/ui/Button'
 
 /**
  * Componente genérico para renderizar una tabla de datos paginada y con controles.
@@ -77,7 +78,7 @@ export function DataTable ({
     return (
       <div className='button-group' style={{ justifyContent: 'center' }}>
         {actions.map((action, index) => (
-          <button
+          <Button
             key={index}
             className={`${action.variant || 'primary'} ${action.iconOnly ? 'icon-only' : ''} no-transform`}
             onClick={() => action.onClick(row)}
@@ -86,7 +87,7 @@ export function DataTable ({
           >
             {action.icon}
             {!action.iconOnly && <span>{action.label}</span>}
-          </button>
+          </Button>
         ))}
       </div>
     )

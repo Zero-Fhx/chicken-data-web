@@ -1,4 +1,6 @@
 import { RefreshIcon } from '@/components/Icons'
+import { Button } from '@/components/ui/Button'
+import { Select } from '@/components/ui/Select'
 
 import '@/styles/TableControls.css'
 
@@ -47,27 +49,23 @@ export function TableControls ({
         <h2>{title}</h2>
       </div>
       <div className='table-controls-actions'>
-        <select
-          className='muted'
+        <Select
+          className='muted inline'
           style={{ width: 'auto' }}
-          value={pageSize}
+          value={String(pageSize)}
+          placeholder={`${pageSize} por página`}
+          onChange={(val) => handlePageSizeChange({ target: { value: Number(val) } })}
+          options={pageSizeOptions.map((o) => ({ label: `${o} por página`, value: String(o) }))}
           disabled={loading}
-          onChange={handlePageSizeChange}
-        >
-          {pageSizeOptions.map((option) => (
-            <option key={option} value={option}>
-              {option} por página
-            </option>
-          ))}
-        </select>
-        <button
+        />
+        <Button
           className='muted'
           onClick={handleRefresh}
           disabled={loading}
         >
           <RefreshIcon />
           {refreshLabel}
-        </button>
+        </Button>
       </div>
     </div>
   )

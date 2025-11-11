@@ -9,6 +9,8 @@
  *
  * @returns {React.ReactElement} El elemento JSX renderizado.
  */
+import { Button } from '@/components/ui/Button'
+
 export function PageHeader ({ title, description, actions = [] }) {
   const handleActionClick = (actionOnClick) => {
     if (actionOnClick) {
@@ -26,7 +28,7 @@ export function PageHeader ({ title, description, actions = [] }) {
       {actions.length > 0 && (
         <div className='button-group'>
           {actions.map((action, index) => (
-            <button
+            <Button
               key={index}
               className={action.variant || 'primary'}
               onClick={() => handleActionClick(action.onClick)}
@@ -34,7 +36,7 @@ export function PageHeader ({ title, description, actions = [] }) {
             >
               {action.icon}
               {action.label}
-            </button>
+            </Button>
           ))}
         </div>
       )}
