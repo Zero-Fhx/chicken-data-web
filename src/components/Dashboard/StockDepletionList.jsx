@@ -8,34 +8,36 @@ export function StockDepletionList ({ data }) {
 
   return (
     <div className='stock-depletion-wrapper'>
-      <table className='stock-depletion-table compact'>
-        <thead>
-          <tr>
-            <th>Ingrediente</th>
-            <th>Stock</th>
-            <th>Días</th>
-            <th>Cantidad rec.</th>
-            <th>Costo</th>
-            <th>Prioridad</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map(item => (
-            <tr key={item.ingredientId ?? item.ingredientName}>
-              <td>{item.ingredientName}</td>
-              <td className='stock-small'>{formatNumber(item.currentStock, 2)}</td>
-              <td>{formatNumber(item.daysUntilDepleted, 1)}</td>
-              <td>{formatNumber(item.recommendedOrderQuantity, 2)}</td>
-              <td>{formatCurrency(item.estimatedCost)}</td>
-              <td>
-                <span className={`priority-chip ${item.priority === 'high' ? 'priority-alta' : item.priority === 'low' ? 'priority-baja' : 'priority-media'}`}>
-                  {item.priority === 'high' ? 'Alta' : item.priority === 'low' ? 'Baja' : 'Media'}
-                </span>
-              </td>
+      <div className='table-scroll-wrapper'>
+        <table className='stock-depletion-table compact'>
+          <thead>
+            <tr>
+              <th>Ingrediente</th>
+              <th>Stock</th>
+              <th>Días</th>
+              <th>Cantidad rec.</th>
+              <th>Costo</th>
+              <th>Prioridad</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {data.map(item => (
+              <tr key={item.ingredientId ?? item.ingredientName}>
+                <td>{item.ingredientName}</td>
+                <td className='stock-small'>{formatNumber(item.currentStock, 2)}</td>
+                <td>{formatNumber(item.daysUntilDepleted, 1)}</td>
+                <td>{formatNumber(item.recommendedOrderQuantity, 2)}</td>
+                <td>{formatCurrency(item.estimatedCost)}</td>
+                <td>
+                  <span className={`priority-chip ${item.priority === 'high' ? 'priority-alta' : item.priority === 'low' ? 'priority-baja' : 'priority-media'}`}>
+                    {item.priority === 'high' ? 'Alta' : item.priority === 'low' ? 'Baja' : 'Media'}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }

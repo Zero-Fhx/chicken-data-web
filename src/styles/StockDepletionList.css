@@ -1,13 +1,11 @@
 .stock-depletion-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 1rem;
   font-size: 0.92rem;
 }
 
 .stock-depletion-table th,
 .stock-depletion-table td {
-  border-bottom: 1px solid #eee;
   padding: 10px 12px;
   text-align: left;
   vertical-align: middle;
@@ -28,10 +26,19 @@
   background: #fbfbfc;
 }
 
-/* Make the table horizontally scrollable on small screens */
+/* Double-wrapper: outer clips border-radius, inner provides scroll */
 .stock-depletion-wrapper {
   width: 100%;
+  overflow: hidden; /* clip scrollbars to preserve outer border-radius */
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  background: #fff;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
+}
+
+.stock-depletion-wrapper .table-scroll-wrapper {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .stock-small {
