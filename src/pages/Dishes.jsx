@@ -310,9 +310,10 @@ export function Dishes () {
 
     if (filters.category) url.searchParams.set('categoryId', filters.category)
     if (filters.status) url.searchParams.set('status', filters.status)
+    if (filters.hasStock) url.searchParams.set('hasStock', filters.hasStock)
 
     return url.toString()
-  }, [page, pageSize, debouncedName, debouncedMinPrice, debouncedMaxPrice, filters.category, filters.status, filterErrors])
+  }, [page, pageSize, debouncedName, debouncedMinPrice, debouncedMaxPrice, filters.category, filters.status, filters.hasStock, filterErrors])
 
   const { data, loading, setLoading, error, setError, refetch } = useFetch(
     buildURL
