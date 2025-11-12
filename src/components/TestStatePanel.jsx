@@ -1,6 +1,7 @@
 import { Card, CardBody, CardHeader } from './Card'
 import { WarningIcon } from './Icons'
 import { Separator } from './Separator'
+import { Button } from './ui/Button'
 
 /**
  * Panel de control para simular estados de la aplicación durante el desarrollo.
@@ -34,18 +35,18 @@ export function TestStatePanel ({ loading, setLoading, error, setError }) {
             <div style={{ flex: '1', minWidth: '250px' }}>
               <h3 style={{ marginBottom: '0.5rem', fontSize: '1rem' }}>Estado de Carga</h3>
               <div className='button-group'>
-                <button
+                <Button
                   className='info'
                   onClick={() => setLoading(true)}
                 >
                   Activar Carga
-                </button>
-                <button
+                </Button>
+                <Button
                   className='muted'
                   onClick={() => setLoading(false)}
                 >
                   Desactivar Carga
-                </button>
+                </Button>
               </div>
               <p className='muted-text' style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>
                 Estado actual: <strong>{loading ? 'Cargando...' : 'Inactivo'}</strong>
@@ -55,18 +56,18 @@ export function TestStatePanel ({ loading, setLoading, error, setError }) {
             <div style={{ flex: '1', minWidth: '250px' }}>
               <h3 style={{ marginBottom: '0.5rem', fontSize: '1rem' }}>Estado de Error</h3>
               <div className='button-group'>
-                <button
+                <Button
                   className='danger'
                   onClick={() => setError({ message: 'Error simulado para pruebas' })}
                 >
                   Simular Error
-                </button>
-                <button
+                </Button>
+                <Button
                   className='muted'
                   onClick={() => setError(null)}
                 >
                   Limpiar Error
-                </button>
+                </Button>
               </div>
               <p className='muted-text' style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>
                 Estado actual: <strong>{error ? `Error: ${error.message}` : 'Sin errores'}</strong>
@@ -79,7 +80,7 @@ export function TestStatePanel ({ loading, setLoading, error, setError }) {
           <div>
             <h3 style={{ marginBottom: '0.5rem', fontSize: '1rem' }}>Acciones Rápidas</h3>
             <div className='button-group'>
-              <button
+              <Button
                 className='warning'
                 onClick={() => {
                   setLoading(false)
@@ -87,8 +88,8 @@ export function TestStatePanel ({ loading, setLoading, error, setError }) {
                 }}
               >
                 Resetear Todo
-              </button>
-              <button
+              </Button>
+              <Button
                 className='info'
                 onClick={() => {
                   setLoading(true)
@@ -96,8 +97,8 @@ export function TestStatePanel ({ loading, setLoading, error, setError }) {
                 }}
               >
                 Simular Carga (2s)
-              </button>
-              <button
+              </Button>
+              <Button
                 className='danger'
                 onClick={() => {
                   setError({ message: 'Error de conexión con el servidor' })
@@ -105,7 +106,7 @@ export function TestStatePanel ({ loading, setLoading, error, setError }) {
                 }}
               >
                 Simular Error (3s)
-              </button>
+              </Button>
             </div>
           </div>
         </CardBody>
