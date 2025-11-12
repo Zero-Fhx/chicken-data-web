@@ -29,7 +29,8 @@ export function RecipeSection ({
   availableIngredients,
   ingredientsLoading,
   mode = 'edit',
-  disabled = false
+  disabled = false,
+  containerRef = null
 }) {
   const [expandedIngredients, setExpandedIngredients] = useState({})
   const [touchedFields, setTouchedFields] = useState({})
@@ -205,6 +206,7 @@ export function RecipeSection ({
                 isFieldTouched={isFieldTouched}
                 availableIngredients={availableIngredients}
                 disabled={disabled}
+                containerRef={containerRef}
               />
             ))}
           </div>
@@ -244,7 +246,8 @@ function RecipeIngredientItem ({
   onFieldBlur,
   isFieldTouched,
   availableIngredients,
-  disabled
+  disabled,
+  containerRef
 }) {
   const hasValidData = ingredient.name && ingredient.quantityUsed
 
@@ -292,14 +295,16 @@ function RecipeIngredientItem ({
             </label>
             <Select
               id={`ingredient-select-${index}`}
-              value={String(ingredient.ingredientId || '')}
+              value={ingredient.ingredientId == null ? '' : String(ingredient.ingredientId)}
               onChange={(val) => {
                 onChange(index, 'ingredientId', val)
                 onFieldBlur(index, 'ingredientId')
               }}
               disabled={disabled}
               className={isFieldTouched(index, 'ingredientId') && !ingredient.ingredientId ? 'input-error' : ''}
-              options={[{ label: 'Seleccionar ingrediente', value: '' }, ...availableIngredients.map(ai => ({ label: `${ai.name} (${ai.unit})`, value: String(ai.id) }))]}
+              options={[{ label: 'Ingredientes', items: availableIngredients.map(ai => ({ label: `${ai.name} (${ai.unit})`, value: String(ai.id) })) }]}
+              placeholder='Seleccionar ingrediente'
+              containerRef={containerRef}
             />
           </div>
 
