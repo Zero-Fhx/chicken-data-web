@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import { RemoveScroll } from 'react-remove-scroll'
 
 /**
  * Componente base para mostrar contenido en un diálogo modal.
@@ -11,8 +12,10 @@ import { useEffect, useRef } from 'react'
  *
  * @returns {React.ReactElement} El elemento JSX renderizado.
  */
-export function Modal ({ isOpen, onAnimationEnd, children }) {
-  const dialogRef = useRef(null)
+export const Modal = React.forwardRef(function Modal ({ isOpen, onAnimationEnd, children }, ref) {
+  const innerRef = useRef(null)
+  const dialogRef = ref || innerRef
+  const [isDialogActive, setIsDialogActive] = useState(false)
 
   useEffect(() => {
     const dialog = dialogRef.current
@@ -21,12 +24,16 @@ export function Modal ({ isOpen, onAnimationEnd, children }) {
     if (isOpen && !dialog.hasAttribute('open')) {
       dialog.removeAttribute('data-closing')
       dialog.showModal()
+      setIsDialogActive(true)
     } else if (!isOpen && dialog.hasAttribute('open')) {
       dialog.setAttribute('data-closing', 'true')
+      // keep dialog active during closing animation
+      setIsDialogActive(true)
 
       const handleAnimationEnd = () => {
         dialog.removeAttribute('data-closing')
         dialog.close()
+        setIsDialogActive(false)
         if (onAnimationEnd) {
           onAnimationEnd()
         }
@@ -41,19 +48,21 @@ export function Modal ({ isOpen, onAnimationEnd, children }) {
         if (dialog.hasAttribute('data-closing')) {
           dialog.removeAttribute('data-closing')
           dialog.close()
+          setIsDialogActive(false)
           if (onAnimationEnd) {
             onAnimationEnd()
           }
         }
       }, 350)
     }
-  }, [isOpen, onAnimationEnd])
-
+  }, [isOpen, onAnimationEnd, dialogRef])
   return (
-    <dialog ref={dialogRef} className='modal-dialog' closedby='none'>
-      <div className='modal-content'>
-        {children}
-      </div>
-    </dialog>
+    <RemoveScroll enabled={isDialogActive}>
+      <dialog ref={dialogRef} className='modal-dialog' closedby='none'>
+        <div className='modal-content'>
+          {children}
+        </div>
+      </dialog>
+    </RemoveScroll>
   )
-}
+})
