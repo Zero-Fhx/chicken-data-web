@@ -3,6 +3,20 @@
   border-collapse: collapse;
 }
 
+/* Double-wrapper: outer clips border-radius, inner scrolls */
+.comparison-wrapper {
+  width: 100%;
+  overflow: hidden; /* clip scrollbars to preserve outer border-radius */
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+}
+
+.comparison-wrapper .table-scroll-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .dishes-comparison-table thead th {
   text-transform: uppercase;
   text-align: right;
@@ -16,7 +30,6 @@
 .dishes-comparison-table td {
   padding: 10px 12px;
   text-align: left;
-  border-bottom: 1px solid #f1f3f5;
   font-size: 0.95rem;
   vertical-align: middle;
 }
