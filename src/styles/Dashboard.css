@@ -85,3 +85,78 @@
 .recharts-tooltip-wrapper {
   z-index: 999 !important;
 }
+
+/* 1. Contenedor GRIS unificado (sin cambios) */
+.dashboard-controls-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background-color: #f1f3f5;
+  border-radius: 6px;
+  padding: 4px;
+}
+
+/* 2. FIX: Hacemos que el .period-selector se vuelva transparente
+      CUANDO está dentro del .dashboard-controls-group */
+.dashboard-controls-group .period-selector {
+  background-color: transparent;
+  padding: 0;
+  gap: 4px; /* Asegura el gap */
+}
+
+/* 3. Estilo INACTIVO del Select (sin cambios) */
+.form-select-trigger.dashboard-select {
+  border: 1px solid transparent;
+  box-shadow: none;
+  background-color: transparent;
+  min-height: auto;
+  height: auto;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border-radius: 4px;
+  color: #495057;
+  gap: 0.25rem;
+  padding-left: 10px;
+  padding-right: 10px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+/* 4. Estilo HOVER del Select (sin cambios) */
+.form-select-trigger.dashboard-select:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+  border-color: transparent;
+}
+
+/* 5. Estilo ACTIVO/FOCUS del Select (sin cambios) */
+.form-select-trigger.dashboard-select:focus,
+.form-select-trigger.dashboard-select[data-state="open"] {
+  background-color: #ffffff;
+  color: #333;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* 6. Estilo de la flecha (sin cambios) */
+.form-select-trigger.dashboard-select .form-select-icon svg {
+  stroke: #9ca3af;
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+/* 7. Separador vertical (sin cambios) */
+.controls-separator {
+  width: 1px;
+  height: 16px;
+  background-color: #d1d5db;
+  margin: 0 4px;
+}
+
+/* 8. Estilo del Dropdown (sin cambios) */
+.form-select-content.dashboard-dropdown {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #495057;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-color: #e5e7eb;
+}
