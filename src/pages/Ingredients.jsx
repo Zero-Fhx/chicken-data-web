@@ -230,7 +230,8 @@ export function Ingredients () {
       icon: <TrashBinIcon />,
       variant: 'delete',
       iconOnly: true,
-      onClick: (row) => handleIngredientSelect(row, 'delete')
+      onClick: (row) => handleIngredientSelect(row, 'delete'),
+      disabled: (row) => row.isInUse
     }
   ]
 
