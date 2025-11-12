@@ -312,7 +312,14 @@ function SaleDetailItem ({
               }}
               disabled={disabled}
               className={isTouched('dish_id') && !detail.dish_id ? 'input-error' : ''}
-              options={[{ label: 'Platillos', items: availableDishes.map(d => ({ label: d.name, value: String(d.id) })) }]}
+              options={[{
+                label: 'Platillos',
+                items: availableDishes.map(d => ({
+                  label: d.name,
+                  value: String(d.id),
+                  disabled: !d.hasSufficientStock
+                }))
+              }]}
               placeholder='Seleccionar platillo'
               containerRef={containerRef}
             />
