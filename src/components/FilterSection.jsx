@@ -65,39 +65,16 @@ export function FilterSection ({
 
     switch (type) {
       case 'select': {
-        // Preparamos las opciones que vamos a pasar al Select.
-        // Si el campo es de categoría (name === 'category' o label contiene 'categor')
-        // transformamos la lista plana en un formato agrupado:
-        //  - primer grupo (label: null) con el placeholder
-        //  - segundo grupo 'Categorías' con las opciones reales
-        const rawOptions = options || []
-        let selectOptionsToPass
-
-        const isCategoryField = name === 'category' || (String(label).toLowerCase().includes('categor'))
-
-        if (rawOptions.length > 0 && rawOptions[0].items) {
-          // Ya viene agrupado: lo pasamos tal cual
-          selectOptionsToPass = rawOptions
-        } else if (isCategoryField) {
-          selectOptionsToPass = [
-            { label: null, items: [{ label: placeholder || `Seleccionar ${label}`, value: '' }] },
-            { label: 'Categorías', items: rawOptions.map(o => ({ label: o.label, value: String(o.value) })) }
-          ]
-        } else {
-          // comportamiento por defecto: lista plana con placeholder como primer ítem
-          selectOptionsToPass = [{ label: placeholder || `Seleccionar ${label}`, value: '' }, ...rawOptions.map(o => ({ label: o.label, value: String(o.value) }))]
-        }
-
         return (
           <div key={name} className='filter-input'>
             <label htmlFor={fieldId}>{label}:</label>
             <Select
               className=''
               value={String(value)}
-              placeholder={placeholder || `Seleccionar ${label}`}
+              placeholder={placeholder}
               onChange={(val) => handleChange({ target: { name, value: val } })}
               disabled={disabled}
-              options={selectOptionsToPass}
+              options={options}
             />
           </div>
         )
