@@ -28,7 +28,8 @@ export function PurchaseDetailsSection ({
   availableIngredients,
   ingredientsLoading,
   detailsLoading = false,
-  disabled = false
+  disabled = false,
+  containerRef = null
 }) {
   const [expandedDetails, setExpandedDetails] = useState({})
   const [touchedFields, setTouchedFields] = useState({})
@@ -181,6 +182,7 @@ export function PurchaseDetailsSection ({
                 availableIngredients={availableIngredients}
                 disabled={disabled}
                 allDetails={details}
+                containerRef={containerRef}
               />
             ))}
           </div>
@@ -222,7 +224,8 @@ function PurchaseDetailItem ({
   touchedFields,
   availableIngredients,
   disabled,
-  allDetails
+  allDetails,
+  containerRef
 }) {
   const hasValidData = detail.ingredientName && detail.quantity && detail.unit_price !== ''
 
@@ -306,7 +309,9 @@ function PurchaseDetailItem ({
               }}
               disabled={disabled}
               className={isTouched('ingredient_id') && !detail.ingredient_id ? 'input-error' : ''}
-              options={[{ label: 'Seleccionar ingrediente', value: '' }, ...availableIngredients.map(ing => ({ label: `${ing.name} (${ing.unit})`, value: String(ing.id) }))]}
+              options={[{ label: 'Ingredientes', items: availableIngredients.map(ing => ({ label: `${ing.name} (${ing.unit})`, value: String(ing.id) })) }]}
+              placeholder='Seleccionar ingrediente'
+              containerRef={containerRef}
             />
           </div>
 
