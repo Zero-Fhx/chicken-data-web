@@ -120,6 +120,22 @@ export function Dishes () {
     ...groupedStatusOptions
   ]
 
+  const stockStatusOptions = [
+    { label: 'Con Stock', value: 'true' },
+    { label: 'Sin Stock', value: 'false' }
+  ]
+
+  const filterStockOptions = [
+    {
+      label: null,
+      items: [{ label: 'Todos los Estados', value: '' }]
+    },
+    {
+      label: 'Disponibilidad',
+      items: stockStatusOptions
+    }
+  ]
+
   const filterFields = [
     {
       type: 'text',
@@ -151,6 +167,13 @@ export function Dishes () {
     },
     {
       type: 'select',
+      name: 'hasStock',
+      label: 'Stock',
+      placeholder: 'Todos los Estados',
+      options: filterStockOptions
+    },
+    {
+      type: 'select',
       name: 'status',
       label: 'Estado',
       placeholder: 'Todos los Estados',
@@ -167,12 +190,26 @@ export function Dishes () {
     {
       key: 'name',
       label: 'Nombre',
-      ellipsis: true
+      ellipsis: true,
+      render: (row) => (
+        <div className='name-cell-wrapper' style={{ minWidth: '120px' }}>
+          <span
+            className={`status-dot ${row.has_sufficient_stock ? 'in-stock' : 'out-of-stock'}`}
+            title={row.has_sufficient_stock ? 'Con stock' : 'Sin stock'}
+          />
+          <span className='name-text'>{row.name}</span>
+        </div>
+      )
     },
     {
       key: 'description',
       label: 'Descripción',
-      ellipsis: true
+      ellipsis: true,
+      render: (row) => (
+        <div style={{ minWidth: '150px' }}>
+          <span className='description-text'>{row.description || '—'}</span>
+        </div>
+      )
     },
     {
       key: 'category',
