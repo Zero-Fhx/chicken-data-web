@@ -194,8 +194,8 @@ export function Dishes () {
       render: (row) => (
         <div className='name-cell-wrapper' style={{ minWidth: '120px' }}>
           <span
-            className={`status-dot ${row.has_sufficient_stock ? 'in-stock' : 'out-of-stock'}`}
-            title={row.has_sufficient_stock ? 'Con stock' : 'Sin stock'}
+            className={`status-dot ${row.hasSufficientStock ? 'in-stock' : 'out-of-stock'}`}
+            title={row.hasSufficientStock ? 'Con stock' : 'Sin stock'}
           />
           <span className='name-text'>{row.name}</span>
         </div>
