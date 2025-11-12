@@ -3,11 +3,24 @@
   border-collapse: collapse;
 }
 
+/* Double-wrapper helpers: outer clips border radius, inner provides scroll */
+.comparison-wrapper {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+}
+
+.comparison-wrapper .table-scroll-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .inventory-comparison-table th,
 .inventory-comparison-table td {
   padding: 12px;
   text-align: left;
-  border-bottom: 1px solid #f1f3f5;
   font-size: 0.9rem;
   vertical-align: middle;
 }

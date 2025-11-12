@@ -10,31 +10,35 @@ export function InventoryComparisonTable ({ data }) {
   const totalValue = data.totalValue?.current ?? data.totalValue ?? data.totalValueCurrent
 
   return (
-    <table className='inventory-comparison-table compact'>
-      <thead>
-        <tr>
-          <th>Métrica</th>
-          <th>Valor</th>
-          <th>Vs 30 días</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Total ingredientes</td>
-          <td>{total ?? '-'}</td>
-          <td>{data.totalIngredients?.vs30DaysAgo?.change != null ? `${Number(data.totalIngredients.vs30DaysAgo.change).toFixed(1)}%` : '-'}</td>
-        </tr>
-        <tr>
-          <td>Items en stock bajo</td>
-          <td>{lowStock ?? '-'}</td>
-          <td>{data.lowStockItems?.vs30DaysAgo?.change != null ? `${Number(data.lowStockItems.vs30DaysAgo.change).toFixed(1)}%` : '-'}</td>
-        </tr>
-        <tr>
-          <td>Valor total</td>
-          <td>{formatCurrency(totalValue)}</td>
-          <td>{data.totalValue?.vs30DaysAgo?.change != null ? `${Number(data.totalValue.vs30DaysAgo.change).toFixed(1)}%` : '-'}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div className='comparison-wrapper'>
+      <div className='table-scroll-wrapper'>
+        <table className='inventory-comparison-table compact'>
+          <thead>
+            <tr>
+              <th>Métrica</th>
+              <th>Valor</th>
+              <th>Vs 30 días</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Total ingredientes</td>
+              <td>{total ?? '-'}</td>
+              <td>{data.totalIngredients?.vs30DaysAgo?.change != null ? `${Number(data.totalIngredients.vs30DaysAgo.change).toFixed(1)}%` : '-'}</td>
+            </tr>
+            <tr>
+              <td>Items en stock bajo</td>
+              <td>{lowStock ?? '-'}</td>
+              <td>{data.lowStockItems?.vs30DaysAgo?.change != null ? `${Number(data.lowStockItems.vs30DaysAgo.change).toFixed(1)}%` : '-'}</td>
+            </tr>
+            <tr>
+              <td>Valor total</td>
+              <td>{formatCurrency(totalValue)}</td>
+              <td>{data.totalValue?.vs30DaysAgo?.change != null ? `${Number(data.totalValue.vs30DaysAgo.change).toFixed(1)}%` : '-'}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   )
 }
