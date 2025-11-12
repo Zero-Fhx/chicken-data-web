@@ -15,7 +15,7 @@ import { Separator } from '@/components/Separator'
 import { Select } from '@/components/ui/Select'
 import { useFetch } from '@/hooks/useFetch'
 import API_ENDPOINTS from '@/services/api'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { AlertsFeedCard } from '@/components/Dashboard/AlertsFeedCard'
 import { TopDishesCard } from '@/components/Dashboard/TopDishesCard'
@@ -29,6 +29,31 @@ const API_PROJECTIONS = `${API_ENDPOINTS.dashboard}/projections?days=30`
 const API_COMPARISONS = `${API_ENDPOINTS.dashboard}/comparisons`
 const API_BREAKDOWN_SALES = `${API_ENDPOINTS.dashboard}/breakdown/sales`
 const API_BREAKDOWN_PURCHASES = `${API_ENDPOINTS.dashboard}/breakdown/purchases`
+
+// Mapa de opciones de período válidas para cada granularidad
+// Basado en la API
+const GRANULARITY_PERIOD_MAP = {
+  daily: [
+    { label: '7 días', value: '7d' },
+    { label: '14 días', value: '14d' },
+    { label: '30 días', value: '30d' },
+    { label: '60 días', value: '60d' },
+    { label: '90 días', value: '90d' }
+  ],
+  weekly: [
+    { label: '4 semanas', value: '4w' },
+    { label: '8 semanas', value: '8w' },
+    { label: '12 semanas', value: '12w' },
+    { label: '26 semanas', value: '6m' },
+    { label: '52 semanas', value: '1y' }
+  ],
+  monthly: [
+    { label: '3 meses', value: '3m' },
+    { label: '6 meses', value: '6m' },
+    { label: '12 meses', value: '1y' },
+    { label: '24 meses', value: '2y' }
+  ]
+}
 
 export function Home () {
   // FASE 5: Estados para controles avanzados
@@ -59,6 +84,23 @@ export function Home () {
   const { data: salesBreakdown } = salesBreakdownData || {}
   const { data: purchasesBreakdown } = purchasesBreakdownData || {}
 
+  // FASE 5: Hook para sincronizar el período con la granularidad
+  useEffect(() => {
+    // 1. Obtiene la lista de períodos válidos para la granularidad actual
+    const validPeriods = GRANULARITY_PERIOD_MAP[trendGranularity]
+
+    // 2. Comprueba si el período actual está en esa lista
+    const isCurrentPeriodValid = validPeriods.some(
+      option => option.value === trendPeriod
+    )
+
+    // 3. Si no es válido, resetea el período al primer valor de la nueva lista
+    if (!isCurrentPeriodValid) {
+      setTrendPeriod(validPeriods[0].value)
+    }
+    // Ejecutar este efecto solo si 'trendGranularity' cambia
+  }, [trendGranularity, trendPeriod])
+
   // FASE 5: Controles para las tarjetas
   // --- TAREA 21: Añadir opción 'Ambos' y usar labels ---
   const trendToggleControls = (
@@ -74,16 +116,25 @@ export function Home () {
 
   const trendControls = (
     <div className='card-controls' style={{ gap: '0.5rem', display: 'flex', flexDirection: 'row' }}>
-      <Select
-        value={trendGranularity}
-        onChange={(val) => setTrendGranularity(val)}
-        options={[{ label: 'Diario', value: 'daily' }, { label: 'Semanal', value: 'weekly' }, { label: 'Mensual', value: 'monthly' }]}
-      />
-      <Select
-        value={trendPeriod}
-        onChange={(val) => setTrendPeriod(val)}
-        options={[{ label: '7 días', value: '7d' }, { label: '30 días', value: '30d' }, { label: '90 días', value: '90d' }]}
-      />
+      <div className='dashboard-controls-group'>
+        {trendToggleControls}
+        <div className='controls-separator' />
+        <Select
+          className='dashboard-select'
+          dropdownClassName='dashboard-dropdown'
+          value={trendGranularity}
+          onChange={(val) => setTrendGranularity(val)}
+          options={[{ label: 'Diario', value: 'daily' }, { label: 'Semanal', value: 'weekly' }, { label: 'Mensual', value: 'monthly' }]}
+        />
+        <Select
+          className='dashboard-select'
+          dropdownClassName='dashboard-dropdown'
+          value={trendPeriod}
+          onChange={(val) => setTrendPeriod(val)}
+          // ¡Usa el mapa dinámico según la granularidad seleccionada!
+          options={GRANULARITY_PERIOD_MAP[trendGranularity]}
+        />
+      </div>
     </div>
   )
 
@@ -150,7 +201,6 @@ export function Home () {
           loading={trendsLoading}
           cardControls={
             <div style={{ display: 'flex', gap: '1rem', flexDirection: 'row' }}>
-              {trendToggleControls}
               {trendControls}
             </div>
           }
