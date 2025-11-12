@@ -28,7 +28,8 @@ export function SaleDetailsSection ({
   availableDishes,
   dishesLoading,
   detailsLoading = false,
-  disabled = false
+  disabled = false,
+  containerRef = null
 }) {
   const [expandedDetails, setExpandedDetails] = useState({})
   const [touchedFields, setTouchedFields] = useState({})
@@ -202,6 +203,7 @@ export function SaleDetailsSection ({
                 touchedFields={touchedFields}
                 availableDishes={availableDishes}
                 disabled={disabled}
+                containerRef={containerRef}
               />
             ))}
           </div>
@@ -241,7 +243,8 @@ function SaleDetailItem ({
   onFieldTouch,
   touchedFields,
   availableDishes,
-  disabled
+  disabled,
+  containerRef
 }) {
   const hasValidData = detail.dishName && detail.quantity && detail.unit_price !== ''
 
@@ -309,7 +312,9 @@ function SaleDetailItem ({
               }}
               disabled={disabled}
               className={isTouched('dish_id') && !detail.dish_id ? 'input-error' : ''}
-              options={[{ label: 'Seleccionar platillo', value: '' }, ...availableDishes.map(d => ({ label: d.name, value: String(d.id) }))]}
+              options={[{ label: 'Platillos', items: availableDishes.map(d => ({ label: d.name, value: String(d.id) })) }]}
+              placeholder='Seleccionar platillo'
+              containerRef={containerRef}
             />
           </div>
 
