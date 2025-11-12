@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { useDebounce } from '@/hooks/useDebounce'
 import { useFetch } from '@/hooks/useFetch'
@@ -63,6 +63,7 @@ export function Ingredients () {
   const [filterErrors, setFilterErrors] = useState({ minStock: '', maxStock: '' })
 
   const [selectedIngredient, setSelectedIngredient] = useState(null)
+  const modalRef = useRef(null)
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalMode, setModalMode] = useState('view')
@@ -84,6 +85,21 @@ export function Ingredients () {
     { value: 'low', label: 'Stock Bajo' }
   ]
 
+  const groupedCategoryOptions = [
+    { label: null, items: [{ label: 'Todas las Categorías', value: '' }] },
+    { label: 'Categorías', items: categoryOptions }
+  ]
+
+  const groupedStatusOptions = [
+    { label: null, items: [{ label: 'Todos los Estados', value: '' }] },
+    { label: 'Estados', items: statusOptions }
+  ]
+
+  const groupedStockOptions = [
+    { label: null, items: [{ label: 'Todos', value: '' }] },
+    { label: 'Stock', items: stockOptions }
+  ]
+
   const filterFields = [
     {
       type: 'text',
@@ -96,7 +112,7 @@ export function Ingredients () {
       name: 'category',
       label: 'Categoría',
       placeholder: 'Todas las Categorías',
-      options: categoryOptions,
+      options: groupedCategoryOptions,
       disabled: categoriesLoading
     },
     {
@@ -118,14 +134,14 @@ export function Ingredients () {
       name: 'lowStock',
       label: 'Stock Bajo',
       placeholder: 'Todos',
-      options: stockOptions
+      options: groupedStockOptions
     },
     {
       type: 'select',
       name: 'status',
       label: 'Estado',
       placeholder: 'Todos los Estados',
-      options: statusOptions
+      options: groupedStatusOptions
     }
   ]
 
@@ -445,7 +461,7 @@ export function Ingredients () {
     setSelectedIngredient({
       name: '',
       unit: '',
-      category: null,
+      category: '',
       stock: 0,
       minimumStock: 0,
       status: 'Active'
@@ -612,13 +628,15 @@ export function Ingredients () {
             label: 'Agregar Ingrediente',
             icon: <AddIcon />,
             variant: 'primary',
-            onClick: handleCreateNew
+            onClick: handleCreateNew,
+            disabled: loading || error
           },
           {
             label: 'Exportar Datos',
             icon: <DownloadIcon />,
             variant: 'secondary',
-            onClick: handleExport
+            onClick: handleExport,
+            disabled: loading || error
           }
         ]}
       />
@@ -667,6 +685,7 @@ export function Ingredients () {
       </section>
 
       <Modal
+        ref={modalRef}
         isOpen={isModalOpen}
         onAnimationEnd={handleAnimationEnd}
       >
@@ -788,10 +807,9 @@ export function Ingredients () {
                       disabled={modalMode === 'view' || modalLoading}
                       value={String(selectedIngredient?.category?.id || '')}
                       onChange={(val) => handleChange({ target: { name: 'category', value: val } })}
-                      options={[
-                        { label: null, items: [{ label: 'Seleccionar categoría', value: '' }] },
-                        { label: 'Categorías', items: categoryOptions.map(o => ({ label: o.label, value: String(o.value) })) }
-                      ]}
+                      options={[{ label: 'Categorías', items: categoryOptions.map(o => ({ label: o.label, value: String(o.value) })) }]}
+                      placeholder='Seleccionar categoría'
+                      containerRef={modalRef}
                     />
                     <small className='info-error'>{formErrors.category}</small>
                   </div>
@@ -840,7 +858,8 @@ export function Ingredients () {
                       disabled={modalMode === 'view' || modalLoading}
                       value={String(selectedIngredient?.status || '')}
                       onChange={(val) => handleChange({ target: { name: 'status', value: val } })}
-                      options={statusOptions.map(o => ({ label: o.label, value: String(o.value) }))}
+                      options={[{ label: 'Estados', items: statusOptions.map(o => ({ label: o.label, value: String(o.value) })) }]}
+                      containerRef={modalRef}
                     />
                     <small className='info-error'>{formErrors.status}</small>
                   </div>
