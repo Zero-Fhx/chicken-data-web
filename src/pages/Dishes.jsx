@@ -71,6 +71,7 @@ export function Dishes () {
   const [formErrors, setFormErrors] = useState(initialFormErrors)
 
   const errorModalRef = useRef(null)
+  const modalRef = useRef(null)
 
   const [recipeIngredients, setRecipeIngredients] = useState([])
   const [allIngredients, setAllIngredients] = useState([])
@@ -85,6 +86,40 @@ export function Dishes () {
     label: category.name
   }))
 
+  const groupedCategoryOptions = [
+    {
+      label: 'Categorías',
+      items: categoryOptions
+    }
+  ]
+
+  const groupedStatusOptions = [
+    {
+      label: 'Estados',
+      items: statusOptions
+    }
+  ]
+
+  const filterCategoryOptions = [
+    {
+      label: null,
+      items: [
+        { label: 'Todas las Categorías', value: '' }
+      ]
+    },
+    ...groupedCategoryOptions
+  ]
+
+  const filterStatusOptions = [
+    {
+      label: null,
+      items: [
+        { label: 'Todos los Estados', value: '' }
+      ]
+    },
+    ...groupedStatusOptions
+  ]
+
   const filterFields = [
     {
       type: 'text',
@@ -97,7 +132,7 @@ export function Dishes () {
       name: 'category',
       label: 'Categoría',
       placeholder: 'Todas las Categorías',
-      options: categoryOptions,
+      options: filterCategoryOptions,
       disabled: categoriesLoading
     },
     {
@@ -119,7 +154,7 @@ export function Dishes () {
       name: 'status',
       label: 'Estado',
       placeholder: 'Todos los Estados',
-      options: statusOptions
+      options: filterStatusOptions
     }
   ]
 
@@ -388,7 +423,7 @@ export function Dishes () {
     setSelectedDish({
       name: '',
       description: '',
-      category: null,
+      category: '',
       price: '',
       status: 'Active'
     })
@@ -656,13 +691,15 @@ export function Dishes () {
             label: 'Agregar Plato',
             icon: <AddIcon />,
             variant: 'primary',
-            onClick: handleCreateNew
+            onClick: handleCreateNew,
+            disabled: loading || error
           },
           {
             label: 'Exportar Datos',
             icon: <DownloadIcon />,
             variant: 'secondary',
-            onClick: handleExport
+            onClick: handleExport,
+            disabled: loading || error
           }
         ]}
       />
@@ -711,6 +748,7 @@ export function Dishes () {
       </section>
 
       <Modal
+        ref={modalRef}
         isOpen={isModalOpen}
         onAnimationEnd={handleAnimationEnd}
       >
@@ -814,12 +852,16 @@ export function Dishes () {
                       name='category'
                       id='modal-category'
                       disabled={modalMode === 'view' || modalLoading}
-                      value={String(selectedDish?.category?.id || '')}
+                      value={selectedDish?.category?.id == null ? '' : String(selectedDish.category.id)}
                       onChange={(val) => handleChange({ target: { name: 'category', value: val } })}
                       options={[
-                        { label: null, items: [{ label: 'Seleccionar categoría', value: '' }] },
-                        { label: 'Categorías', items: categoryOptions.map(o => ({ label: o.label, value: String(o.value) })) }
+                        {
+                          label: 'Categorías',
+                          items: categoryOptions.map(o => ({ label: o.label, value: String(o.value) }))
+                        }
                       ]}
+                      placeholder='Seleccionar categoría'
+                      containerRef={modalRef}
                     />
                     <small className='info-error'>{formErrors.category}</small>
                   </div>
@@ -850,7 +892,14 @@ export function Dishes () {
                       disabled={modalMode === 'view' || modalLoading}
                       value={String(selectedDish?.status || '')}
                       onChange={(val) => handleChange({ target: { name: 'status', value: val } })}
-                      options={statusOptions.map(o => ({ label: o.label, value: String(o.value) }))}
+                      options={[
+                        {
+                          label: 'Estados',
+                          items: statusOptions.map(o => ({ label: o.label, value: String(o.value) }))
+                        }
+                      ]}
+                      placeholder='Seleccionar estado'
+                      containerRef={modalRef}
                     />
                     <small className='info-error'>{formErrors.status}</small>
                   </div>
@@ -862,6 +911,7 @@ export function Dishes () {
                     ingredientsLoading={ingredientsLoading || recipeLoading}
                     mode={modalMode}
                     disabled={modalMode === 'view' || modalLoading || recipeLoading}
+                    containerRef={modalRef}
                   />
                   {formErrors.ingredients && (
                     <small className='info-error' style={{ display: 'block', marginTop: '0.5rem' }}>
