@@ -27,9 +27,10 @@ export function PeriodSelector ({
     ? availablePeriods.map(p => ({ label: periodLabels[p] || p, value: p }))
     : [])
 
-  // Garantizar un name único por instancia para evitar colisiones entre cards
+  // Garantizar un name único por instancia
   const name = `${groupName || 'period'}-${id}`
 
+  // --- RESTAURADO AL ORIGINAL ---
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <div className='period-selector'>
