@@ -533,7 +533,7 @@ export function Sales () {
       .then((response) => {
         if (!response.ok) {
           return response.json().then(err => {
-            throw new Error(err.message || 'Error al crear la venta')
+            throw err
           })
         }
         return response.json()
@@ -548,7 +548,20 @@ export function Sales () {
       .catch((error) => {
         console.error('Error:', error)
         setModalLoading(false)
-        setModalError(`Error al crear la venta: ${error.message}`)
+
+        const errorType = error?.error?.type
+        const errorMessage = error?.error?.message
+        const errorDetails = error?.error?.details
+
+        if (errorType === 'InsufficientStockError' && errorDetails) {
+          const failingDishes = errorDetails.map(d => d.dishName).join(', ')
+          setFormErrors((prev) => ({
+            ...prev,
+            details: `Stock insuficiente para: ${failingDishes}. Revisa las cantidades.`
+          }))
+        } else {
+          setModalError(`Error al crear la venta: ${errorMessage || 'Error desconocido'}`)
+        }
       })
   }
 
