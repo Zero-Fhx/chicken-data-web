@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { useFetch } from '@/hooks/useFetch'
 
@@ -60,6 +60,7 @@ export function Purchases () {
   const [filterErrors, setFilterErrors] = useState({ startDate: '', endDate: '' })
 
   const [selectedPurchase, setSelectedPurchase] = useState(null)
+  const modalRef = useRef(null)
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalMode, setModalMode] = useState('view')
@@ -83,13 +84,18 @@ export function Purchases () {
     label: supplier.name
   }))
 
+  const groupedSupplierOptions = [
+    { label: null, items: [{ label: 'Todos los Proveedores', value: '' }] },
+    { label: 'Proveedores', items: supplierOptions }
+  ]
+
   const filterFields = [
     {
       type: 'select',
       name: 'supplierId',
       label: 'Proveedor',
       placeholder: 'Todos los Proveedores',
-      options: supplierOptions,
+      options: groupedSupplierOptions,
       disabled: suppliersDataLoading
     },
     {
@@ -109,7 +115,10 @@ export function Purchases () {
       name: 'status',
       label: 'Estado',
       placeholder: 'Todos los Estados',
-      options: statusOptions
+      options: [
+        { label: null, items: [{ label: 'Todos los Estados', value: '' }] },
+        { label: 'Estados', items: statusOptions }
+      ]
     }
   ]
 
@@ -643,13 +652,15 @@ export function Purchases () {
             label: 'Agregar Compra',
             icon: <AddIcon />,
             variant: 'primary',
-            onClick: handleCreateNew
+            onClick: handleCreateNew,
+            disabled: loading || error
           },
           {
             label: 'Exportar Datos',
             icon: <DownloadIcon />,
             variant: 'secondary',
-            onClick: handleExport
+            onClick: handleExport,
+            disabled: loading || error
           }
         ]}
       />
@@ -698,6 +709,7 @@ export function Purchases () {
       </section>
 
       <Modal
+        ref={modalRef}
         isOpen={isModalOpen}
         onAnimationEnd={handleAnimationEnd}
       >
@@ -823,7 +835,9 @@ export function Purchases () {
                       disabled={modalMode === 'view' || modalLoading}
                       value={String(selectedPurchase?.supplierId || selectedPurchase?.supplier?.id || '')}
                       onChange={(val) => handleChange({ target: { name: 'supplierId', value: val } })}
-                      options={[{ label: 'Ninguno', value: '' }, ...suppliers.map(s => ({ label: s.name, value: String(s.id) }))]}
+                      options={[{ label: 'Proveedores', items: suppliers.map(s => ({ label: s.name, value: String(s.id) })) }]}
+                      placeholder='Ninguno'
+                      containerRef={modalRef}
                     />
                     <small className='info-error'>{formErrors.supplierId}</small>
                   </div>
@@ -849,7 +863,8 @@ export function Purchases () {
                       disabled={modalMode === 'view' || modalLoading}
                       value={String(selectedPurchase?.status || '')}
                       onChange={(val) => handleChange({ target: { name: 'status', value: val } })}
-                      options={statusOptions.map(o => ({ label: o.label, value: String(o.value) }))}
+                      options={[{ label: 'Estados', items: statusOptions.map(o => ({ label: o.label, value: String(o.value) })) }]}
+                      containerRef={modalRef}
                     />
                     <small className='info-error'>{formErrors.status}</small>
                   </div>
@@ -911,6 +926,7 @@ export function Purchases () {
                         ingredientsLoading={ingredientsLoading}
                         detailsLoading={detailsLoading}
                         disabled={modalLoading}
+                        containerRef={modalRef}
                       />
                     </>
                   )}
