@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { useDebounce } from '@/hooks/useDebounce'
 import { useFetch } from '@/hooks/useFetch'
@@ -54,6 +54,7 @@ export function Suppliers () {
   const [filters, setFilters] = useState(initialFilters)
 
   const [selectedSupplier, setSelectedSupplier] = useState(null)
+  const modalRef = useRef(null)
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalMode, setModalMode] = useState('view')
@@ -75,7 +76,10 @@ export function Suppliers () {
       name: 'status',
       label: 'Estado',
       placeholder: 'Todos los Estados',
-      options: statusOptions
+      options: [
+        { label: null, items: [{ label: 'Todos los Estados', value: '' }] },
+        { label: 'Estados', items: statusOptions.map(o => ({ label: o.label, value: o.value })) }
+      ]
     }
   ]
 
@@ -351,13 +355,15 @@ export function Suppliers () {
             label: 'Agregar Proveedor',
             icon: <AddIcon />,
             variant: 'primary',
-            onClick: handleCreateNew
+            onClick: handleCreateNew,
+            disabled: loading || error
           },
           {
             label: 'Exportar Datos',
             icon: <DownloadIcon />,
             variant: 'secondary',
-            onClick: handleExport
+            onClick: handleExport,
+            disabled: loading || error
           }
         ]}
       />
@@ -405,6 +411,7 @@ export function Suppliers () {
       </section>
 
       <Modal
+        ref={modalRef}
         isOpen={isModalOpen}
         onAnimationEnd={handleAnimationEnd}
       >
@@ -569,7 +576,8 @@ export function Suppliers () {
                         disabled={modalMode === 'view' || modalLoading}
                         value={String(selectedSupplier?.status || '')}
                         onChange={(val) => handleChange({ target: { name: 'status', value: val } })}
-                        options={statusOptions.map(o => ({ label: o.label, value: String(o.value) }))}
+                        options={[{ label: 'Estados', items: statusOptions.map(o => ({ label: o.label, value: String(o.value) })) }]}
+                        containerRef={modalRef}
                       />
                       <small className='info-error'>{formErrors.status}</small>
                     </div>
