@@ -2,7 +2,6 @@
 .purchase-recommendations-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 0.5rem;
   font-size: 0.95rem;
 }
 
@@ -10,7 +9,6 @@
 .purchase-recommendations-table td {
   padding: 10px 12px;
   text-align: left;
-  border-bottom: 1px solid #f1f3f5;
   vertical-align: middle;
 }
 
@@ -29,7 +27,6 @@
 .purchase-recommendations-summary {
   margin-bottom: 8px;
   padding-bottom: 8px;
-  border-bottom: 1px solid #eef0f2;
   display: block;
   color: #495057;
   font-size: 0.9rem;
@@ -96,4 +93,25 @@
 }
 .purchase-recommendations-table.compact th {
   font-size: 0.8rem;
+}
+
+.purchase-recommendations-wrapper .purchase-recommendations-wrapper {
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+  overflow: hidden; /* <-- CLAVE: recorta el scrollbar del hijo */
+}
+
+/* 2. Wrapper INTERIOR: (El nuevo div)
+   Este se encarga ÚNICAMENTE del scroll horizontal.
+*/
+.table-scroll-wrapper {
+  overflow-x: auto;
+}
+
+/* 3. La tabla:
+   Como estaba antes.
+*/
+.purchase-recommendations-table {
+  width: 100%;
+  border-collapse: collapse;
 }

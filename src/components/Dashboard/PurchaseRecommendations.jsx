@@ -51,35 +51,37 @@ export function ProjectionsCard ({ className = 'span-2' }) {
           )}
 
           {/* Tabla compacta: mostrar solo columnas esenciales */}
-          <div className='purchase-recommendations-wrapper'>
-            <table className='purchase-recommendations-table compact'>
-              <thead>
-                <tr>
-                  <th>Ingrediente</th>
-                  <th>Stock</th>
-                  <th>Días</th>
-                  <th>Cantidad rec.</th>
-                  <th>Costo</th>
-                  <th>Prioridad</th>
-                </tr>
-              </thead>
-              <tbody>
-                {projections?.purchases?.recommendations?.map(rec => (
-                  <tr key={rec.ingredientId ?? rec.ingredientName}>
-                    <td>{rec.ingredientName}</td>
-                    <td className='stock-small'>{rec.currentStock != null ? Number(rec.currentStock).toFixed(2) : '-'}</td>
-                    <td>{rec.daysUntilDepleted != null ? Number(rec.daysUntilDepleted).toFixed(1) : '-'}</td>
-                    <td>{rec.recommendedOrderQuantity ?? rec.recommendedAmount ?? '-'}</td>
-                    <td>{rec.estimatedCost != null ? `S/. ${Number(rec.estimatedCost).toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '-'}</td>
-                    <td>
-                      <span className={`priority-chip ${rec.priority === 'high' ? 'priority-alta' : rec.priority === 'low' ? 'priority-baja' : 'priority-media'}`}>
-                        {rec.priority === 'high' ? 'Alta' : rec.priority === 'low' ? 'Baja' : 'Media'}
-                      </span>
-                    </td>
+          <div className='purchase-recommendations-wrapper'> {/* Wrapper EXTERIOR (para border-radius) */}
+            <div className='table-scroll-wrapper'> {/* Wrapper INTERIOR (para scroll) */}
+              <table className='purchase-recommendations-table compact'>
+                <thead>
+                  <tr>
+                    <th>Ingrediente</th>
+                    <th>Stock</th>
+                    <th>Días</th>
+                    <th>Cantidad rec.</th>
+                    <th>Costo</th>
+                    <th>Prioridad</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {projections?.purchases?.recommendations?.map(rec => (
+                    <tr key={rec.ingredientId ?? rec.ingredientName}>
+                      <td>{rec.ingredientName}</td>
+                      <td className='stock-small'>{rec.currentStock != null ? Number(rec.currentStock).toFixed(2) : '-'}</td>
+                      <td>{rec.daysUntilDepleted != null ? Number(rec.daysUntilDepleted).toFixed(1) : '-'}</td>
+                      <td>{rec.recommendedOrderQuantity ?? rec.recommendedAmount ?? '-'}</td>
+                      <td>{rec.estimatedCost != null ? `S/. ${Number(rec.estimatedCost).toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '-'}</td>
+                      <td>
+                        <span className={`priority-chip ${rec.priority === 'high' ? 'priority-alta' : rec.priority === 'low' ? 'priority-baja' : 'priority-media'}`}>
+                          {rec.priority === 'high' ? 'Alta' : rec.priority === 'low' ? 'Baja' : 'Media'}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}
