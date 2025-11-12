@@ -295,7 +295,7 @@ function DetailItem ({
               onChange={(val) => onChange(index, itemIdField, val)}
               disabled={disabled}
               className={!detail[itemIdField] ? 'input-error' : ''}
-              options={[{ label: `Seleccionar ${itemLabel.toLowerCase()}`, value: '' }, ...availableItems.map(it => ({ label: `${it[itemNameField]}${it[itemUnitField] ? ` (${it[itemUnitField]})` : ''}`, value: String(it[itemIdField]) }))]}
+              options={[{ label: `${itemLabel}s`, items: availableItems.map(it => ({ label: `${it[itemNameField]}${it[itemUnitField] ? ` (${it[itemUnitField]})` : ''}`, value: String(it[itemIdField]) })) }]}
             />
           </div>
 
