@@ -13,9 +13,9 @@ const SelectTrigger = React.forwardRef(({ className, children, ...props }, ref) 
   </SelectPrimitive.Trigger>
 ))
 
-const SelectContent = React.forwardRef(({ className, children, ...props }, ref) => (
-  <SelectPrimitive.Portal>
-    <SelectPrimitive.Content ref={ref} className={classnames('form-select-content', className)} {...props}>
+const SelectContent = React.forwardRef(({ className, children, containerRef, dropdownClassName, ...props }, ref) => (
+  <SelectPrimitive.Portal container={containerRef?.current}>
+    <SelectPrimitive.Content ref={ref} className={classnames('form-select-content', className, dropdownClassName)} {...props}>
       <SelectPrimitive.ScrollUpButton className='form-select-scroll-button'>
         <ArrowUpIcon width={18} height={18} />
       </SelectPrimitive.ScrollUpButton>
@@ -65,7 +65,7 @@ const SelectSeparator = React.forwardRef(({ className, ...props }, ref) => (
  * @param {React.Ref} ref - La ref que se reenvía al elemento `SelectTrigger`.
  * @returns {React.ReactElement} El elemento JSX del componente Select.
  */
-const Select = React.forwardRef(({ options = [], onChange, value, placeholder, className, ...props }, ref) => {
+export const Select = React.forwardRef(({ options = [], onChange, value, placeholder, className, containerRef = null, dropdownClassName = null, ...props }, ref) => {
   const isGrouped = Array.isArray(options) && options.length > 0 && options[0]?.items
 
   const internalToOriginal = {}
@@ -146,11 +146,9 @@ const Select = React.forwardRef(({ options = [], onChange, value, placeholder, c
       <SelectTrigger ref={ref} className={className}>
         <SelectPrimitive.Value placeholder={placeholder} />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent containerRef={containerRef} dropdownClassName={dropdownClassName}>
         {renderedItems}
       </SelectContent>
     </SelectPrimitive.Root>
   )
 })
-
-export { Select }

@@ -55,6 +55,7 @@
   box-shadow: 0 10px 30px rgba(2, 6, 23, 0.2);
   padding: 0.25rem;
   min-width: 8rem;
+  z-index: 50;
 }
 
 .form-select-viewport {
@@ -144,6 +145,7 @@
   box-shadow: 0 10px 30px rgba(2, 6, 23, 0.2);
   padding: 0.25rem;
   min-width: 8rem;
+  z-index: 50;
 }
 
 .form-select-viewport {
