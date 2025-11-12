@@ -100,6 +100,22 @@ export function Ingredients () {
     { label: 'Stock', items: stockOptions }
   ]
 
+  const inUseOptions = [
+    { label: 'En Uso', value: 'true' },
+    { label: 'Sin Uso', value: 'false' }
+  ]
+
+  const filterInUseOptions = [
+    {
+      label: null, // Grupo para "Todos"
+      items: [{ label: 'Todos', value: '' }]
+    },
+    {
+      label: 'Estado de Uso',
+      items: inUseOptions
+    }
+  ]
+
   const filterFields = [
     {
       type: 'text',
@@ -138,6 +154,13 @@ export function Ingredients () {
     },
     {
       type: 'select',
+      name: 'isInUse', // (El backend ya maneja 'filters.isInUse')
+      label: 'Uso en Recetas',
+      placeholder: 'Todos',
+      options: filterInUseOptions
+    },
+    {
+      type: 'select',
       name: 'status',
       label: 'Estado',
       placeholder: 'Todos los Estados',
@@ -154,7 +177,16 @@ export function Ingredients () {
     {
       key: 'name',
       label: 'Nombre',
-      ellipsis: true
+      ellipsis: true,
+      render: (row) => (
+        <div className='name-cell-wrapper'>
+          <span
+            className={`status-dot ${row.isInUse ? 'in-stock' : 'out-of-stock'}`}
+            title={row.isInUse ? 'Ingrediente en uso' : 'Ingrediente sin uso (se puede eliminar)'}
+          />
+          <span className='name-text'>{row.name}</span>
+        </div>
+      )
     },
     {
       key: 'category',
@@ -287,9 +319,10 @@ export function Ingredients () {
     if (filters.category) url.searchParams.set('categoryId', filters.category)
     if (filters.status) url.searchParams.set('status', filters.status)
     if (filters.lowStock === 'low') url.searchParams.set('lowStock', 'true')
+    if (filters.isInUse) url.searchParams.set('isInUse', filters.isInUse)
 
     return url.toString()
-  }, [page, pageSize, debouncedName, debouncedMinStock, debouncedMaxStock, filters.category, filters.status, filters.lowStock, filterErrors.minStock, filterErrors.maxStock])
+  }, [page, pageSize, debouncedName, debouncedMinStock, debouncedMaxStock, filters.category, filters.status, filters.lowStock, filters.isInUse, filterErrors.minStock, filterErrors.maxStock])
 
   const { data, loading, setLoading, error, setError, refetch } = useFetch(
     buildURL
