@@ -9,7 +9,7 @@ import { DataTable } from '@/components/DataTable'
 import { DeleteConfirmation } from '@/components/DeleteConfirmation'
 import { ErrorModal } from '@/components/ErrorModal'
 import { FilterSection } from '@/components/FilterSection'
-import { AddIcon, AdjustIcon, CancelIcon, CheckIcon, CubeAltIcon, DownloadIcon, EditIcon, SearchIcon, TrashBinIcon, ViewIcon } from '@/components/Icons'
+import { AddIcon, AdjustIcon, CancelIcon, CheckIcon, CubeAltIcon, EditIcon, SearchIcon, TrashBinIcon, ViewIcon } from '@/components/Icons'
 import { InputWithLabel } from '@/components/InputWithLabel'
 import { Loader } from '@/components/Loader'
 import { Modal } from '@/components/Modal'
@@ -665,13 +665,13 @@ export function Ingredients () {
             onClick: handleCreateNew,
             disabled: loading || error
           },
-          {
-            label: 'Exportar Datos',
-            icon: <DownloadIcon />,
-            variant: 'secondary',
-            onClick: handleExport,
-            disabled: loading || error
-          }
+          // {
+          //   label: 'Exportar Datos',
+          //   icon: <DownloadIcon />,
+          //   variant: 'secondary',
+          //   onClick: handleExport,
+          //   disabled: loading || error
+          // }
         ]}
       />
 

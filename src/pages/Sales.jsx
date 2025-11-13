@@ -8,7 +8,7 @@ import { DataTable } from '@/components/DataTable'
 import { DeleteConfirmation } from '@/components/DeleteConfirmation'
 import { ErrorModal } from '@/components/ErrorModal'
 import { FilterSection } from '@/components/FilterSection'
-import { AddIcon, CancelIcon, CheckIcon, DollarIcon, DownloadIcon, EditIcon, SearchIcon, TrashBinIcon, ViewIcon, WarningIcon } from '@/components/Icons'
+import { AddIcon, CancelIcon, CheckIcon, DollarIcon, EditIcon, SearchIcon, TrashBinIcon, ViewIcon, WarningIcon } from '@/components/Icons'
 import { Loader } from '@/components/Loader'
 import { Modal } from '@/components/Modal'
 import { PageHeader } from '@/components/PageHeader'
@@ -628,13 +628,13 @@ export function Sales () {
             onClick: handleCreateNew,
             disabled: loading || error
           },
-          {
-            label: 'Exportar Datos',
-            icon: <DownloadIcon />,
-            variant: 'secondary',
-            onClick: handleExport,
-            disabled: loading || error
-          }
+          // {
+          //   label: 'Exportar Datos',
+          //   icon: <DownloadIcon />,
+          //   variant: 'secondary',
+          //   onClick: handleExport,
+          //   disabled: loading || error
+          // }
         ]}
       />
 
