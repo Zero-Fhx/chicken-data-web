@@ -43,7 +43,8 @@ const GRANULARITY_PERIOD_MAP = {
     { label: '4 semanas', value: '4w' },
     { label: '8 semanas', value: '8w' },
     { label: '12 semanas', value: '12w' },
-    { label: '26 semanas', value: '26w' }
+    { label: '26 semanas', value: '26w' },
+    { label: '52 semanas', value: '52w' }
   ],
   monthly: [
     { label: '3 meses', value: '3m' },
