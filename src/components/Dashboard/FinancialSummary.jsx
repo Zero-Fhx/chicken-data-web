@@ -95,7 +95,7 @@ export function FinancialSummary ({ loading, data, period = 'month' }) {
       {/* Fila 3: KPIs secundarios (Sin cambios, 2 columnas) */}
       <div className='financial-static-grid'>
         <div className='financial-item'>
-          <h4 className='financial-title-box'>ROI del Mes</h4>
+          <h4 className='financial-title-box'>ROI del Mes - Retorno de la Inversión</h4>
           <p className='financial-value'>{roi?.month ?? 0}%</p>
         </div>
         <div className='financial-item'>
