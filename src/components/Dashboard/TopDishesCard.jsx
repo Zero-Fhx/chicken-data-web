@@ -28,7 +28,7 @@ export function TopDishesCard () {
 
   return (
     <DashboardCard
-      title='Platos'
+      title='Platos del Mes'
       className='span-2'
       loading={loading}
       error={error}

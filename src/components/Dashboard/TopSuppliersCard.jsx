@@ -13,7 +13,7 @@ export function TopSuppliersCard () {
 
   return (
     <DashboardCard
-      title='Proveedores Principales'
+      title='Proveedores Principales del Mes'
       className='span-2'
       loading={loading}
       error={error}
