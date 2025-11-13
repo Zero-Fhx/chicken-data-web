@@ -7,9 +7,7 @@ import { Home } from '@/pages/Home'
 import { Ingredients } from '@/pages/Ingredients'
 import { Purchases } from '@/pages/Purchases'
 import { Sales } from '@/pages/Sales'
-import { Settings } from '@/pages/Settings'
 import { Suppliers } from '@/pages/Suppliers'
-import { Users } from '@/pages/Users'
 
 import '@/styles/App.css'
 import '@fontsource-variable/onest'
@@ -27,8 +25,8 @@ export function App () {
           <Route path='/purchases' element={<Purchases />} />
           <Route path='/sales' element={<Sales />} />
           <Route path='/suppliers' element={<Suppliers />} />
-          <Route path='/users' element={<Users />} />
-          <Route path='/settings' element={<Settings />} />
+          {/* <Route path='/users' element={<Users />} />
+          <Route path='/settings' element={<Settings />} /> */}
         </Routes>
       </div>
     </main>

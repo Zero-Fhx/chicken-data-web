@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router'
 
-import { ChartIcon, CubeAltIcon, CubeIcon, DollarIcon, LogoIcon, SettingsIcon, ShoppingCartIcon, TruckIcon, UserIcon } from './Icons'
+import { ChartIcon, CubeAltIcon, CubeIcon, DollarIcon, LogoIcon, ShoppingCartIcon, TruckIcon } from './Icons'
 
 import '@/styles/Sidebar.css'
 
@@ -21,13 +21,13 @@ const MENU = [
       { name: 'Suppliers', label: 'Proveedores', icon: TruckIcon }
     ]
   },
-  {
-    label: 'Sistema',
-    items: [
-      { name: 'Users', label: 'Usuarios', icon: UserIcon },
-      { name: 'Settings', label: 'Configuración', icon: SettingsIcon }
-    ]
-  }
+  // {
+  //   label: 'Sistema',
+  //   items: [
+  //     { name: 'Users', label: 'Usuarios', icon: UserIcon },
+  //     { name: 'Settings', label: 'Configuración', icon: SettingsIcon }
+  //   ]
+  // }
 ]
 
 /**
