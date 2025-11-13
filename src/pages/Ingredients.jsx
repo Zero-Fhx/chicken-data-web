@@ -9,7 +9,7 @@ import { DataTable } from '@/components/DataTable'
 import { DeleteConfirmation } from '@/components/DeleteConfirmation'
 import { ErrorModal } from '@/components/ErrorModal'
 import { FilterSection } from '@/components/FilterSection'
-import { AddIcon, AdjustIcon, CancelIcon, CheckIcon, CubeAltIcon, EditIcon, SearchIcon, TrashBinIcon, ViewIcon } from '@/components/Icons'
+import { AddIcon, AdjustIcon, CancelIcon, CheckIcon, CubeAltIcon, DownloadIcon, EditIcon, SearchIcon, TrashBinIcon, ViewIcon } from '@/components/Icons'
 import { InputWithLabel } from '@/components/InputWithLabel'
 import { Loader } from '@/components/Loader'
 import { Modal } from '@/components/Modal'
@@ -23,6 +23,7 @@ import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
 
 import API_ENDPOINTS from '@/services/api'
+import { exportToCSV, exportToExcel, exportToPDF } from '@/services/exportUtils'
 import { removeExtraSpaces } from '@/services/normalize'
 import trunc from '@/services/trunc'
 
@@ -504,8 +505,45 @@ export function Ingredients () {
     setIsModalOpen(true)
   }
 
-  const handleExport = () => {
-    console.log('Exportando datos de ingredientes...')
+  const getExportData = () => {
+    const headers = [
+      'ID',
+      'Nombre',
+      'Categoría',
+      'En Uso',
+      'Unidad',
+      'Stock',
+      'Stock Mínimo',
+      'Estado'
+    ]
+
+    const data = (ingredients || []).map(item => [
+      item.id,
+      item.name,
+      item.category?.name || '-',
+      item.isInUse ? 'En Uso' : 'Sin Uso',
+      item.unit || '-',
+      (typeof item.stock === 'number') ? item.stock.toFixed(2) : '-',
+      (typeof item.minimumStock === 'number') ? item.minimumStock.toFixed(2) : '-',
+      item.status === 'Active' ? 'Activo' : 'Inactivo'
+    ])
+
+    return { headers, data }
+  }
+
+  const handleExportCSV = () => {
+    const { headers, data } = getExportData()
+    exportToCSV(headers, data, 'reporte-ingredientes.csv')
+  }
+
+  const handleExportExcel = () => {
+    const { headers, data } = getExportData()
+    exportToExcel(headers, data, 'reporte-ingredientes.xlsx', 'Ingredientes')
+  }
+
+  const handleExportPDF = () => {
+    const { headers, data } = getExportData()
+    exportToPDF(headers, data, 'reporte-ingredientes.pdf', 'Reporte de Ingredientes')
   }
 
   const handleCloseWithX = () => {
@@ -665,13 +703,27 @@ export function Ingredients () {
             onClick: handleCreateNew,
             disabled: loading || error
           },
-          // {
-          //   label: 'Exportar Datos',
-          //   icon: <DownloadIcon />,
-          //   variant: 'secondary',
-          //   onClick: handleExport,
-          //   disabled: loading || error
-          // }
+          {
+            label: 'Exportar CSV',
+            icon: <DownloadIcon />,
+            variant: 'secondary',
+            onClick: handleExportCSV,
+            disabled: loading || error || !ingredients || ingredients.length === 0
+          },
+          {
+            label: 'Exportar Excel',
+            icon: <DownloadIcon />,
+            variant: 'secondary',
+            onClick: handleExportExcel,
+            disabled: loading || error || !ingredients || ingredients.length === 0
+          },
+          {
+            label: 'Exportar PDF',
+            icon: <DownloadIcon />,
+            variant: 'secondary',
+            onClick: handleExportPDF,
+            disabled: loading || error || !ingredients || ingredients.length === 0
+          }
         ]}
       />
 

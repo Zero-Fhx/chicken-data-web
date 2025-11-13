@@ -7,7 +7,7 @@ import { DataTable } from '@/components/DataTable'
 import { DeleteConfirmation } from '@/components/DeleteConfirmation'
 import { ErrorModal } from '@/components/ErrorModal'
 import { FilterSection } from '@/components/FilterSection'
-import { AddIcon, CancelIcon, CheckIcon, EditIcon, SearchIcon, ShoppingCartIcon, TrashBinIcon, ViewIcon, WarningIcon } from '@/components/Icons'
+import { AddIcon, CancelIcon, CheckIcon, DownloadIcon, EditIcon, SearchIcon, ShoppingCartIcon, TrashBinIcon, ViewIcon, WarningIcon } from '@/components/Icons'
 import { Loader } from '@/components/Loader'
 import { Modal } from '@/components/Modal'
 import { PageHeader } from '@/components/PageHeader'
@@ -22,6 +22,7 @@ import { Select } from '@/components/ui/Select'
 
 import API_ENDPOINTS from '@/services/api'
 import { formatDateShort, getToday } from '@/services/dateUtils'
+import { exportToCSV, exportToExcel, exportToPDF } from '@/services/exportUtils'
 import { removeExtraSpaces } from '@/services/normalize'
 import trunc from '@/services/trunc'
 
@@ -386,8 +387,41 @@ export function Purchases () {
     setPurchaseDetails([])
   }
 
-  const handleExport = () => {
-    console.log('Exportando datos de compras...')
+  const getExportData = () => {
+    const headers = [
+      'ID',
+      'Fecha',
+      'Proveedor',
+      'Total (S/.)',
+      'Notas',
+      'Estado'
+    ]
+
+    const data = (purchases || []).map(p => [
+      p.id,
+      formatDateShort(p.purchaseDate, undefined, 'UTC'),
+      p.supplier?.name || '-',
+      (typeof p.total === 'number') ? p.total.toFixed(2) : '-',
+      p.notes || '-',
+      p.status === 'Completed' ? 'Completada' : 'Cancelada'
+    ])
+
+    return { headers, data }
+  }
+
+  const handleExportCSV = () => {
+    const { headers, data } = getExportData()
+    exportToCSV(headers, data, 'reporte-compras.csv')
+  }
+
+  const handleExportExcel = () => {
+    const { headers, data } = getExportData()
+    exportToExcel(headers, data, 'reporte-compras.xlsx', 'Compras')
+  }
+
+  const handleExportPDF = () => {
+    const { headers, data } = getExportData()
+    exportToPDF(headers, data, 'reporte-compras.pdf', 'Reporte de Compras')
   }
 
   const handleCloseWithX = () => {
@@ -655,13 +689,27 @@ export function Purchases () {
             onClick: handleCreateNew,
             disabled: loading || error
           },
-          // {
-          //   label: 'Exportar Datos',
-          //   icon: <DownloadIcon />,
-          //   variant: 'secondary',
-          //   onClick: handleExport,
-          //   disabled: loading || error
-          // }
+          {
+            label: 'Exportar CSV',
+            icon: <DownloadIcon />,
+            variant: 'secondary',
+            onClick: handleExportCSV,
+            disabled: loading || error || !purchases || purchases.length === 0
+          },
+          {
+            label: 'Exportar Excel',
+            icon: <DownloadIcon />,
+            variant: 'secondary',
+            onClick: handleExportExcel,
+            disabled: loading || error || !purchases || purchases.length === 0
+          },
+          {
+            label: 'Exportar PDF',
+            icon: <DownloadIcon />,
+            variant: 'secondary',
+            onClick: handleExportPDF,
+            disabled: loading || error || !purchases || purchases.length === 0
+          }
         ]}
       />
 

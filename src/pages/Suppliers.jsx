@@ -8,7 +8,7 @@ import { DataTable } from '@/components/DataTable'
 import { DeleteConfirmation } from '@/components/DeleteConfirmation'
 import { ErrorModal } from '@/components/ErrorModal'
 import { FilterSection } from '@/components/FilterSection'
-import { AddIcon, CancelIcon, CheckIcon, EditIcon, SearchIcon, TrashBinIcon, TruckIcon, ViewIcon } from '@/components/Icons'
+import { AddIcon, CancelIcon, CheckIcon, DownloadIcon, EditIcon, SearchIcon, TrashBinIcon, TruckIcon, ViewIcon } from '@/components/Icons'
 import { Loader } from '@/components/Loader'
 import { Modal } from '@/components/Modal'
 import { PageHeader } from '@/components/PageHeader'
@@ -21,6 +21,7 @@ import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
 
 import API_ENDPOINTS from '@/services/api'
+import { exportToCSV, exportToExcel, exportToPDF } from '@/services/exportUtils'
 import { removeExtraSpaces } from '@/services/normalize'
 
 const ENVIRONMENT = import.meta.env.VITE_ENV || 'production'
@@ -251,8 +252,43 @@ export function Suppliers () {
     setModalError(null)
   }
 
-  const handleExport = () => {
-    console.log('Exportando datos de proveedores...')
+  const getExportData = () => {
+    const headers = [
+      'ID',
+      'Nombre',
+      'RUC',
+      'Contacto',
+      'Teléfono',
+      'Email',
+      'Estado'
+    ]
+
+    const data = (suppliers || []).map(s => [
+      s.id,
+      s.name || '-',
+      s.ruc || '-',
+      s.contactPerson || '-',
+      s.phone || '-',
+      s.email || '-',
+      s.status === 'Active' ? 'Activo' : 'Inactivo'
+    ])
+
+    return { headers, data }
+  }
+
+  const handleExportCSV = () => {
+    const { headers, data } = getExportData()
+    exportToCSV(headers, data, 'reporte-proveedores.csv')
+  }
+
+  const handleExportExcel = () => {
+    const { headers, data } = getExportData()
+    exportToExcel(headers, data, 'reporte-proveedores.xlsx', 'Proveedores')
+  }
+
+  const handleExportPDF = () => {
+    const { headers, data } = getExportData()
+    exportToPDF(headers, data, 'reporte-proveedores.pdf', 'Reporte de Proveedores')
   }
 
   const handleSave = () => {
@@ -358,13 +394,27 @@ export function Suppliers () {
             onClick: handleCreateNew,
             disabled: loading || error
           },
-          // {
-          //   label: 'Exportar Datos',
-          //   icon: <DownloadIcon />,
-          //   variant: 'secondary',
-          //   onClick: handleExport,
-          //   disabled: loading || error
-          // }
+          {
+            label: 'Exportar CSV',
+            icon: <DownloadIcon />,
+            variant: 'secondary',
+            onClick: handleExportCSV,
+            disabled: loading || error || !suppliers || suppliers.length === 0
+          },
+          {
+            label: 'Exportar Excel',
+            icon: <DownloadIcon />,
+            variant: 'secondary',
+            onClick: handleExportExcel,
+            disabled: loading || error || !suppliers || suppliers.length === 0
+          },
+          {
+            label: 'Exportar PDF',
+            icon: <DownloadIcon />,
+            variant: 'secondary',
+            onClick: handleExportPDF,
+            disabled: loading || error || !suppliers || suppliers.length === 0
+          }
         ]}
       />
 

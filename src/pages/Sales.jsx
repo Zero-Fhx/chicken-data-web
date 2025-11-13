@@ -8,7 +8,7 @@ import { DataTable } from '@/components/DataTable'
 import { DeleteConfirmation } from '@/components/DeleteConfirmation'
 import { ErrorModal } from '@/components/ErrorModal'
 import { FilterSection } from '@/components/FilterSection'
-import { AddIcon, CancelIcon, CheckIcon, DollarIcon, EditIcon, SearchIcon, TrashBinIcon, ViewIcon, WarningIcon } from '@/components/Icons'
+import { AddIcon, CancelIcon, CheckIcon, DollarIcon, DownloadIcon, EditIcon, SearchIcon, TrashBinIcon, ViewIcon, WarningIcon } from '@/components/Icons'
 import { Loader } from '@/components/Loader'
 import { Modal } from '@/components/Modal'
 import { PageHeader } from '@/components/PageHeader'
@@ -23,6 +23,7 @@ import { Select } from '@/components/ui/Select'
 
 import API_ENDPOINTS from '@/services/api'
 import { formatDateShort, getToday } from '@/services/dateUtils'
+import { exportToCSV, exportToExcel, exportToPDF } from '@/services/exportUtils'
 import { removeExtraSpaces } from '@/services/normalize'
 import trunc from '@/services/trunc'
 
@@ -345,8 +346,41 @@ export function Sales () {
     setSaleDetails([])
   }
 
-  const handleExport = () => {
-    console.log('Exportando datos de ventas...')
+  const getExportData = () => {
+    const headers = [
+      'ID',
+      'Fecha',
+      'Cliente',
+      'Total (S/.)',
+      'Notas',
+      'Estado'
+    ]
+
+    const data = (sales || []).map(s => [
+      s.id,
+      formatDateShort(s.saleDate, undefined, 'UTC'),
+      s.customer || '-',
+      (typeof s.total === 'number') ? s.total.toFixed(2) : '-',
+      s.notes || '-',
+      s.status === 'Completed' ? 'Completada' : 'Cancelada'
+    ])
+
+    return { headers, data }
+  }
+
+  const handleExportCSV = () => {
+    const { headers, data } = getExportData()
+    exportToCSV(headers, data, 'reporte-ventas.csv')
+  }
+
+  const handleExportExcel = () => {
+    const { headers, data } = getExportData()
+    exportToExcel(headers, data, 'reporte-ventas.xlsx', 'Ventas')
+  }
+
+  const handleExportPDF = () => {
+    const { headers, data } = getExportData()
+    exportToPDF(headers, data, 'reporte-ventas.pdf', 'Reporte de Ventas')
   }
 
   const handleCloseWithX = () => {
@@ -628,13 +662,27 @@ export function Sales () {
             onClick: handleCreateNew,
             disabled: loading || error
           },
-          // {
-          //   label: 'Exportar Datos',
-          //   icon: <DownloadIcon />,
-          //   variant: 'secondary',
-          //   onClick: handleExport,
-          //   disabled: loading || error
-          // }
+          {
+            label: 'Exportar CSV',
+            icon: <DownloadIcon />,
+            variant: 'secondary',
+            onClick: handleExportCSV,
+            disabled: loading || error || !sales || sales.length === 0
+          },
+          {
+            label: 'Exportar Excel',
+            icon: <DownloadIcon />,
+            variant: 'secondary',
+            onClick: handleExportExcel,
+            disabled: loading || error || !sales || sales.length === 0
+          },
+          {
+            label: 'Exportar PDF',
+            icon: <DownloadIcon />,
+            variant: 'secondary',
+            onClick: handleExportPDF,
+            disabled: loading || error || !sales || sales.length === 0
+          }
         ]}
       />
 

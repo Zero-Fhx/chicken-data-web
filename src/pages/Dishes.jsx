@@ -8,7 +8,7 @@ import { DataTable } from '@/components/DataTable'
 import { DeleteConfirmation } from '@/components/DeleteConfirmation'
 import { ErrorModal } from '@/components/ErrorModal'
 import { FilterSection } from '@/components/FilterSection'
-import { AddIcon, CancelIcon, CheckIcon, CubeIcon, EditIcon, SearchIcon, TrashBinIcon, ViewIcon } from '@/components/Icons'
+import { AddIcon, CancelIcon, CheckIcon, CubeIcon, DownloadIcon, EditIcon, SearchIcon, TrashBinIcon, ViewIcon } from '@/components/Icons'
 import { InputWithLabel } from '@/components/InputWithLabel'
 import { Loader } from '@/components/Loader'
 import { Modal } from '@/components/Modal'
@@ -23,6 +23,7 @@ import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
 
 import API_ENDPOINTS from '@/services/api'
+import { exportToCSV, exportToExcel, exportToPDF } from '@/services/exportUtils'
 import { removeExtraSpaces } from '@/services/normalize'
 import trunc from '@/services/trunc'
 
@@ -470,8 +471,43 @@ export function Dishes () {
     setRecipeIngredients([])
   }
 
-  const handleExport = () => {
-    console.log('Exportando datos de platos...')
+  const getExportData = () => {
+    const headers = [
+      'ID',
+      'Nombre',
+      'Descripción',
+      'Categoría',
+      'Precio (S/.)',
+      'Disponibilidad',
+      'Estado'
+    ]
+
+    const data = (dishes || []).map(dish => [
+      dish.id,
+      dish.name,
+      dish.description || '—', // Manejar valores nulos
+      dish.category.name,
+      dish.price.toFixed(2),
+      dish.hasSufficientStock ? 'Con Stock' : 'Sin Stock',
+      dish.status === 'Active' ? 'Activo' : 'Inactivo'
+    ])
+
+    return { headers, data }
+  }
+
+  const handleExportCSV = () => {
+    const { headers, data } = getExportData()
+    exportToCSV(headers, data, 'reporte-platos.csv')
+  }
+
+  const handleExportExcel = () => {
+    const { headers, data } = getExportData()
+    exportToExcel(headers, data, 'reporte-platos.xlsx', 'Platos')
+  }
+
+  const handleExportPDF = () => {
+    const { headers, data } = getExportData()
+    exportToPDF(headers, data, 'reporte-platos.pdf', 'Reporte de Platos')
   }
 
   const handleCloseWithX = () => {
@@ -732,13 +768,27 @@ export function Dishes () {
             onClick: handleCreateNew,
             disabled: loading || error
           },
-          // {
-          //   label: 'Exportar Datos',
-          //   icon: <DownloadIcon />,
-          //   variant: 'secondary',
-          //   onClick: handleExport,
-          //   disabled: loading || error
-          // }
+          {
+            label: 'Exportar CSV',
+            icon: <DownloadIcon />,
+            variant: 'secondary',
+            onClick: handleExportCSV,
+            disabled: loading || error || !dishes || dishes.length === 0
+          },
+          {
+            label: 'Exportar Excel',
+            icon: <DownloadIcon />,
+            variant: 'secondary',
+            onClick: handleExportExcel,
+            disabled: loading || error || !dishes || dishes.length === 0
+          },
+          {
+            label: 'Exportar PDF',
+            icon: <DownloadIcon />,
+            variant: 'secondary',
+            onClick: handleExportPDF,
+            disabled: loading || error || !dishes || dishes.length === 0
+          }
         ]}
       />
 
