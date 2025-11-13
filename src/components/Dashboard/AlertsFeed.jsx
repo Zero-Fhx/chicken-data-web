@@ -72,7 +72,9 @@ export function AlertsFeed ({ loading, data }) {
             <div className='alert-content'>
               <span className='alert-title'>{alert.title}</span>
               {main ? <span className='alert-message'>{main}</span> : null}
-              {note ? <span className='alert-message-sub'>{note}</span> : null}
+              {alert.severity === 'critical' && note
+                ? (<span className='alert-message-sub'>{note}</span>)
+                : null}
             </div>
           </li>
         )

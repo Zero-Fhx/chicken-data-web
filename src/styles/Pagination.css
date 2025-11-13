@@ -39,3 +39,10 @@
   cursor: not-allowed;
   border-color: #e5e7eb;
 }
+
+.pagination-ellipsis {
+  padding: 0.5rem 0.25rem;
+  color: #9ca3af;
+  font-weight: 500;
+  white-space: nowrap;
+}

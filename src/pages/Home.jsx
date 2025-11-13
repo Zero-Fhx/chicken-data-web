@@ -3,7 +3,6 @@ import { DashboardCard } from '@/components/Dashboard/DashboardCard'
 import { FinancialSummary } from '@/components/Dashboard/FinancialSummary'
 import { InventorySummaryCard } from '@/components/Dashboard/InventorySummaryCard'
 import { PeriodSelector } from '@/components/Dashboard/PeriodSelector'
-import { ProjectionsCard } from '@/components/Dashboard/PurchaseRecommendations'
 import { PurchasesCategoryChart } from '@/components/Dashboard/PurchasesCategoryChart'
 import { PurchasesKpiCard } from '@/components/Dashboard/PurchasesKpiCard'
 import { RecentActivityCard } from '@/components/Dashboard/RecentActivityCard'
@@ -234,7 +233,7 @@ export function Home () {
         <TopSuppliersCard />
 
         {/* Fila 5: Proyecciones + Comparaciones: ocuparán la misma fila (cada una span-2) */}
-        <ProjectionsCard className='span-2' />
+        {/* <ProjectionsCard className='span-2' /> */}
         <ComparisonsCard
           className='span-2'
           comparisonsData={comparisons}
