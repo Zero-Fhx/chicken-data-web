@@ -1,52 +1,69 @@
+/* fileName: DishesComparisonTable.css (REEMPLAZAR ARCHIVO) */
+
+.table-scroll-wrapper {
+  overflow-x: auto;
+  width: 100%;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+}
+
 .dishes-comparison-table {
   width: 100%;
   border-collapse: collapse;
-}
-
-/* Double-wrapper: outer clips border-radius, inner scrolls */
-.comparison-wrapper {
-  width: 100%;
-  overflow: hidden; /* clip scrollbars to preserve outer border-radius */
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  background: #ffffff;
-}
-
-.comparison-wrapper .table-scroll-wrapper {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.dishes-comparison-table thead th {
-  text-transform: uppercase;
-  text-align: right;
-}
-
-.dishes-comparison-table thead th:first-child {
-  text-align: left;
+  min-width: 500px;
 }
 
 .dishes-comparison-table th,
 .dishes-comparison-table td {
   padding: 10px 12px;
-  text-align: left;
-  font-size: 0.95rem;
   vertical-align: middle;
+  line-height: 1.5;
+  white-space: nowrap;
 }
 
-.dishes-comparison-table th {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #868e96;
+.dishes-comparison-table thead {
   background-color: #f8f9fa;
 }
 
-.dishes-comparison-table td:nth-child(2),
-.dishes-comparison-table td:nth-child(4) {
+.dishes-comparison-table th {
+  font-size: 0.8rem; /* 12px */
+  font-weight: 600;
+  color: #495057;
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.dishes-comparison-table tbody tr {
+  border-top: 1px solid #e9ecef;
+}
+.dishes-comparison-table tbody tr:first-child {
+  border-top: none;
+}
+
+.dishes-comparison-table td {
+  font-size: 0.9rem;
+  color: #212529;
+}
+
+/* Alineación de Texto */
+.dishes-comparison-table .text-right {
+  text-align: right;
+}
+.dishes-comparison-table .text-center {
   text-align: center;
 }
 
-.dishes-comparison-table td:nth-child(3),
-.dishes-comparison-table td:nth-child(5) {
-  text-align: right;
+/* Reutilizamos los estilos de cambio de KPI */
+.kpi-change.positive {
+  color: #00c49f;
+  font-weight: 600;
+}
+.kpi-change.negative {
+  color: #e63946;
+  font-weight: 600;
+}
+.kpi-change.neutral {
+  color: #6c757d;
+  font-weight: 600;
 }

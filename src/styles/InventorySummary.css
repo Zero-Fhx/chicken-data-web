@@ -254,3 +254,54 @@
   margin: 0;
   white-space: nowrap;
 }
+
+/* styles/InventorySummary.css (NUEVO CONTENIDO) */
+
+/* Layout principal: apilado vertical */
+.inventory-summary-v2 {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* Espacio entre KPIs y gráfico */
+  width: 100%;
+}
+
+/* Contenedor de los KPIs de arriba */
+.inventory-kpis {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Estilo para cada item de KPI */
+.inventory-item {
+  background-color: #f8f9fa;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.inventory-title {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #6c757d;
+  margin: 0 0 4px 0;
+}
+
+.inventory-value {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #212529;
+  margin: 0;
+}
+
+/* Contenedor del gráfico de dona */
+.inventory-chart-container {
+  width: 100%;
+  height: 120px; /* Altura fija para la dona */
+  margin-top: 8px; /* Pequeño espacio superior */
+}
+
+/* Ajustar la leyenda de Recharts */
+.recharts-legend-item-text {
+  font-size: 0.9rem !important;
+  color: #343a40 !important;
+}

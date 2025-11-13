@@ -1,0 +1,69 @@
+/* fileName: SalesProjections.css */
+
+.projections-v2 {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 8px;
+}
+
+/* Reutilizamos los estilos de KPI de la otra tarjeta */
+.projections-v2 .kpi-main {
+  align-items: flex-start; /* Alineado a la izquierda */
+}
+.projections-v2 .kpi-main-value {
+  font-size: 1.75rem; /* 28px */
+}
+.projections-v2 .kpi-main-label {
+  font-size: 0.9rem;
+}
+
+/* Contenedor del gráfico de rango */
+.range-container {
+  width: 100%;
+  padding-top: 16px;
+  border-top: 1px solid #f1f3f5;
+}
+
+.range-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #343a40;
+  margin: 0 0 12px 0;
+}
+
+.range-chart {
+  position: relative;
+  width: 100%;
+}
+
+.range-bar {
+  width: 100%;
+  height: 12px;
+  background-color: #e9ecef;
+  border-radius: 6px;
+  /* Gradiente de conservador (rojo) a optimista (verde) */
+  background: linear-gradient(to right, #ff8042, #ffbb28, #00c49f);
+}
+
+.range-marker {
+  position: absolute;
+  top: -6px; /* Centrado verticalmente */
+  width: 2px;
+  height: 24px;
+  background-color: #212529;
+  border-radius: 1px;
+  transform: translateX(-50%);
+  cursor: pointer;
+  z-index: 2;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.range-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #6c757d;
+}

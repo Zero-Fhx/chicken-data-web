@@ -1,74 +1,97 @@
-.stock-depletion-table {
+/* fileName: StockDepletionList.css (ARCHIVO NUEVO) */
+
+.table-scroll-wrapper {
+  overflow-x: auto;
+  width: 100%;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+}
+
+.depletion-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.92rem;
+  min-width: 600px; /* Evita que la tabla se comprima demasiado */
 }
 
-.stock-depletion-table th,
-.stock-depletion-table td {
+.depletion-table th,
+.depletion-table td {
   padding: 10px 12px;
-  text-align: left;
   vertical-align: middle;
+  line-height: 1.5;
 }
 
-.stock-depletion-table thead th {
-  color: #868e96;
+.depletion-table thead {
+  background-color: #f8f9fa;
+}
+
+.depletion-table th {
+  font-size: 0.8rem; /* 12px */
   font-weight: 600;
-  background: #f8f9fa;
-  text-transform: uppercase;
-}
-
-.stock-depletion-table tbody tr:nth-child(even) {
-  background: #fff;
-}
-
-.stock-depletion-table tbody tr:hover {
-  background: #fbfbfc;
-}
-
-/* Double-wrapper: outer clips border-radius, inner provides scroll */
-.stock-depletion-wrapper {
-  width: 100%;
-  overflow: hidden; /* clip scrollbars to preserve outer border-radius */
-  border-radius: 8px;
-  border: 1px solid #e9ecef;
-  background: #fff;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
-}
-
-.stock-depletion-wrapper .table-scroll-wrapper {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.stock-small {
-  font-size: 0.85rem;
   color: #495057;
+  text-align: left;
+  text-transform: uppercase; /* MAYÚSCULAS */
+  letter-spacing: 0.5px;
 }
 
-.priority-alta {
-  background: #ffd6d6;
-  color: #9b2226;
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-weight: 600;
+.depletion-table tbody tr {
+  border-top: 1px solid #e9ecef;
 }
-.priority-media {
-  background: #ffd8a8;
-  color: #8a4b00;
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-weight: 600;
-}
-.priority-baja {
-  background: #d6f5d6;
-  color: #116530;
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-weight: 600;
+.depletion-table tbody tr:first-child {
+  border-top: none;
 }
 
-.stock-depletion-table.compact th,
-.stock-depletion-table.compact td {
-  padding: 12px;
+.depletion-table td {
+  font-size: 0.9rem;
+  color: #212529;
+}
+
+/* Alineación de Texto */
+.depletion-table .text-right {
+  text-align: right;
+}
+.depletion-table .text-center {
+  text-align: center;
+}
+
+/* Corrección del Salto de Línea */
+.depletion-table .cost-value {
+  white-space: nowrap; /* EVITA EL SALTO DE LÍNEA */
+}
+
+/* Destacar días restantes */
+.depletion-table .days-highlight {
+  font-weight: 500;
+  color: #c9184a; /* Un rojo para llamar la atención */
+}
+
+/* Estilos de Chip (ya deberías tenerlos, pero por si acaso) */
+.priority-chip {
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+}
+.priority-chip.priority-alta {
+  background-color: #e63946;
+}
+.priority-chip.priority-media {
+  background-color: #ffbb28;
+  color: #333;
+}
+.priority-chip.priority-baja {
+  background-color: #00c49f;
+}
+
+/* Alineación de Encabezados (NUEVO) */
+.depletion-table th:nth-child(2),
+.depletion-table th:nth-child(3),
+.depletion-table th:nth-child(4),
+.depletion-table th:nth-child(5) {
+  text-align: right;
+}
+
+.depletion-table th:nth-child(6) {
+  text-align: center;
 }

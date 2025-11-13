@@ -1,31 +1,26 @@
-/* styles/KpiCard.css */
+/* fileName: KpiCard.css (REEMPLAZAR ARCHIVO COMPLETO) */
 
-/* --- TAREA 20: Fusionar estilos de .dashboard-card --- */
 .kpi-card-wrapper {
-  /* Apariencia de la tarjeta (de DashboardCard.css) */
   background-color: #ffffff;
   border: 1px solid #e9ecef;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
   padding: 20px;
-
-  /* Layout interno */
   display: flex;
   flex-direction: column;
-  height: 100%; /* Para que coincida con la altura de la fila */
+  height: 100%;
 }
 
-/* Encabezado (Título + Selector) */
+/* Encabezado */
 .kpi-card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px; /* Espacio antes del valor */
-  min-height: 28px; /* Altura fija para el selector */
-  border-bottom: 1px solid #f1f3f5; /* línea bajo el título, similar a otras cards */
+  margin-bottom: 12px;
+  min-height: 28px;
+  border-bottom: 1px solid #f1f3f5;
   padding-bottom: 8px;
 }
-
 .kpi-card-title {
   margin: 0;
   font-size: 1.1rem;
@@ -33,31 +28,92 @@
   color: #343a40;
 }
 
-/* Contenido (Valor + Crecimiento) */
+/* Contenido */
 .kpi-card-content {
-  flex: 1; /* Ocupa el espacio restante */
+  flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Centra el valor verticalmente */
+  justify-content: space-between;
 }
-
+.kpi-card-metrics {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  /* Centrar verticalmente si no hay gráfico (ej. en "Hoy") */
+  flex-grow: 1;
+  justify-content: center;
+}
 .kpi-card-value {
   margin: 0;
   font-size: 2.25rem;
   font-weight: 600;
   color: #212529;
 }
-
 .kpi-card-growth {
   font-size: 0.9rem;
   font-weight: 600;
   margin-top: 4px;
 }
 .kpi-card-growth.positive {
-  color: #28a745; /* Verde */
+  color: #28a745;
 }
 .kpi-card-growth.negative {
-  color: #dc3545; /* Rojo */
+  color: #dc3545;
 }
 
-/* Pie de página (Fuente) eliminado */
+/* Sparkline */
+.kpi-sparkline {
+  width: 100%;
+  margin-top: 16px;
+  border-top: 1px solid #f1f3f5;
+  padding-top: 12px;
+}
+.kpi-sparkline-title {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #6c757d;
+  margin: 0 0 8px 0;
+  text-align: left;
+}
+.kpi-sparkline-chart-wrapper {
+  width: 100%;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* fileName: KpiCard.css (SOLO EL CSS DEL TOOLTIP) */
+
+.custom-sparkline-tooltip {
+  background-color: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 8px 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Regla para la fecha/hora (ej. 2025-11-10) */
+.custom-sparkline-tooltip .label {
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #343a40;
+  font-size: 0.85rem;
+}
+
+/* Regla para la línea de valor (ej. Costos: S/. 117.25) */
+.custom-sparkline-tooltip .item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #495057;
+}
+
+.custom-sparkline-tooltip .value {
+  font-weight: 600;
+  margin-left: 4px;
+  color: #212529;
+}

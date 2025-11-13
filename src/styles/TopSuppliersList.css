@@ -34,3 +34,68 @@
   font-weight: 600;
   color: #212529;
 }
+/* styles/TopSuppliersList.css (NUEVO CONTENIDO) */
+
+/* Apuntamos a las etiquetas de texto SVG generadas por Recharts */
+.recharts-cartesian-axis-tick-value tspan {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #343a40;
+}
+
+/* Estilo para las etiquetas de valor (Números sobre la barra) */
+.recharts-bar-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #333;
+  fill: #333;
+}
+
+.top-suppliers-chart-container {
+  /*
+    Usamos el MISMO valor (255px) para forzar
+    que esta tarjeta tenga la misma altura que la de "Platos".
+  */
+  min-height: 255px;
+
+  /* Asegura que el gráfico se alinee arriba */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+/* ... (reglas existentes) ... */
+
+/* --- AÑADIR ESTAS REGLAS AL FINAL --- */
+
+.custom-tooltip {
+  background-color: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 10px 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.custom-tooltip .label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #343a40;
+  font-size: 0.95rem;
+}
+.custom-tooltip .item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.tooltip-color-box {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+.custom-tooltip .value {
+  font-weight: 600;
+  margin-left: 5px;
+}

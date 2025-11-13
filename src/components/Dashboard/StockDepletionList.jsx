@@ -1,43 +1,62 @@
-import '../../styles/StockDepletionList.css'
+// fileName: StockDepletionList.jsx (CREA O REEMPLAZA ESTE ARCHIVO)
 
-const formatNumber = (v, digits = 2) => (v == null ? 'N/A' : Number(v).toLocaleString('es-PE', { minimumFractionDigits: digits, maximumFractionDigits: digits }))
-const formatCurrency = (v) => (v == null ? 'N/A' : `S/. ${Number(v).toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`)
+import '@/styles/StockDepletionList.css' // Importamos el nuevo CSS
+
+const formatCurrency = (v) => {
+  if (v == null) return 'N/A'
+  return `S/. ${Number(v).toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+}
 
 export function StockDepletionList ({ data }) {
-  if (!data || data.length === 0) return <div>No hay ingredientes próximos a agotarse.</div>
+  if (!data || data.length === 0) {
+    return <p>No hay items con riesgo de agotamiento.</p>
+  }
 
   return (
-    <div className='stock-depletion-wrapper'>
-      <div className='table-scroll-wrapper'>
-        <table className='stock-depletion-table compact'>
-          <thead>
-            <tr>
-              <th>Ingrediente</th>
-              <th>Stock</th>
-              <th>Días</th>
-              <th>Cantidad rec.</th>
-              <th>Costo</th>
-              <th>Prioridad</th>
+    <div className='table-scroll-wrapper'>
+      <table className='depletion-table'>
+        <thead>
+          <tr>
+            {/* Encabezados corregidos */}
+            <th>Ingrediente</th>
+            <th>Stock Actual</th>
+            <th>Días Restantes</th>
+            <th>Cant. Rec.</th>
+            <th>Costo Estimado</th>
+            <th>Prioridad</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map(item => (
+            <tr key={item.ingredientId ?? item.ingredientName}>
+              <td data-label='Ingrediente'>{item.ingredientName}</td>
+
+              {/* Se quitó la clase 'stock-small' */}
+              <td data-label='Stock Actual' className='text-right'>
+                {item.currentStock != null ? Number(item.currentStock).toFixed(2) : '-'}
+              </td>
+
+              <td data-label='Días Restantes' className='text-right days-highlight'>
+                {item.daysUntilDepleted != null ? Number(item.daysUntilDepleted).toFixed(1) : '-'}
+              </td>
+
+              <td data-label='Cant. Rec.' className='text-right'>
+                {item.recommendedOrderQuantity ?? item.recommendedAmount ?? '-'}
+              </td>
+
+              <td data-label='Costo Estimado' className='text-right cost-value'>
+                {formatCurrency(item.estimatedCost)}
+              </td>
+
+              <td data-label='Prioridad' className='text-center'>
+                <span className={`priority-chip ${item.priority === 'high' ? 'priority-alta' : item.priority === 'low' ? 'priority-baja' : 'priority-media'}`}>
+                  {item.priority === 'high' ? 'Alta' : item.priority === 'low' ? 'Baja' : 'Media'}
+                </span>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {data.map(item => (
-              <tr key={item.ingredientId ?? item.ingredientName}>
-                <td>{item.ingredientName}</td>
-                <td className='stock-small'>{formatNumber(item.currentStock, 2)}</td>
-                <td>{formatNumber(item.daysUntilDepleted, 1)}</td>
-                <td>{formatNumber(item.recommendedOrderQuantity, 2)}</td>
-                <td>{formatCurrency(item.estimatedCost)}</td>
-                <td>
-                  <span className={`priority-chip ${item.priority === 'high' ? 'priority-alta' : item.priority === 'low' ? 'priority-baja' : 'priority-media'}`}>
-                    {item.priority === 'high' ? 'Alta' : item.priority === 'low' ? 'Baja' : 'Media'}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
     </div>
   )
 }

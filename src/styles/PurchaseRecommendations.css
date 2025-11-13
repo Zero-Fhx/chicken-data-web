@@ -115,3 +115,154 @@
   width: 100%;
   border-collapse: collapse;
 }
+/* fileName: PurchaseRecommendations.css (AÑADIR ESTO AL FINAL) */
+
+.recommendations-v2 {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 8px;
+}
+
+/* NOTA: Estos estilos de KPI se reutilizan de 'ComparisonKpiView.css'
+  Si no los tienes en un CSS global, cópialos aquí.
+*/
+.kpi-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.kpi-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background-color: #f8f9fa;
+  padding: 16px 12px;
+  border-radius: 8px;
+  gap: 4px;
+}
+.kpi-item-value {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #212529;
+}
+.kpi-item-label {
+  font-size: 0.8rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+/* Fin de los estilos reutilizados */
+
+.priority-bar-wrapper {
+  padding-top: 16px;
+  border-top: 1px solid #f1f3f5;
+}
+
+.recommendations-subtitle {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #343a40;
+  margin: 0 0 12px 0;
+}
+
+.table-wrapper {
+  padding-top: 16px;
+  border-top: 1px solid #f1f3f5;
+}
+
+/* Estilo para el <summary> de la tabla colapsable */
+.table-summary-toggle {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #007bff; /* Color de link */
+  cursor: pointer;
+  list-style: none; /* Ocultar flecha por defecto */
+}
+
+.table-summary-toggle::-webkit-details-marker {
+  display: none; /* Ocultar para Chrome/Safari */
+}
+
+.table-summary-toggle::before {
+  /* Flecha personalizada */
+  content: "►";
+  display: inline-block;
+  margin-right: 8px;
+  font-size: 0.7rem;
+  transition: transform 0.2s ease;
+}
+
+details[open] > .table-summary-toggle::before {
+  transform: rotate(90deg);
+}
+
+/* Estilos de la tabla (ya los tienes, pero por si acaso) */
+.purchase-recommendations-table.compact th:nth-child(2),
+.purchase-recommendations-table.compact td:nth-child(2),
+.purchase-recommendations-table.compact th:nth-child(3),
+.purchase-recommendations-table.compact td:nth-child(3) {
+  text-align: center;
+}
+.stock-small {
+  font-size: 0.8rem;
+}
+
+.priority-chip {
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+}
+.priority-chip.priority-alta {
+  background-color: #e63946;
+}
+.priority-chip.priority-media {
+  background-color: #ffbb28;
+  color: #333;
+}
+.priority-chip.priority-baja {
+  background-color: #00c49f;
+}
+/* fileName: PurchaseRecommendations.css (REEMPLAZAR ESTAS REGLAS) */
+
+.table-summary-toggle {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #007bff; /* Color azul de "link" */
+  cursor: pointer;
+  list-style: none; /* Oculta la flecha por defecto */
+  display: inline-flex; /* Alinear con el SVG */
+  align-items: center;
+  padding: 4px 0;
+
+  &::before {
+    display: none; /* Oculta la flecha por defecto */
+  }
+}
+
+.table-summary-toggle:hover {
+  text-decoration: underline;
+}
+
+/* Ocultar la flecha en Chrome/Safari */
+.table-summary-toggle::-webkit-details-marker {
+  display: none;
+}
+
+/* Estilos para el icono SVG */
+.table-toggle-icon {
+  width: 14px;
+  height: 14px;
+  margin-right: 6px;
+  color: #6c757d; /* Color del icono */
+  transition: transform 0.2s ease;
+}
+
+/* Rotación del icono SVG cuando está abierto */
+details[open] > .table-summary-toggle > .table-toggle-icon {
+  transform: rotate(90deg);
+}

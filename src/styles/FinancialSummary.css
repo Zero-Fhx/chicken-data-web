@@ -1,77 +1,98 @@
-/* styles/FinancialSummary.css */
+/* styles/FinancialSummary.css (NUEVO CONTENIDO) */
 
-/* Contenedor principal del componente */
-.financial-summary {
+.financial-summary-v2 {
   display: flex;
   flex-direction: column;
-  gap: 16px; /* Espacio entre la sección dinámica y la estática */
+  gap: 16px;
 }
 
-/* Projections specific */
-.projections-summary {
+/* Fila 1: KPIs de arriba (Utilidad Neta, etc.) */
+.financial-kpi-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  grid-template-columns: 1fr 1fr; /* 2 columnas */
+  gap: 16px;
 }
 
-.proj-item {
+.financial-item-flat {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
-.proj-label {
+
+.financial-title-flat {
+  font-size: 0.9rem;
+  font-weight: 500;
   color: #6c757d;
-  font-size: 0.85rem;
-}
-.proj-value {
-  font-weight: 700;
-  font-size: 1.05rem;
-}
-.proj-value.highlight {
-  color: #1b6b6b;
-}
-.proj-range {
-  grid-column: 1 / -1;
-  margin-top: 8px;
-}
-.range-conservative {
-  color: #9b2226;
-}
-.range-optimistic {
-  color: #116530;
+  margin: 0;
 }
 
-/* Sección para los items que SÍ cambian */
-.financial-dynamic-grid {
+.financial-value-main {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #212529;
+  margin: 0;
+}
+
+/* Fila 2: Contenedor para los 2 medidores */
+.financial-gauge-grid {
   display: grid;
   grid-template-columns: 1fr 1fr; /* 2 columnas */
-  gap: 12px;
+  align-items: flex-start;
+  gap: 16px;
+  width: 100%;
+  padding: 16px 0;
+  border-top: 1px solid #f1f3f5;
+  border-bottom: 1px solid #f1f3f5;
+}
+
+/* Cada medidor individual (título + gráfico) */
+.financial-gauge-item {
+  display: flex;
+  flex-direction: column; /* Apilado vertical */
+  align-items: center; /* Centrado */
+  gap: 8px; /* Espacio entre título y gráfico */
   width: 100%;
 }
 
-/* Sección para los items que NO cambian */
+/* Título del medidor (ej. "Margen de Ganancia (Mes)") */
+.financial-gauge-item .financial-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #343a40;
+  margin: 0;
+  text-align: center;
+}
+
+/* Label de porcentaje en el centro de la dona */
+.financial-gauge-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #212529;
+}
+
+/* Fila 3: KPIs de abajo (ROI, Costo Prom.) */
 .financial-static-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* 2x2 para los 4 items */
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
-  width: 100%;
 }
 
-/* El estilo de cada cajita gris */
 .financial-item {
   background-color: #f8f9fa;
   padding: 12px;
   border-radius: 8px;
 }
 
-.financial-title {
+/* Título de los items de abajo (en caja gris) */
+.financial-title-box {
   font-size: 0.8rem;
   font-weight: 500;
   color: #6c757d;
   margin: 0 0 4px 0;
-  display: flex;
-  align-items: center;
-  gap: 4px;
 }
 
 .financial-value {
@@ -79,29 +100,4 @@
   font-weight: 600;
   color: #212529;
   margin: 0;
-}
-
-.help-tooltip {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  font-size: 0.7rem;
-  font-weight: bold;
-  color: #adb5bd;
-  border: 1px solid #adb5bd;
-  border-radius: 50%;
-  text-align: center;
-  line-height: 13px;
-  cursor: help;
-}
-
-/* Separador simple */
-.financial-separator {
-  border: 0;
-  border-top: 1px solid #e9ecef;
-  margin: 4px 0;
-}
-
-.financial-summary .period-selector {
-  align-self: flex-start; /* Se encoge a su ancho natural */
 }

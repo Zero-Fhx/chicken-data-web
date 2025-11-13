@@ -1,23 +1,41 @@
+// fileName: AlertsFeed.jsx (REEMPLAZAR ARCHIVO COMPLETO)
+
 import { CriticalIcon, WarningIcon } from '@/components/Icons'
-import '@/styles/AlertsFeed.css' // Importar estilos
+import '@/styles/AlertsFeed.css'
+
+// --- 1. AÑADIR UN ICONO DE 'INFO' ---
+// (Lo definimos aquí mismo para simplicidad)
+const InfoIcon = ({ width = 18, height = 18, color = '#007bff' }) => (
+  <svg
+    width={width}
+    height={height}
+    viewBox='0 0 24 24'
+    fill='none'
+    stroke={color}
+    strokeWidth='2'
+    strokeLinecap='round'
+    strokeLinejoin='round'
+  >
+    <circle cx='12' cy='12' r='10' />
+    <line x1='12' y1='16' x2='12' y2='12' />
+    <line x1='12' y1='8' x2='12.01' y2='8' />
+  </svg>
+)
 
 export function AlertsFeed ({ loading, data }) {
-  // El wrapper `DashboardCard` ya muestra Loader/ErrorState.
-  // Aquí evitamos renderizar texto simple y delegamos esos estados al wrapper.
   if (loading) return null
 
-  // La data de /alerts tiene 'critical' y 'warning'
-  const { critical, warning } = data || {}
+  // --- 2. LEER EL ARRAY 'info' DE LOS DATOS ---
+  const { critical, warning, info } = data || {}
 
-  const hasAlerts = (critical?.length > 0) || (warning?.length > 0)
+  const hasAlerts = (critical?.length > 0) || (warning?.length > 0) || (info?.length > 0)
 
   if (!hasAlerts) {
     return <p>No hay alertas activas.</p>
   }
 
-  // Normaliza el mensaje de alerta: si contiene paréntesis como "(...)",
-  // separamos en mensaje principal y nota secundaria para mostrar en líneas.
   const splitAlertMessage = (message = '') => {
+    // ... (esta función no cambia)
     if (!message) return { main: '', note: '' }
     const idx = message.indexOf('(')
     if (idx === -1) return { main: message.trim(), note: '' }
@@ -26,10 +44,11 @@ export function AlertsFeed ({ loading, data }) {
     return { main, note }
   }
 
-  // Combinamos y mostramos primero las críticas
+  // --- 3. AÑADIR 'info' AL ARRAY TOTAL ---
   const allAlerts = [
     ...(critical || []),
-    ...(warning || [])
+    ...(warning || []),
+    ...(info || [])
   ]
 
   return (
@@ -39,13 +58,16 @@ export function AlertsFeed ({ loading, data }) {
         return (
           <li
             key={alert.id}
-            // Asignamos clase CSS basada en la severidad
-            className={`alert-item ${alert.severity}`}
+            className={`alert-item ${alert.severity}`} // (critical, warning, o info)
           >
             <div className='alert-icon'>
+              {/* --- 4. AÑADIR LÓGICA PARA EL ICONO 'info' --- */}
               {alert.severity === 'critical'
                 ? <CriticalIcon width={18} height={18} color='#d63333' />
-                : <WarningIcon width={18} height={18} color='#f59e0b' />}
+                : (alert.severity === 'warning'
+                    ? <WarningIcon width={18} height={18} color='#f59e0b' />
+                    : <InfoIcon />
+                  )}
             </div>
             <div className='alert-content'>
               <span className='alert-title'>{alert.title}</span>

@@ -1,0 +1,60 @@
+/* fileName: PriorityBar.css */
+.priority-bar-container {
+  width: 100%;
+}
+
+.priority-bar {
+  display: flex;
+  width: 100%;
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: #e9ecef; /* Fondo si no hay items */
+}
+
+.bar-segment {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+/* Colores de Prioridad */
+.bar-segment.high,
+.legend-item.high .dot {
+  background-color: #e63946; /* Rojo */
+}
+.bar-segment.medium,
+.legend-item.medium .dot {
+  background-color: #ffbb28; /* Naranja */
+}
+.bar-segment.low,
+.legend-item.low .dot {
+  background-color: #00c49f; /* Verde */
+}
+
+/* Leyenda */
+.priority-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #495057;
+}
+
+.legend-item .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.priority-bar-empty {
+  font-size: 0.85rem;
+  color: #6c757d;
+}

@@ -73,3 +73,14 @@
   color: #6c757d;
   margin-top: 6px;
 }
+
+.alert-item.info {
+  background-color: #f7f9ff;
+  border-color: #e4e9f9;
+}
+.alert-item.info .alert-icon {
+  color: #007bff;
+}
+.alert-item.info .alert-title {
+  color: #0056b3;
+}

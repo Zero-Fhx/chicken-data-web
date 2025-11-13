@@ -1,100 +1,73 @@
-import { ArrowLeftIcon, ArrowRightIcon } from '@/components/Icons'
-import { Button } from '@/components/ui/Button'
-import '@/styles/InventorySummary.css'
-import { useEffect, useRef, useState } from 'react'
+// fileName: InventorySummary.jsx
+
+import '@/styles/InventorySummary.css' // Reutilizamos el CSS
+import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
 
 const formatCurrency = (value) => `S/. ${(Number(value) || 0).toFixed(2)}`
 
+// Datos y colores para el gráfico de estado de stock
+const COLORS = {
+  optimal: '#00C49F', // Verde
+  lowStock: '#FFBB28', // Naranja
+  outOfStock: '#FF8042' // Rojo
+}
+
 export function InventorySummary ({ loading, data }) {
-  const carouselRef = useRef(null)
-  const [isCentered, setIsCentered] = useState(false)
-  const [canScrollLeft, setCanScrollLeft] = useState(false)
-  const [canScrollRight, setCanScrollRight] = useState(false)
-
-  useEffect(() => {
-    const el = carouselRef.current
-    if (!el) return
-
-    const update = () => {
-      setIsCentered(el.scrollWidth <= el.clientWidth + 1)
-      setCanScrollLeft(el.scrollLeft > 0)
-      setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 1)
-    }
-
-    update()
-    window.addEventListener('resize', update)
-    el.addEventListener('scroll', update)
-
-    return () => {
-      window.removeEventListener('resize', update)
-      el.removeEventListener('scroll', update)
-    }
-  }, [data])
-
-  const scrollByAmount = (dir = 1) => {
-    const el = carouselRef.current
-    if (!el) return
-    const amount = Math.max(120, Math.floor(el.clientWidth * 0.7))
-    el.scrollBy({ left: dir * amount, behavior: 'smooth' })
-  }
-
-  // El wrapper `DashboardCard` debe mostrar Loader/ErrorState; no renderizamos texto simple aquí.
   if (loading) return null
   if (!data) return <p>No hay datos de inventario.</p>
 
-  const { totalValue, total, active, alerts } = data
+  const { totalValue, total, alerts } = data
+
+  const stockStatusData = [
+    { name: 'Óptimo', value: alerts?.optimal ?? 0 },
+    { name: 'Bajo', value: alerts?.lowStock ?? 0 },
+    { name: 'Agotado', value: alerts?.outOfStock ?? 0 }
+  ].filter(item => item.value > 0) // Filtramos para no mostrar items con 0
 
   return (
-    // Wrapper con controles prev/next y el carrusel
-    <div className={`inventory-carousel-wrapper ${isCentered ? 'is-centered' : ''}`}>
-      <Button
-        type='button'
-        className='inventory-prev'
-        aria-label='Anterior'
-        onClick={() => scrollByAmount(-1)}
-        disabled={!canScrollLeft}
-        hidden={false}
-      >
-        <ArrowLeftIcon width={14} height={14} color='#6c757d' />
-      </Button>
-
-      <div
-        ref={carouselRef}
-        className='inventory-carousel'
-      >
-
+    <div className='inventory-summary-v2'>
+      {/* Columna 1: KPIs Principales */}
+      <div className='inventory-kpis'>
         <div className='inventory-item'>
           <h4 className='inventory-title'>Valor Total</h4>
           <p className='inventory-value'>{formatCurrency(totalValue)}</p>
         </div>
-
         <div className='inventory-item'>
           <h4 className='inventory-title'>Ingredientes Totales</h4>
           <p className='inventory-value'>{total ?? 0}</p>
         </div>
-
-        <div className='inventory-item'>
-          <h4 className='inventory-title'>Ingredientes Activos</h4>
-          <p className='inventory-value'>{active ?? 0}</p>
-        </div>
-
-        <div className='inventory-item'>
-          <h4 className='inventory-title'>Stock Óptimo</h4>
-          <p className='inventory-value'>{alerts?.optimal ?? 0}</p>
-        </div>
-
       </div>
 
-      <Button
-        type='button'
-        className='inventory-next'
-        aria-label='Siguiente'
-        onClick={() => scrollByAmount(1)}
-        disabled={!canScrollRight}
-        hidden={false}
-      >
-        <ArrowRightIcon width={14} height={14} color='#6c757d' />
-      </Button>
+      {/* Columna 2: Gráfico Mini-Dona */}
+      <div className='inventory-chart-container'>
+        <ResponsiveContainer width='100%' height={120}>
+          <PieChart>
+            <Pie
+              data={stockStatusData}
+              dataKey='value'
+              nameKey='name'
+              cx='50%'
+              cy='50%'
+              innerRadius={30} // Esto la hace una Dona
+              outerRadius={50}
+              fill='#8884d8'
+              paddingAngle={2}
+            >
+              {stockStatusData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[entry.name.replace('Óptimo', 'optimal').replace('Bajo', 'lowStock').replace('Agotado', 'outOfStock')]} />
+              ))}
+            </Pie>
+            <Tooltip />
+            <Legend
+              layout='vertical'
+              align='right'
+              verticalAlign='middle'
+              iconType='circle'
+              wrapperStyle={{ fontSize: '12px', right: '-10px' }}
+            />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   )
 }

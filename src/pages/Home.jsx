@@ -1,3 +1,4 @@
+import { ComparisonsCard } from '@/components/Dashboard/ComparisonCard'
 import { DashboardCard } from '@/components/Dashboard/DashboardCard'
 import { FinancialSummary } from '@/components/Dashboard/FinancialSummary'
 import { InventorySummaryCard } from '@/components/Dashboard/InventorySummaryCard'
@@ -7,7 +8,6 @@ import { PurchasesCategoryChart } from '@/components/Dashboard/PurchasesCategory
 import { PurchasesKpiCard } from '@/components/Dashboard/PurchasesKpiCard'
 import { RecentActivityCard } from '@/components/Dashboard/RecentActivityCard'
 import { SalesCategoryChart } from '@/components/Dashboard/SalesCategoryChart'
-import { ComparisonsCard } from '@/components/Dashboard/SalesComparisonTable'
 import { SalesKpiCard } from '@/components/Dashboard/SalesKpiCard'
 import { TrendChart } from '@/components/Dashboard/TrendChart'
 import { PageHeader } from '@/components/PageHeader'
@@ -72,7 +72,7 @@ export function Home () {
   const { data, loading: financialLoading, error: _error } = useFetch(API_STATS)
   const { data: trendsData, loading: trendsLoading } = useFetch(API_TRENDS)
   const { data: projectionsData, loading: _projectionsLoading } = useFetch(API_PROJECTIONS)
-  const { data: comparisonsData, loading: _comparisonsLoading } = useFetch(API_COMPARISONS)
+  const { data: comparisonsData, loading: comparisonsLoading, error: comparisonsError, refetch: comparisonsRefetch } = useFetch(API_COMPARISONS)
   const { data: salesBreakdownData, loading: salesBreakdownLoading } = useFetch(API_BREAKDOWN_SALES)
   const { data: purchasesBreakdownData, loading: purchasesBreakdownLoading } = useFetch(API_BREAKDOWN_PURCHASES)
 
@@ -80,7 +80,7 @@ export function Home () {
   const { sales: _sales, purchases: _purchases, inventory: _inventory, dishes: _dishes, suppliers: _suppliers, recentActivity: _recentActivity, financial } = metrics || {}
   const { data: trends } = trendsData || {}
   const { data: _projections } = projectionsData || {}
-  const { data: _comparisons } = comparisonsData || {}
+  const { data: comparisons } = comparisonsData || {}
   const { data: salesBreakdown } = salesBreakdownData || {}
   const { data: purchasesBreakdown } = purchasesBreakdownData || {}
 
@@ -235,7 +235,13 @@ export function Home () {
 
         {/* Fila 5: Proyecciones + Comparaciones: ocuparán la misma fila (cada una span-2) */}
         <ProjectionsCard className='span-2' />
-        <ComparisonsCard className='span-2' />
+        <ComparisonsCard
+          className='span-2'
+          comparisonsData={comparisons}
+          loading={comparisonsLoading}
+          error={comparisonsError}
+          refetch={comparisonsRefetch}
+        />
 
         {/* --- TAREA 15: Fila 7 (Combinada) --- */}
         <DashboardCard
