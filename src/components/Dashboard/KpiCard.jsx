@@ -109,36 +109,36 @@ export function KpiCard ({
           <div className='kpi-sparkline'>
             <h4 className='kpi-sparkline-title'>{sparklineLabel}</h4>
             <div className='kpi-sparkline-chart-wrapper'>
-              {trendsLoading ? (
-                <Loader width={20} height={20} text='' />
-              ) : (
-                !error && chartData.length > 0 && (
-                  <ResponsiveContainer width='100%' height={40}>
-                    <AreaChart data={chartData} margin={{ top: 2, right: 2, bottom: 2, left: 2 }}>
-                      <Tooltip
-                        content={<CustomSparklineTooltip title={title} />} // Pasa el 'title'
-                        cursor={{ stroke: growthColor, strokeWidth: 1, strokeDasharray: '3 3' }}
-                      />
-                      <defs>
-                        <linearGradient id={isPositive ? 'positiveGradient' : 'negativeGradient'} x1='0' y1='0' x2='0' y2='1'>
-                          <stop offset='5%' stopColor={growthColor} stopOpacity={0.4} />
-                          <stop offset='95%' stopColor={growthColor} stopOpacity={0.05} />
-                        </linearGradient>
-                      </defs>
-                      <Area
-                        type='monotone'
-                        dataKey='value' // Este es el payload[0].value
-                        stroke={growthColor}
-                        strokeWidth={2}
-                        fillOpacity={1}
-                        fill={`url(#${isPositive ? 'positiveGradient' : 'negativeGradient'})`}
-                        dot={false}
-                        activeDot={{ r: 4, strokeWidth: 1, fill: '#fff', stroke: growthColor }}
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                )
-              )}
+              {trendsLoading
+                ? (<Loader width={20} height={20} text='' />)
+                : (
+                    !error && chartData.length > 0 && (
+                      <ResponsiveContainer width='100%' height={40}>
+                        <AreaChart data={chartData} margin={{ top: 2, right: 2, bottom: 2, left: 2 }}>
+                          <Tooltip
+                            content={<CustomSparklineTooltip title={title} />} // Pasa el 'title'
+                            cursor={{ stroke: growthColor, strokeWidth: 1, strokeDasharray: '3 3' }}
+                          />
+                          <defs>
+                            <linearGradient id={isPositive ? 'positiveGradient' : 'negativeGradient'} x1='0' y1='0' x2='0' y2='1'>
+                              <stop offset='5%' stopColor={growthColor} stopOpacity={0.4} />
+                              <stop offset='95%' stopColor={growthColor} stopOpacity={0.05} />
+                            </linearGradient>
+                          </defs>
+                          <Area
+                            type='monotone'
+                            dataKey='value' // Este es el payload[0].value
+                            stroke={growthColor}
+                            strokeWidth={2}
+                            fillOpacity={1}
+                            fill={`url(#${isPositive ? 'positiveGradient' : 'negativeGradient'})`}
+                            dot={false}
+                            activeDot={{ r: 4, strokeWidth: 1, fill: '#fff', stroke: growthColor }}
+                          />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    )
+                  )}
             </div>
           </div>
         )}
