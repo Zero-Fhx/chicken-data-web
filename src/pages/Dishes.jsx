@@ -54,6 +54,12 @@ const initialFormErrors = {
   ingredients: ''
 }
 
+const formatDescriptions = {
+  csv: 'Recomendado para Hojas de Cálculo (Excel, Google Sheets).',
+  excel: 'Formato nativo .xlsx de Microsoft Excel.',
+  pdf: 'Documento no editable, ideal para imprimir o archivar.'
+}
+
 export function Dishes () {
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
@@ -73,11 +79,18 @@ export function Dishes () {
 
   const errorModalRef = useRef(null)
   const modalRef = useRef(null)
+  const exportModalRef = useRef(null)
 
   const [recipeIngredients, setRecipeIngredients] = useState([])
   const [allIngredients, setAllIngredients] = useState([])
   const [ingredientsLoading, setIngredientsLoading] = useState(true)
   const [recipeLoading, setRecipeLoading] = useState(false)
+
+  const [isExporting, setIsExporting] = useState(false)
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false)
+  const [exportScope, setExportScope] = useState('filtered')
+  const [exportFormat, setExportFormat] = useState('csv')
+  const [exportSuccess, setExportSuccess] = useState(false)
 
   const { data: categoriesData, loading: categoriesLoading } = useFetch(API_CATEGORIES_URL)
   const categories = categoriesData?.data || []
@@ -316,6 +329,46 @@ export function Dishes () {
     return url.toString()
   }, [page, pageSize, debouncedName, debouncedMinPrice, debouncedMaxPrice, filters.category, filters.status, filters.hasStock, filterErrors])
 
+  const filteredBaseUrl = useMemo(() => {
+    const url = new URL(API_URL)
+    if (debouncedName) url.searchParams.set('search', debouncedName.trim().toLowerCase())
+    if (debouncedMinPrice && !filterErrors.minPrice) url.searchParams.set('minPrice', debouncedMinPrice)
+    if (debouncedMaxPrice && !filterErrors.maxPrice) url.searchParams.set('maxPrice', debouncedMaxPrice)
+    if (filters.category) url.searchParams.set('categoryId', filters.category)
+    if (filters.status) url.searchParams.set('status', filters.status)
+    if (filters.hasStock) url.searchParams.set('hasStock', filters.hasStock)
+
+    return url.toString()
+  }, [debouncedName, debouncedMinPrice, debouncedMaxPrice, filters.category, filters.status, filters.hasStock, filterErrors])
+
+  const fetchAllPaginatedData = async (baseUrl) => {
+    let allFetchedData = []
+    let currentPage = 1
+    let hasNextPage = true
+    const pageSize = 100
+
+    const separator = baseUrl.includes('?') ? '&' : '?'
+
+    try {
+      while (hasNextPage) {
+        const response = await fetch(`${baseUrl}${separator}page=${currentPage}&pageSize=${pageSize}`)
+        const result = await response.json()
+
+        if (result.success && result.data && result.data.length > 0) {
+          allFetchedData = [...allFetchedData, ...result.data]
+          hasNextPage = result.meta?.pagination?.hasNextPage || false
+          currentPage++
+        } else {
+          break
+        }
+      }
+      return allFetchedData
+    } catch (error) {
+      console.error('Error durante el fetch paginado:', error)
+      throw new Error('Error al obtener los datos para la exportación.')
+    }
+  }
+
   const { data, loading, setLoading, error, setError, refetch } = useFetch(
     buildURL
   )
@@ -471,7 +524,7 @@ export function Dishes () {
     setRecipeIngredients([])
   }
 
-  const getExportData = () => {
+  const prepareDataForExport = (allDishes) => {
     const headers = [
       'ID',
       'Nombre',
@@ -482,10 +535,10 @@ export function Dishes () {
       'Estado'
     ]
 
-    const data = (dishes || []).map(dish => [
+    const data = (allDishes || []).map(dish => [
       dish.id,
       dish.name,
-      dish.description || '—', // Manejar valores nulos
+      dish.description || '—',
       dish.category.name,
       dish.price.toFixed(2),
       dish.hasSufficientStock ? 'Con Stock' : 'Sin Stock',
@@ -495,19 +548,47 @@ export function Dishes () {
     return { headers, data }
   }
 
-  const handleExportCSV = () => {
-    const { headers, data } = getExportData()
-    exportToCSV(headers, data, 'reporte-platos.csv')
-  }
+  const handleConfirmExport = async () => {
+    setIsExporting(true)
 
-  const handleExportExcel = () => {
-    const { headers, data } = getExportData()
-    exportToExcel(headers, data, 'reporte-platos.xlsx', 'Platos')
-  }
+    try {
+      const baseUrl = exportScope === 'filtered' ? filteredBaseUrl : API_URL
 
-  const handleExportPDF = () => {
-    const { headers, data } = getExportData()
-    exportToPDF(headers, data, 'reporte-platos.pdf', 'Reporte de Platos')
+      const allDishes = await fetchAllPaginatedData(baseUrl)
+
+      if (!allDishes || allDishes.length === 0) {
+        console.warn('No se encontraron datos para exportar.')
+        return
+      }
+
+      allDishes.sort((a, b) => a.name.localeCompare(b.name))
+      const { headers, data } = prepareDataForExport(allDishes)
+
+      const timestamp = new Date().toISOString().split('T')[0]
+      const filename = `reporte-platos-${timestamp}`
+
+      if (exportFormat === 'csv') {
+        exportToCSV(headers, data, `${filename}.csv`)
+      } else if (exportFormat === 'excel') {
+        exportToExcel(headers, data, `${filename}.xlsx`, 'Platos')
+      } else if (exportFormat === 'pdf') {
+        exportToPDF(headers, data, `${filename}.pdf`, 'Reporte de Platos')
+      }
+
+      setExportSuccess(true)
+
+      setTimeout(() => {
+        setIsExportModalOpen(false) //
+      }, 1500)
+
+      setTimeout(() => {
+        setExportSuccess(false)
+        setIsExporting(false)
+      }, 2000)
+    } catch (error) {
+      console.error('Error al exportar:', error)
+      setIsExporting(false)
+    }
   }
 
   const handleCloseWithX = () => {
@@ -769,25 +850,11 @@ export function Dishes () {
             disabled: loading || error
           },
           {
-            label: 'Exportar CSV',
+            label: isExporting ? 'Exportando...' : 'Exportar Datos',
             icon: <DownloadIcon />,
             variant: 'secondary',
-            onClick: handleExportCSV,
-            disabled: loading || error || !dishes || dishes.length === 0
-          },
-          {
-            label: 'Exportar Excel',
-            icon: <DownloadIcon />,
-            variant: 'secondary',
-            onClick: handleExportExcel,
-            disabled: loading || error || !dishes || dishes.length === 0
-          },
-          {
-            label: 'Exportar PDF',
-            icon: <DownloadIcon />,
-            variant: 'secondary',
-            onClick: handleExportPDF,
-            disabled: loading || error || !dishes || dishes.length === 0
+            onClick: () => setIsExportModalOpen(true),
+            disabled: loading || error || isExporting || !dishes || dishes.length === 0
           }
         ]}
       />
@@ -1043,6 +1110,116 @@ export function Dishes () {
                   Confirmar Eliminación
                 </Button>
               )}
+            </CardFooter>
+          </Card>
+        </form>
+      </Modal>
+
+      <Modal
+        ref={exportModalRef}
+        isOpen={isExportModalOpen}
+        onAnimationEnd={() => {
+          if (!isExportModalOpen) {
+            setExportScope('filtered')
+            setExportFormat('csv')
+          }
+        }}
+      >
+        <form action=''>
+          <Card>
+            <CardHeader>
+              <div className='header-with-icon'>
+                <DownloadIcon />
+                <h3>Exportar Datos de Platos</h3>
+              </div>
+              <Button type='button' className='modal-close-button no-transform' onClick={() => setIsExportModalOpen(false)}>
+                <CancelIcon />
+              </Button>
+            </CardHeader>
+            <CardBody className='modal-body'>
+              {isExporting && (
+                <div className='modal-loading-overlay'>
+                  {exportSuccess
+                    ? (
+                      <div className='modal-success-overlay'>
+                        <CheckIcon width={40} height={40} color='#059669' />
+                        <span>¡Exportación completada exitosamente!</span>
+                      </div>
+                      )
+                    : (
+                      <Loader width={32} height={32} text='Generando archivo... Esto puede tardar.' />
+                      )}
+                </div>
+              )}
+
+              <div className='modal-input-group'>
+                <div className='input-group'>
+                  <label htmlFor='modal-export-scope'>Datos a Exportar</label>
+                  <Select
+                    name='export-scope'
+                    id='modal-export-scope'
+                    disabled={isExporting}
+                    value={exportScope}
+                    onChange={(val) => setExportScope(val)}
+                    containerRef={exportModalRef}
+                    options={[
+                      {
+                        label: 'Alcance',
+                        items: [
+                          { label: 'Vista actual (filtrada)', value: 'filtered' },
+                          { label: 'Todos los platos', value: 'all' }
+                        ]
+                      }
+                    ]}
+                  />
+                  <small className='input-helper-text'>
+                    {exportScope === 'filtered'
+                      ? 'Se exportarán solo los platos que coincidan con tus filtros actuales.'
+                      : 'Se exportarán todos los platos, ignorando los filtros.'}
+                  </small>
+                </div>
+
+                <div className='input-group'>
+                  <label htmlFor='modal-export-format'>Formato de Archivo</label>
+                  <Select
+                    name='export-format'
+                    id='modal-export-format'
+                    disabled={isExporting}
+                    value={exportFormat}
+                    onChange={(val) => setExportFormat(val)}
+                    containerRef={exportModalRef}
+                    options={[
+                      {
+                        label: 'Formato',
+                        items: [
+                          { label: 'CSV', value: 'csv' },
+                          { label: 'Excel', value: 'excel' },
+                          { label: 'PDF', value: 'pdf' }
+                        ]
+                      }
+                    ]}
+                  />
+                  <small className='input-helper-text'>
+                    {formatDescriptions[exportFormat]}
+                  </small>
+                </div>
+              </div>
+
+            </CardBody>
+            <CardFooter className='modal-footer'>
+              <Button type='button' onClick={() => setIsExportModalOpen(false)} disabled={isExporting}>
+                <CancelIcon />
+                Cancelar
+              </Button>
+              <Button
+                type='button'
+                className='primary'
+                onClick={handleConfirmExport}
+                disabled={isExporting}
+              >
+                <DownloadIcon />
+                {isExporting ? 'Generando...' : 'Confirmar Exportación'}
+              </Button>
             </CardFooter>
           </Card>
         </form>

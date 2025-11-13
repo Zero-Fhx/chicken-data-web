@@ -53,6 +53,12 @@ const initialFormErrors = {
   details: ''
 }
 
+const formatDescriptions = {
+  csv: 'Recomendado para Hojas de Cálculo (Excel, Google Sheets).',
+  excel: 'Formato nativo .xlsx de Microsoft Excel.',
+  pdf: 'Documento no editable, ideal para imprimir o archivar.'
+}
+
 export function Sales () {
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
@@ -61,7 +67,6 @@ export function Sales () {
   const [filterErrors, setFilterErrors] = useState({ startDate: '', endDate: '' })
 
   const [selectedSale, setSelectedSale] = useState(null)
-  const modalRef = useRef(null)
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalMode, setModalMode] = useState('view')
@@ -71,10 +76,20 @@ export function Sales () {
 
   const [formErrors, setFormErrors] = useState(initialFormErrors)
 
+  const errorModalRef = useRef(null)
+  const modalRef = useRef(null)
+  const exportModalRef = useRef(null)
+
   const [saleDetails, setSaleDetails] = useState([])
   const [detailsLoading, setDetailsLoading] = useState(false)
   const [dishes, setDishes] = useState([])
   const [dishesLoading, setDishesLoading] = useState(true)
+
+  const [isExporting, setIsExporting] = useState(false)
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false)
+  const [exportScope, setExportScope] = useState('filtered')
+  const [exportFormat, setExportFormat] = useState('csv')
+  const [exportSuccess, setExportSuccess] = useState(false)
 
   const filterFields = [
     {
@@ -229,6 +244,41 @@ export function Sales () {
     return url.toString()
   }, [page, pageSize, debouncedSearch, filters.startDate, filters.endDate, filters.status, filterErrors])
 
+  const filteredBaseUrl = useMemo(() => {
+    const url = new URL(API_URL)
+    if (debouncedSearch) url.searchParams.set('search', debouncedSearch.trim())
+    if (filters.startDate && !filterErrors.startDate) url.searchParams.set('startDate', filters.startDate)
+    if (filters.endDate && !filterErrors.endDate) url.searchParams.set('endDate', filters.endDate)
+    if (filters.status) url.searchParams.set('status', filters.status)
+    return url.toString()
+  }, [debouncedSearch, filters.startDate, filters.endDate, filters.status, filterErrors])
+
+  const fetchAllPaginatedData = async (baseUrl) => {
+    let allFetchedData = []
+    let currentPage = 1
+    let hasNextPage = true
+    const pageSize = 100
+    const separator = baseUrl.includes('?') ? '&' : '?'
+
+    try {
+      while (hasNextPage) {
+        const response = await fetch(`${baseUrl}${separator}page=${currentPage}&pageSize=${pageSize}`)
+        const result = await response.json()
+        if (result.success && result.data && result.data.length > 0) {
+          allFetchedData = [...allFetchedData, ...result.data]
+          hasNextPage = result.meta?.pagination?.hasNextPage || false
+          currentPage++
+        } else {
+          break
+        }
+      }
+      return allFetchedData
+    } catch (error) {
+      console.error('Error durante el fetch paginado:', error)
+      throw new Error('Error al obtener los datos para la exportación.')
+    }
+  }
+
   const { data, loading, setLoading, error, setError, refetch } = useFetch(buildURL)
 
   const { data: sales, meta } = data || {}
@@ -346,7 +396,7 @@ export function Sales () {
     setSaleDetails([])
   }
 
-  const getExportData = () => {
+  const prepareDataForExport = (allSales) => {
     const headers = [
       'ID',
       'Fecha',
@@ -355,8 +405,7 @@ export function Sales () {
       'Notas',
       'Estado'
     ]
-
-    const data = (sales || []).map(s => [
+    const data = (allSales || []).map(s => [
       s.id,
       formatDateShort(s.saleDate, undefined, 'UTC'),
       s.customer || '-',
@@ -364,23 +413,48 @@ export function Sales () {
       s.notes || '-',
       s.status === 'Completed' ? 'Completada' : 'Cancelada'
     ])
-
     return { headers, data }
   }
 
-  const handleExportCSV = () => {
-    const { headers, data } = getExportData()
-    exportToCSV(headers, data, 'reporte-ventas.csv')
-  }
+  const handleConfirmExport = async () => {
+    setIsExporting(true)
 
-  const handleExportExcel = () => {
-    const { headers, data } = getExportData()
-    exportToExcel(headers, data, 'reporte-ventas.xlsx', 'Ventas')
-  }
+    try {
+      const baseUrl = exportScope === 'filtered' ? filteredBaseUrl : API_URL
+      const allSales = await fetchAllPaginatedData(baseUrl)
 
-  const handleExportPDF = () => {
-    const { headers, data } = getExportData()
-    exportToPDF(headers, data, 'reporte-ventas.pdf', 'Reporte de Ventas')
+      if (!allSales || allSales.length === 0) {
+        console.warn('No se encontraron datos para exportar.')
+        return
+      }
+
+      const { headers, data } = prepareDataForExport(allSales)
+
+      const timestamp = new Date().toISOString().split('T')[0]
+      const filename = `reporte-ventas-${timestamp}`
+
+      if (exportFormat === 'csv') {
+        exportToCSV(headers, data, `${filename}.csv`)
+      } else if (exportFormat === 'excel') {
+        exportToExcel(headers, data, `${filename}.xlsx`, 'Ventas')
+      } else if (exportFormat === 'pdf') {
+        exportToPDF(headers, data, `${filename}.pdf`, 'Reporte de Ventas')
+      }
+
+      setExportSuccess(true)
+
+      setTimeout(() => {
+        setIsExportModalOpen(false) //
+      }, 1500)
+
+      setTimeout(() => {
+        setExportSuccess(false)
+        setIsExporting(false)
+      }, 2000)
+    } catch (error) {
+      console.error('Error al exportar:', error)
+      setIsExporting(false)
+    }
   }
 
   const handleCloseWithX = () => {
@@ -663,25 +737,11 @@ export function Sales () {
             disabled: loading || error
           },
           {
-            label: 'Exportar CSV',
+            label: isExporting ? 'Exportando...' : 'Exportar Datos',
             icon: <DownloadIcon />,
             variant: 'secondary',
-            onClick: handleExportCSV,
-            disabled: loading || error || !sales || sales.length === 0
-          },
-          {
-            label: 'Exportar Excel',
-            icon: <DownloadIcon />,
-            variant: 'secondary',
-            onClick: handleExportExcel,
-            disabled: loading || error || !sales || sales.length === 0
-          },
-          {
-            label: 'Exportar PDF',
-            icon: <DownloadIcon />,
-            variant: 'secondary',
-            onClick: handleExportPDF,
-            disabled: loading || error || !sales || sales.length === 0
+            onClick: () => setIsExportModalOpen(true),
+            disabled: loading || error || isExporting || !dishes || dishes.length === 0
           }
         ]}
       />
@@ -781,7 +841,9 @@ export function Sales () {
                 </div>
               )}
               {modalError && (
-                <ErrorModal message={modalError} onClose={handleCloseError} />
+                <div ref={errorModalRef}>
+                  <ErrorModal message={modalError} onClose={handleCloseError} />
+                </div>
               )}
               {modalMode === 'delete' && (
                 <DeleteConfirmation
@@ -1032,6 +1094,113 @@ export function Sales () {
                   Confirmar Eliminación
                 </Button>
               )}
+            </CardFooter>
+          </Card>
+        </form>
+      </Modal>
+
+      <Modal
+        ref={exportModalRef}
+        isOpen={isExportModalOpen}
+        onAnimationEnd={() => {
+          if (!isExportModalOpen) {
+            setExportScope('filtered')
+            setExportFormat('csv')
+          }
+        }}
+      >
+        <form action=''>
+          <Card>
+            <CardHeader>
+              <div className='header-with-icon'>
+                <DownloadIcon />
+                <h3>Exportar Datos de Ventas</h3>
+              </div>
+              <Button type='button' className='modal-close-button no-transform' onClick={() => setIsExportModalOpen(false)}>
+                <CancelIcon />
+              </Button>
+            </CardHeader>
+            <CardBody className='modal-body'>
+              {isExporting && (
+                <div className='modal-loading-overlay'>
+                  {exportSuccess
+                    ? (
+                      <div className='modal-success-overlay'>
+                        <CheckIcon width={40} height={40} color='#059669' />
+                        <span>¡Exportación completada exitosamente!</span>
+                      </div>
+                      )
+                    : (
+                      <Loader width={32} height={32} text='Generando archivo... Esto puede tardar.' />
+                      )}
+                </div>
+              )}
+              <div className='modal-input-group'>
+                <div className='input-group'>
+                  <label htmlFor='modal-export-scope'>Datos a Exportar</label>
+                  <Select
+                    name='export-scope'
+                    id='modal-export-scope'
+                    disabled={isExporting}
+                    value={exportScope}
+                    onChange={(val) => setExportScope(val)}
+                    containerRef={exportModalRef}
+                    options={[
+                      {
+                        label: 'Alcance',
+                        items: [
+                          { label: 'Exportar vista actual (filtrada)', value: 'filtered' },
+                          { label: 'Exportar todas las ventas', value: 'all' }
+                        ]
+                      }
+                    ]}
+                  />
+                  <small className='input-helper-text'>
+                    {exportScope === 'filtered'
+                      ? 'Se exportarán solo las ventas que coincidan con tus filtros actuales.'
+                      : 'Se exportarán todas las ventas, ignorando los filtros.'}
+                  </small>
+                </div>
+                <div className='input-group'>
+                  <label htmlFor='modal-export-format'>Formato de Archivo</label>
+                  <Select
+                    name='export-format'
+                    id='modal-export-format'
+                    disabled={isExporting}
+                    value={exportFormat}
+                    onChange={(val) => setExportFormat(val)}
+                    containerRef={exportModalRef}
+                    options={[
+                      {
+                        label: 'Formato',
+                        items: [
+                          { label: 'CSV', value: 'csv' },
+                          { label: 'Excel', value: 'excel' },
+                          { label: 'PDF', value: 'pdf' }
+                        ]
+                      }
+                    ]}
+                  />
+                  <small className='input-helper-text'>
+                    {formatDescriptions[exportFormat]}
+                  </small>
+                </div>
+              </div>
+            </CardBody>
+            <CardFooter className='modal-footer'>
+              <Button type='button' onClick={() => setIsExportModalOpen(false)} disabled={isExporting}>
+                <CancelIcon />
+                Cancelar
+              </Button>
+              <Button
+                type='button'
+                className='primary'
+                onClick={handleConfirmExport}
+                disabled={isExporting}
+              >
+                <DownloadIcon />
+                {isExporting ? 'Generando...' : 'Confirmar Exportación'}
+              </Button>
             </CardFooter>
           </Card>
         </form>
