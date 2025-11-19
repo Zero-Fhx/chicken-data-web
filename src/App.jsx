@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import { Route, Routes } from 'react-router'
 
+import { MobileNavbar } from '@/components/MobileNavbar'
 import { Sidebar } from '@/components/Sidebar'
 
 import { Dishes } from '@/pages/Dishes'
@@ -13,9 +15,15 @@ import '@/styles/App.css'
 import '@fontsource-variable/onest'
 
 export function App () {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen)
+  const closeSidebar = () => setIsSidebarOpen(false)
+
   return (
     <main className='app'>
-      <Sidebar />
+      <MobileNavbar onMenuClick={toggleSidebar} />
+      <Sidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
       <div className='page-content'>
         <Routes>
           <Route path='/' element={<Home />} />

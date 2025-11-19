@@ -35,6 +35,13 @@ body {
   min-height: 100vh;
 }
 
+@media (max-width: 768px) {
+  .page-content {
+    margin-left: 0;
+    padding-top: calc(64px + 2rem);
+  }
+}
+
 section {
   display: flex;
   flex-direction: column;
