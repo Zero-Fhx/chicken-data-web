@@ -76,7 +76,7 @@ export function ComparisonsCard ({
       error={error}
       onRetry={refetch}
       cardControls={
-        <div style={{ display: 'flex', gap: '0.5rem', flexDirection: 'row' }}>
+        <div style={{ display: 'flex', gap: '0.5rem', flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center' }}>
           {viewControls}
           {view !== 'dishes' && <div className='controls-separator' />}
           {view !== 'dishes' && periodControls}

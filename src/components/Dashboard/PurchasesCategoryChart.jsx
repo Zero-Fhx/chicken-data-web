@@ -109,7 +109,7 @@ export function PurchasesCategoryChart ({ loading, data, period = 'month' }) {
   return (
     <div className='pie-chart-wrapper'>
       <ResponsiveContainer width='100%' height={350}>
-        <PieChart style={{ overflow: 'visible' }} margin={{ top: 20, right: 80, bottom: 20, left: 80 }}>
+        <PieChart style={{ overflow: 'visible' }} margin={{ top: 10, right: 10, bottom: 10, left: 10 }}>
           <Legend
             layout='vertical'
             align='right'

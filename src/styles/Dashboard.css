@@ -51,12 +51,14 @@
     grid-column: span 2;
   }
 }
-@media (max-width: 768px) {
+@media (max-width: 1100px) {
   .dashboard-grid {
     grid-template-columns: 1fr;
   }
   .span-4,
-  .span-2 {
+  .span-3,
+  .span-2,
+  .span-md-2 {
     grid-column: span 1;
   }
 }
@@ -67,10 +69,14 @@
   .span-1 {
     grid-column: span 1;
   }
+  /* Nueva clase utilitaria para forzar span 2 en tablet */
+  .span-md-2 {
+    grid-column: span 2;
+  }
   /* (Las .span-2 y .span-4 ya están configuradas para span 2) */
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1100px) {
   /* En móviles, todo va a 1 columna de todas formas */
   .span-1 {
     grid-column: span 1;
@@ -147,9 +153,9 @@
 /* 7. Separador vertical (sin cambios) */
 .controls-separator {
   width: 1px;
-  height: 16px;
+  height: 24px;
   background-color: #d1d5db;
-  margin: 0 4px;
+  margin: 0 8px;
 }
 
 /* 8. Estilo del Dropdown (sin cambios) */

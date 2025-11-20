@@ -114,7 +114,7 @@ export function Home () {
   )
 
   const trendControls = (
-    <div className='card-controls' style={{ gap: '0.5rem', display: 'flex', flexDirection: 'row' }}>
+    <div className='card-controls' style={{ gap: '0.5rem', display: 'flex', flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center' }}>
       <div className='dashboard-controls-group'>
         {trendToggleControls}
         <div className='controls-separator' />
@@ -199,7 +199,7 @@ export function Home () {
           className='span-3'
           loading={trendsLoading}
           cardControls={
-            <div style={{ display: 'flex', gap: '1rem', flexDirection: 'row' }}>
+            <div style={{ display: 'flex', gap: '1rem', flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center' }}>
               {trendControls}
             </div>
           }
@@ -207,7 +207,7 @@ export function Home () {
           <TrendChart data={trends} dataType={trendType} period={trendPeriod} />
         </DashboardCard>
 
-        <AlertsFeedCard className='span-1' />
+        <AlertsFeedCard className='span-1 span-md-2' />
 
         {/* Fila 3: Desgloses (Sin cambios) */}
         <DashboardCard

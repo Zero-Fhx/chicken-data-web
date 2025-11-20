@@ -23,6 +23,7 @@
   padding-bottom: 12px;
   margin-bottom: 16px;
   gap: 16px;
+  flex-wrap: wrap;
 }
 .dashboard-card-title {
   margin: 0;
