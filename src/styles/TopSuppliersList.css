@@ -1,4 +1,3 @@
-/* styles/TopSuppliersList.css */
 .top-suppliers-list {
   list-style: none;
   padding: 0;
@@ -10,7 +9,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 4px;
-  border-bottom: 1px solid #f1f3f5;
+  border-bottom: 1px solid var(--color-surface-alt);
 }
 .top-suppliers-item:last-child {
   border-bottom: none;
@@ -21,63 +20,51 @@
   gap: 2px;
 }
 .top-suppliers-name {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #343a40;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gray-700);
 }
 .top-suppliers-count {
   font-size: 0.8rem;
   color: #868e96;
 }
 .top-suppliers-spent {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #212529;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
 }
-/* styles/TopSuppliersList.css (NUEVO CONTENIDO) */
-
-/* Apuntamos a las etiquetas de texto SVG generadas por Recharts */
 .recharts-cartesian-axis-tick-value tspan {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #343a40;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gray-700);
 }
 
-/* Estilo para las etiquetas de valor (Números sobre la barra) */
 .recharts-bar-label {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #333;
-  fill: #333;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  fill: var(--color-text-primary);
 }
 
 .top-suppliers-chart-container {
-  /*
-    Usamos el MISMO valor (255px) para forzar
-    que esta tarjeta tenga la misma altura que la de "Platos".
-  */
   min-height: 255px;
 
-  /* Asegura que el gráfico se alinee arriba */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
 }
-/* ... (reglas existentes) ... */
-
-/* --- AÑADIR ESTAS REGLAS AL FINAL --- */
 
 .custom-tooltip {
-  background-color: #fff;
-  border: 1px solid #e9ecef;
-  border-radius: 8px;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
   padding: 10px 15px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 .custom-tooltip .label {
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   margin-bottom: 8px;
-  color: #343a40;
+  color: var(--color-gray-700);
   font-size: 0.95rem;
 }
 .custom-tooltip .item {
@@ -85,7 +72,7 @@
   align-items: center;
   margin-bottom: 0;
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 .tooltip-color-box {
   display: inline-block;
@@ -96,6 +83,6 @@
   flex-shrink: 0;
 }
 .custom-tooltip .value {
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   margin-left: 5px;
 }

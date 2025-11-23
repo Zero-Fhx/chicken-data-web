@@ -1,18 +1,14 @@
 .pie-chart-wrapper {
-  /* Allow connectors/labels to overflow the SVG without being clipped */
   overflow: visible;
-  position: relative; /* keep stacking context if needed */
-  /* add inner padding so connectors don't touch the card edge (top/bottom + left/right) */
+  position: relative;
   padding: 20px 16px;
 }
 
-/* Recharts surface (SVG) should allow overflow too */
 .pie-chart-wrapper .recharts-surface,
 .pie-chart-wrapper svg {
   overflow: visible;
 }
 
-/* Ensure the SVG drawing surface is stacked above the legend/list so hover labels/connectors are visible */
 .pie-chart-wrapper .recharts-surface,
 .pie-chart-wrapper svg {
   position: relative;
@@ -23,5 +19,3 @@
   position: relative;
   z-index: 1;
 }
-
-/* If the card container has overflow:hidden, you may need to increase these margins or remove the clip on the card */

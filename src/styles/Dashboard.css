@@ -1,46 +1,26 @@
-/*
- * styles/Dashboard.css
- * Estilos para el layout principal del Bento Grid del Dashboard.
- */
-
-/* 1. El Contenedor del Grid */
 .dashboard-grid {
   display: grid;
-  /* Define un grid de 4 columnas de igual tamaño */
   grid-template-columns: repeat(4, 1fr);
-  /* Espacio entre las tarjetas */
-  gap: 20px;
+  grid-auto-rows: minmax(min-content, auto);
+  gap: var(--spacing-5);
 }
-
-/* Evita que los hijos del grid crezcan más allá de su celda cuando
-   contienen elementos con min-width (por ejemplo nuestro carrusel). */
 .dashboard-grid > * {
   min-width: 0;
 }
 
-/* 3. Clases de Span para el Grid */
-
-/* Tarjetas que ocupan 4 columnas */
 .span-4 {
   grid-column: span 4;
 }
-
-/* Tarjetas que ocupan 3 columnas */
 .span-3 {
   grid-column: span 3;
 }
-
-/* Tarjetas que ocupan 2 columnas */
 .span-2 {
   grid-column: span 2;
 }
-
-/* Tarjetas que ocupan 1 columna */
 .span-1 {
   grid-column: span 1;
 }
 
-/* 4. Responsividad (Opcional pero recomendado) */
 @media (max-width: 1200px) {
   .dashboard-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -63,106 +43,92 @@
   }
 }
 
-/* Ajuste de responsividad para la nueva Fila 1 */
 @media (max-width: 1200px) {
-  /* En tablets, hacemos que las nuevas tarjetas de feed ocupen 1 columna */
   .span-1 {
     grid-column: span 1;
   }
-  /* Nueva clase utilitaria para forzar span 2 en tablet */
   .span-md-2 {
     grid-column: span 2;
   }
-  /* (Las .span-2 y .span-4 ya están configuradas para span 2) */
 }
 
 @media (max-width: 1100px) {
-  /* En móviles, todo va a 1 columna de todas formas */
-  .span-1 {
+  .span-1,
+  .span-md-2 {
     grid-column: span 1;
   }
 }
 
-/*
- * --- CORRECCIÓN DE TOOLTIP (FASE 9.7) ---
- * Fuerza al tooltip de Recharts a aparecer por encima
- * de otros elementos de la tarjeta, como la leyenda.
- */
-.recharts-tooltip-wrapper {
-  z-index: 999 !important;
-}
-
-/* 1. Contenedor GRIS unificado (sin cambios) */
-.dashboard-controls-group {
-  display: inline-flex;
+.controls-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-4);
   align-items: center;
-  gap: 4px;
-  background-color: #f1f3f5;
-  border-radius: 6px;
-  padding: 4px;
+  justify-content: space-between;
+  padding: var(--spacing-4);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
 }
 
-/* 2. FIX: Hacemos que el .period-selector se vuelva transparente
-      CUANDO está dentro del .dashboard-controls-group */
-.dashboard-controls-group .period-selector {
-  background-color: transparent;
-  padding: 0;
-  gap: 4px; /* Asegura el gap */
+.controls-left {
+  display: flex;
+  gap: var(--spacing-3);
+  align-items: center;
+  flex-wrap: wrap;
 }
 
-/* 3. Estilo INACTIVO del Select (sin cambios) */
-.form-select-trigger.dashboard-select {
-  border: 1px solid transparent;
-  box-shadow: none;
-  background-color: transparent;
-  min-height: auto;
-  height: auto;
-  padding: 4px 10px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  border-radius: 4px;
-  color: #495057;
-  gap: 0.25rem;
-  padding-left: 10px;
-  padding-right: 10px;
-  transition: all 0.2s ease;
+.controls-right {
+  display: flex;
+  gap: var(--spacing-3);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.controls-separator {
+  width: 1px;
+  height: 32px;
+  background-color: var(--color-divider);
+  margin: 0 var(--spacing-2);
+}
+
+.period-selector-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.period-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
   white-space: nowrap;
 }
 
-/* 4. Estilo HOVER del Select (sin cambios) */
-.form-select-trigger.dashboard-select:hover {
-  background-color: rgba(255, 255, 255, 0.5);
-  border-color: transparent;
+@media (max-width: 768px) {
+  .controls-group {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .controls-left,
+  .controls-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .controls-separator {
+    display: none;
+  }
 }
 
-/* 5. Estilo ACTIVO/FOCUS del Select (sin cambios) */
-.form-select-trigger.dashboard-select:focus,
-.form-select-trigger.dashboard-select[data-state="open"] {
-  background-color: #ffffff;
-  color: #333;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+.controls-group .form-select-trigger {
+  min-width: 150px;
 }
 
-/* 6. Estilo de la flecha (sin cambios) */
-.form-select-trigger.dashboard-select .form-select-icon svg {
-  stroke: #9ca3af;
-  width: 0.875rem;
-  height: 0.875rem;
-}
-
-/* 7. Separador vertical (sin cambios) */
-.controls-separator {
-  width: 1px;
-  height: 24px;
-  background-color: #d1d5db;
-  margin: 0 8px;
-}
-
-/* 8. Estilo del Dropdown (sin cambios) */
-.form-select-content.dashboard-dropdown {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: #495057;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  border-color: #e5e7eb;
+@media (max-width: 640px) {
+  .controls-group .form-select-trigger {
+    min-width: 120px;
+    font-size: var(--font-size-sm);
+  }
 }

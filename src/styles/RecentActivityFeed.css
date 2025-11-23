@@ -1,11 +1,8 @@
-/* fileName: RecentActivityFeed.css (REEMPLAZAR ARCHIVO COMPLETO) */
-
 .activity-feed {
   list-style: none;
   padding: 0;
   margin: 0;
   width: 100%;
-  /* 1. Aumentamos el espacio entre cada item */
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -14,58 +11,54 @@
 .activity-item {
   display: flex;
   align-items: center;
-  gap: 16px; /* 2. Más espacio entre icono y texto */
+  gap: 16px;
 
-  /* 3. Aumentamos el padding vertical para más altura */
   padding: 16px 4px;
-  border-bottom: 1px solid #f1f3f5;
+  border-bottom: 1px solid var(--color-surface-alt);
 }
 .activity-item:last-child {
   border-bottom: none;
 }
 
 .activity-icon {
-  /* 4. Iconos más grandes */
   width: 40px;
   height: 40px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0; /* Evita que el icono se encoja */
+  flex-shrink: 0;
 }
 .activity-icon.sale {
   background-color: #e6fffb;
-  color: #00c49f;
+  color: var(--color-chart-teal-500);
 }
 .activity-icon.purchase {
   background-color: #fff4e6;
-  color: #ff8042;
+  color: var(--color-chart-orange-500);
 }
 .activity-icon.dishes {
   background-color: #e7f5ff;
-  color: #007bff;
+  color: var(--color-primary-500);
 }
 .activity-icon.ingredient {
   background-color: #e9f7ec;
-  color: #28a745;
+  color: var(--color-success-500);
 }
 
 .activity-details {
   display: flex;
   flex-direction: column;
-  gap: 2px; /* 5. Pequeño espacio entre título y subtítulo */
+  gap: 2px;
 }
 
 .activity-title {
-  /* 6. Texto más grande */
-  font-size: 1rem; /* 16px */
-  font-weight: 500;
-  color: #343a40;
+  font-size: var(--spacing-4);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gray-700);
 }
 
 .activity-time {
-  /* 7. Subtítulo más grande */
-  font-size: 0.9rem; /* 14px */
+  font-size: var(--font-size-base);
   color: #868e96;
 }

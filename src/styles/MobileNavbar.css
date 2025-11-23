@@ -1,34 +1,45 @@
 .mobile-navbar {
   display: none;
+  grid-template-columns: 1fr max-content 1fr;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: 64px;
-  background-color: #fff;
-  border-bottom: 1px solid #e2e8f0;
-  padding: 0 1rem;
+  height: var(--navbar-height);
+  background-color: var(--color-white);
+  border-bottom: 1px solid var(--color-border);
+  padding: 0 var(--spacing-4);
   align-items: center;
   justify-content: space-between;
   z-index: 90;
-  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  box-shadow: var(--shadow-xs);
+}
+
+.mobile-menu {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  justify-self: start;
+  justify-content: flex-start;
+  width: max-content;
 }
 
 .menu-btn {
   background: none;
   border: none;
-  padding: 0.5rem;
+  padding: var(--spacing-2);
   cursor: pointer;
-  color: #64748b;
+  color: var(--color-gray-500);
   display: flex;
   align-items: center;
-  justify-content: center;
-  border-radius: 0.375rem;
-  transition: background-color 0.2s;
+  justify-content: flex-start;
+  border-radius: var(--radius-md);
+  transition: var(--transition-colors);
+  max-width: fit-content;
 
   &:hover {
-    background-color: #f1f5f9;
-    color: #1e293b;
+    background-color: var(--color-surface-hover);
+    color: var(--color-gray-800);
   }
 
   & svg {
@@ -40,21 +51,32 @@
 .mobile-logo {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: var(--spacing-3);
+  justify-content: center;
+  width: max-content;
 }
 
 .mobile-title {
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: #1a202c;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-gray-850);
+}
+
+.mobile-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  justify-self: end;
+  justify-content: flex-end;
+  width: max-content;
 }
 
 .mobile-user-avatar {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   overflow: hidden;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border);
 
   & img {
     width: 100%;
@@ -65,6 +87,6 @@
 
 @media (max-width: 768px) {
   .mobile-navbar {
-    display: flex;
+    display: grid;
   }
 }

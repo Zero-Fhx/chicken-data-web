@@ -2,69 +2,71 @@
 .form-input,
 input,
 textarea {
-  border: 2px solid #f0f2f5;
-  padding: 0.5rem;
-  border-radius: 0.5rem;
-  font-size: 1rem;
+  border: 2px solid var(--color-border-alt);
+  padding: var(--spacing-2);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-base);
   font-family: inherit;
-  min-height: 2.75rem;
+  min-height: var(--input-height);
   width: 100%;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: var(--transition-colors), var(--transition-shadow);
 }
 
 .form-control:hover,
 .form-input:hover,
 input:hover,
 textarea:hover {
-  border-color: #cbd5e1;
+  border-color: var(--color-gray-250);
 }
 
 .form-control:focus,
 .form-input:focus,
 input:focus,
 textarea:focus {
-  border-color: #007bff;
+  border-color: var(--color-primary-500);
   outline: none;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  box-shadow: var(--shadow-focus-primary);
 }
 
 .form-control::placeholder,
 .form-input::placeholder,
 input::placeholder,
 textarea::placeholder {
-  color: #aaa;
+  color: var(--color-text-placeholder);
 }
 
 .form-control:disabled,
 .form-input:disabled,
 input:disabled,
 textarea:disabled {
-  background-color: #f5f5f5;
+  background-color: var(--color-surface-alt);
+  color: var(--color-text-disabled);
   cursor: not-allowed;
+  opacity: 1;
 }
 
 .form-control.error,
 .form-input.error,
 input.error,
 textarea.error {
-  border-color: #dc3545;
+  border-color: var(--color-danger-500);
 }
 
 .input-error {
-  border-color: #ef4444 !important;
+  border-color: var(--color-danger-400) !important;
 }
 .input-error:hover {
-  border-color: #dc2626 !important;
+  border-color: var(--color-danger-600) !important;
 }
 .input-error:focus {
-  border-color: #dc2626 !important;
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+  border-color: var(--color-danger-600) !important;
+  box-shadow: var(--shadow-focus-danger);
 }
 
 .info-error {
-  color: #dc2626;
-  font-size: 0.75rem;
-  margin-top: -0.25rem;
+  color: var(--color-danger-600);
+  font-size: var(--font-size-xs);
+  margin-top: calc(var(--spacing-1) * -1);
   display: block;
 }
 

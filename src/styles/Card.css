@@ -1,8 +1,8 @@
 .card {
-  border: 1px solid #e2e8f0;
-  border-radius: 0.75rem;
-  background-color: #ffffff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  background-color: var(--color-white);
+  box-shadow: var(--shadow-card);
   overflow: hidden;
 }
 
@@ -10,15 +10,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 0.5rem;
-  padding: 1.5rem 2rem;
-  border-bottom: 1px solid #eee;
-  background-color: #f9fafb;
+  gap: var(--spacing-2);
+  padding: var(--spacing-6) var(--spacing-8);
+  border-bottom: 1px solid var(--color-divider);
+  background-color: var(--color-surface);
 }
 
 .card-body {
-  padding: 1.5rem 2rem;
-  font-size: 1rem;
+  padding: var(--spacing-6) var(--spacing-8);
+  font-size: var(--font-size-base);
   overflow-x: auto;
 
   &.no-padding {
@@ -31,27 +31,27 @@
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 0.5rem;
-  padding: 1.5rem 2rem;
-  border-top: 1px solid #eee;
-  background-color: #f9fafb;
-  border-radius: 0 0 0.75rem 0.75rem;
+  gap: var(--spacing-2);
+  padding: var(--spacing-6) var(--spacing-8);
+  border-top: 1px solid var(--color-divider);
+  background-color: var(--color-surface);
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
 }
 
 .filter-input {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--spacing-2);
 }
 
 .filter-form {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1rem;
+  gap: var(--spacing-4);
 }
 
 .header-with-icon {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-2);
 }

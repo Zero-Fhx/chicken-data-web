@@ -1,9 +1,7 @@
-/* fileName: KpiCard.css (REEMPLAZAR ARCHIVO COMPLETO) */
-
 .kpi-card-wrapper {
-  background-color: #ffffff;
-  border: 1px solid #e9ecef;
-  border-radius: 8px;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
   padding: 20px;
   display: flex;
@@ -11,24 +9,22 @@
   height: 100%;
 }
 
-/* Encabezado */
 .kpi-card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
   min-height: 28px;
-  border-bottom: 1px solid #f1f3f5;
+  border-bottom: 1px solid var(--color-surface-alt);
   padding-bottom: 8px;
 }
 .kpi-card-title {
   margin: 0;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #343a40;
+  font-size: 1var (--spacing-4);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-700);
 }
 
-/* Contenido */
 .kpi-card-content {
   flex: 1;
   display: flex;
@@ -41,39 +37,37 @@
   align-items: center;
   padding-top: 10px;
   padding-bottom: 10px;
-  /* Centrar verticalmente si no hay gráfico (ej. en "Hoy") */
   flex-grow: 1;
   justify-content: center;
 }
 .kpi-card-value {
   margin: 0;
   font-size: 2.25rem;
-  font-weight: 600;
-  color: #212529;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
 }
 .kpi-card-growth {
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
   margin-top: 4px;
 }
 .kpi-card-growth.positive {
-  color: #28a745;
+  color: var(--color-success-500);
 }
 .kpi-card-growth.negative {
-  color: #dc3545;
+  color: var(--color-danger-500);
 }
 
-/* Sparkline */
 .kpi-sparkline {
   width: 100%;
   margin-top: 16px;
-  border-top: 1px solid #f1f3f5;
+  border-top: 1px solid var(--color-surface-alt);
   padding-top: 12px;
 }
 .kpi-sparkline-title {
   font-size: 0.8rem;
-  font-weight: 500;
-  color: #6c757d;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-tertiary);
   margin: 0 0 8px 0;
   text-align: left;
 }
@@ -84,36 +78,32 @@
   align-items: center;
   justify-content: center;
 }
-/* fileName: KpiCard.css (SOLO EL CSS DEL TOOLTIP) */
-
 .custom-sparkline-tooltip {
-  background-color: #fff;
-  border: 1px solid #e9ecef;
-  border-radius: 8px;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
   padding: 8px 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Regla para la fecha/hora (ej. 2025-11-10) */
 .custom-sparkline-tooltip .label {
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   margin-bottom: 4px;
-  color: #343a40;
+  color: var(--color-gray-700);
   font-size: 0.85rem;
 }
 
-/* Regla para la línea de valor (ej. Costos: S/. 117.25) */
 .custom-sparkline-tooltip .item {
   display: flex;
   align-items: center;
   margin-bottom: 0;
   font-size: 0.8rem;
-  font-weight: 500;
-  color: #495057;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gray-550);
 }
 
 .custom-sparkline-tooltip .value {
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   margin-left: 4px;
-  color: #212529;
+  color: var(--color-text-primary);
 }

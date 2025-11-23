@@ -1,10 +1,8 @@
-/* fileName: DishesComparisonTable.css (REEMPLAZAR ARCHIVO) */
-
 .table-scroll-wrapper {
   overflow-x: auto;
   width: 100%;
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-lg);
 }
 
 .dishes-comparison-table {
@@ -22,20 +20,20 @@
 }
 
 .dishes-comparison-table thead {
-  background-color: #f8f9fa;
+  background-color: var(--color-surface);
 }
 
 .dishes-comparison-table th {
-  font-size: 0.8rem; /* 12px */
-  font-weight: 600;
-  color: #495057;
+  font-size: 0.8rem;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-550);
   text-align: left;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .dishes-comparison-table tbody tr {
-  border-top: 1px solid #e9ecef;
+  border-top: 1px solid var(--color-border-light);
 }
 .dishes-comparison-table tbody tr:first-child {
   border-top: none;
@@ -43,10 +41,9 @@
 
 .dishes-comparison-table td {
   font-size: 0.9rem;
-  color: #212529;
+  color: var(--color-text-primary);
 }
 
-/* Alineación de Texto */
 .dishes-comparison-table .text-right {
   text-align: right;
 }
@@ -54,16 +51,15 @@
   text-align: center;
 }
 
-/* Reutilizamos los estilos de cambio de KPI */
 .kpi-change.positive {
   color: #00c49f;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 .kpi-change.negative {
   color: #e63946;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 .kpi-change.neutral {
-  color: #6c757d;
-  font-weight: 600;
+  color: var(--color-text-tertiary);
+  font-weight: var(--font-weight-semibold);
 }

@@ -1,22 +1,15 @@
-/* styles/InventorySummary.css */
-
-/* --- TAREA 21: Convertir en carrusel --- */
 .inventory-carousel {
-  display: flex; /* 1. Convertir en fila */
-  overflow-x: auto; /* 2. Habilitar scroll horizontal */
+  display: flex;
+  overflow-x: auto;
   gap: 12px;
   width: 100%;
-  max-width: 100%; /* evitar que el contenedor crezca sin límite */
+  max-width: 100%;
   align-items: center;
-  -webkit-overflow-scrolling: touch; /* suaviza scroll en móviles */
-  box-sizing: border-box; /* incluir padding en el ancho */
-  flex-wrap: nowrap; /* evitar wrap, obligar scroll */
-  overflow-y: hidden; /* evitar scrollbar vertical inesperado */
-
-  /* Para que funcione aunque haya reglas globales que interfieran, aumentamos especificidad */
+  -webkit-overflow-scrolling: touch;
+  box-sizing: border-box;
+  flex-wrap: nowrap;
+  overflow-y: hidden;
 }
-
-/* Especificidad adicional: cuando está dentro de una dashboard card */
 .dashboard-card .inventory-carousel {
   display: flex;
   overflow-x: auto;
@@ -24,46 +17,37 @@
   width: 100%;
   max-width: 100%;
   align-items: center;
-  padding-bottom: 12px; /* espacio para scrollbar */
-  scroll-snap-type: x mandatory; /* ayuda al UX del carrusel */
+  padding-bottom: 12px;
+  scroll-snap-type: x mandatory;
   box-sizing: border-box;
   flex-wrap: nowrap;
 }
-
-/* Estilizado ligero de scrollbar para mejor apariencia */
 .inventory-carousel::-webkit-scrollbar {
   height: 8px;
 }
 .inventory-carousel::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.08);
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
 }
 
-/* --- TAREA 21: Desacoplar de .financial-item --- */
-/* Creamos un estilo de item propio para el inventario */
 .inventory-item {
-  background-color: #f8f9fa;
+  background-color: var(--color-surface);
   padding: 12px;
-  border-radius: 8px;
-  /* --- TAREA 21: Ajuste de tamaño --- */
-  flex: 0 0 auto; /* evita que los items crezcan o encojan */
-  width: auto; /* El ancho se ajusta al contenido */
-  min-width: 160px; /* Ancho mínimo razonable para visibilidad */
+  border-radius: var(--radius-lg);
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 160px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  scroll-snap-align: center; /* alineación en scroll-snap */
+  scroll-snap-align: center;
 }
 
-/* Wrapper para colocar controles prev/next */
 .inventory-carousel-wrapper {
   position: relative;
   width: 100%;
 }
-
-/* Añadimos espacio lateral para que los items no queden debajo de los botones */
 .dashboard-card .inventory-carousel {
-  /* padding lateral eliminado: ya no es necesario */
   padding-left: 0;
   padding-right: 0;
 }
@@ -73,20 +57,16 @@
 }
 
 .inventory-carousel.is-centered {
-  justify-content: center; /* centra si no hay overflow */
+  justify-content: center;
 }
 
 .inventory-prev,
 .inventory-next {
-  /* Reset minimal para evitar herencia de estilos globales */
   all: unset;
   box-sizing: border-box;
-
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-
-  /* Propiedades restauradas explícitamente */
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -94,8 +74,8 @@
   height: 32px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.95);
-  border: 1px solid #e9ecef;
-  color: #212529;
+  border: 1px solid var(--color-border-light);
+  color: var(--color-text-primary);
   font-size: 14px;
   line-height: 1;
   cursor: pointer;
@@ -111,7 +91,6 @@
   right: 8px;
 }
 
-/* Mover ligeramente los botones hacia afuera para que no tapen el contenido */
 .inventory-prev {
   left: -8px;
 }
@@ -121,28 +100,22 @@
 
 .inventory-prev[disabled],
 .inventory-next[disabled] {
-  /* Disabled hidden by default; start offset horizontally so they slide in left/right */
   opacity: 0;
   cursor: default;
   pointer-events: none;
 }
 
-/* Ocultar botones cuando el wrapper esté marcado como centrado */
 .inventory-carousel-wrapper.is-centered .inventory-prev,
 .inventory-carousel-wrapper.is-centered .inventory-next {
   display: none !important;
 }
 
-/* Mostrar controles solo al hacer hover del wrapper, mantener visibles si tienen focus (accesible) */
 .inventory-prev,
 .inventory-next {
   opacity: 0;
-  /* Transición de opacidad y transform para slide-in */
   transition: opacity 180ms ease, transform 180ms ease;
-  pointer-events: none; /* evitar interacción cuando ocultos */
+  pointer-events: none;
 }
-
-/* Aplicar pequeño offset horizontal cuando están ocultos para efecto slide */
 .inventory-prev {
   transform: translateY(-50%) translateX(-6px);
 }
@@ -157,10 +130,6 @@
   transform: translateY(-50%) translateX(0);
 }
 
-/* Al mostrarse (hover), regresan al centro vertical y sin offset horizontal */
-/* removed wrapper hover transforms to avoid double-hover slide; card hover handles transform */
-
-/* Si el botón recibe foco (teclado), debe ser visible */
 .inventory-prev:focus,
 .inventory-next:focus,
 .inventory-prev:focus-visible,
@@ -170,14 +139,12 @@
   transform: translateY(-50%) translateX(0) !important;
 }
 
-/* Accesibilidad: foco visible */
 .inventory-prev:focus-visible,
 .inventory-next:focus-visible {
   outline: 2px solid rgba(52, 58, 64, 0.12);
   outline-offset: 2px;
 }
 
-/* Reglas de mayor especificidad para bloquear estilos globales de `button` */
 .dashboard-card .inventory-carousel-wrapper .inventory-prev,
 .dashboard-card .inventory-carousel-wrapper .inventory-next {
   box-sizing: border-box;
@@ -189,29 +156,25 @@
   height: 32px !important;
   border-radius: 50% !important;
   background: rgba(255, 255, 255, 0.95) !important;
-  border: 1px solid #e9ecef !important;
-  color: #212529 !important;
+  border: 1px solid var(--color-border-light) !important;
+  color: var(--color-text-primary) !important;
   font-size: 14px !important;
   line-height: 1 !important;
   cursor: pointer !important;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06) !important;
   text-align: center !important;
-  /* permitir nuestras transiciones para fade + slide */
   transition: opacity 180ms ease, transform 180ms ease !important;
 }
 
-/* Asegurar que hover/focus no apliquen transform/scale o sombras globales */
 .dashboard-card .inventory-carousel-wrapper .inventory-prev:hover,
 .dashboard-card .inventory-carousel-wrapper .inventory-next:hover,
 .dashboard-card .inventory-carousel-wrapper .inventory-prev:focus,
 .dashboard-card .inventory-carousel-wrapper .inventory-next:focus {
-  /* preservar el centrado vertical y el offset horizontal a 0 para evitar jumps; bloqueamos transforms globales */
   transform: translateY(-50%) translateX(0) !important;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06) !important;
   background: rgba(255, 255, 255, 0.98) !important;
 }
 
-/* Anular outlines y estilos de focus globales y aplicar nuestro focus-visible específico */
 .dashboard-card .inventory-carousel-wrapper .inventory-prev:focus,
 .dashboard-card .inventory-carousel-wrapper .inventory-next:focus {
   outline: none !important;
@@ -225,13 +188,10 @@
 
 .dashboard-card:hover .inventory-carousel-wrapper .inventory-prev:disabled,
 .dashboard-card:hover .inventory-carousel-wrapper .inventory-next:disabled {
-  /* Disabled appears only when card is hovered: attenuated; slide horizontally into place */
   opacity: 0.45 !important;
   pointer-events: none !important;
   transform: translateY(-50%) translateX(0) !important;
 }
-
-/* Ensure disabled buttons start with the same horizontal offset as enabled ones */
 .inventory-prev[disabled] {
   transform: translateY(-50%) translateX(-6px);
 }
@@ -241,67 +201,59 @@
 
 .inventory-title {
   font-size: 0.8rem;
-  font-weight: 500;
-  color: #6c757d;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-tertiary);
   margin: 0 0 4px 0;
-  white-space: nowrap; /* Evita que el título se parta */
+  white-space: nowrap;
 }
 
 .inventory-value {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #212529;
+  font-size: var(--spacing-5);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
   margin: 0;
   white-space: nowrap;
 }
 
-/* styles/InventorySummary.css (NUEVO CONTENIDO) */
-
-/* Layout principal: apilado vertical */
 .inventory-summary-v2 {
   display: flex;
   flex-direction: column;
-  gap: 16px; /* Espacio entre KPIs y gráfico */
+  gap: 16px;
   width: 100%;
 }
-
-/* Contenedor de los KPIs de arriba */
 .inventory-kpis {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-/* Estilo para cada item de KPI */
 .inventory-item {
-  background-color: #f8f9fa;
+  background-color: var(--color-surface);
   padding: 12px;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
 }
 
 .inventory-title {
   font-size: 0.8rem;
-  font-weight: 500;
-  color: #6c757d;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-tertiary);
   margin: 0 0 4px 0;
 }
 
 .inventory-value {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #212529;
+  font-size: var(--spacing-5);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
   margin: 0;
 }
 
-/* Contenedor del gráfico de dona */
 .inventory-chart-container {
   width: 100%;
-  height: 120px; /* Altura fija para la dona */
-  margin-top: 8px; /* Pequeño espacio superior */
+  height: 120px;
+  margin-top: 8px;
 }
 
-/* Ajustar la leyenda de Recharts */
 .recharts-legend-item-text {
   font-size: 0.9rem !important;
-  color: #343a40 !important;
+  color: var(--color-gray-700) !important;
 }

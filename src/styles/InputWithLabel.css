@@ -12,31 +12,41 @@
 
 .input-label {
   position: absolute;
-  color: #6b7280;
-  font-size: 0.875rem;
-  font-weight: 500;
+  color: var(--color-gray-450);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
   pointer-events: none;
-  background-color: #f9fafb;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
+  background-color: var(--color-surface);
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-sm);
   white-space: nowrap;
   display: inline-block;
 }
 
 .input-label.left {
-  left: 0.75rem;
+  left: var(--spacing-3);
 }
 
 .input-label.right {
-  right: 0.75rem;
+  right: var(--spacing-3);
 }
 
 .input-with-label-wrapper.left .input-with-label {
-  padding-left: calc(0.75rem + var(--label-width, 3rem) + 0.5rem);
+  padding-left: calc(
+    var(--spacing-3) + var(--label-width, 3rem) + var(--spacing-2)
+  );
 }
 
 .input-with-label-wrapper.right .input-with-label {
-  padding-right: calc(0.75rem + var(--label-width, 3rem) + 0.5rem);
+  padding-right: calc(
+    var(--spacing-3) + var(--label-width, 3rem) + var(--spacing-2)
+  );
+}
+
+.input-with-label:disabled ~ .input-label,
+.input-with-label[disabled] ~ .input-label {
+  background-color: var(--color-surface-alt);
+  color: var(--color-text-disabled);
 }
 
 @media (max-width: 640px) {

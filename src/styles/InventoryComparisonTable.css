@@ -3,13 +3,12 @@
   border-collapse: collapse;
 }
 
-/* Double-wrapper helpers: outer clips border radius, inner provides scroll */
 .comparison-wrapper {
   width: 100%;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   border: 1px solid #e5e7eb;
-  background: #ffffff;
+  background: var(--color-white);
 }
 
 .comparison-wrapper .table-scroll-wrapper {
@@ -27,15 +26,15 @@
 
 .inventory-comparison-table th {
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   color: #868e96;
   text-transform: uppercase;
-  background-color: #f8f9fa;
+  background-color: var(--color-surface);
 }
 
 .inventory-comparison-table td:first-child {
-  font-weight: 600;
-  color: #343a40;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-700);
 }
 
 .inventory-comparison-table.compact th,

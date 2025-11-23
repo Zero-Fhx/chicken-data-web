@@ -1,4 +1,3 @@
-/* styles/PurchaseRecommendations.css */
 .purchase-recommendations-table {
   width: 100%;
   border-collapse: collapse;
@@ -14,10 +13,10 @@
 
 .purchase-recommendations-table th {
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   color: #868e96;
   text-transform: uppercase;
-  background-color: #f8f9fa;
+  background-color: var(--color-surface);
 }
 
 .purchase-recommendations-table tbody tr:hover {
@@ -28,12 +27,12 @@
   margin-bottom: 8px;
   padding-bottom: 8px;
   display: block;
-  color: #495057;
+  color: var(--color-gray-550);
   font-size: 0.9rem;
 }
 
 .purchase-recommendations-summary strong {
-  color: #212529;
+  color: var(--color-text-primary);
   margin-right: 8px;
 }
 
@@ -42,12 +41,11 @@
   text-align: right;
 }
 
-/* Priority chips */
 .priority-chip {
   display: inline-block;
   padding: 4px 8px;
   border-radius: 12px;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   font-size: 0.8rem;
 }
 .priority-media {
@@ -63,7 +61,6 @@
   color: #116530;
 }
 
-/* Responsive: permitir scroll horizontal en pantallas pequeñas */
 .purchase-recommendations-wrapper {
   width: 100%;
   overflow-x: auto;
@@ -71,19 +68,19 @@
 
 .card-highlight {
   display: flex;
-  gap: 1.5rem;
+  gap: var(--spacing-6);
   padding: 10px 12px;
-  border-radius: 8px;
-  background: linear-gradient(90deg, #f8fafb, #ffffff);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(90deg, #f8fafb, var(--color-white));
   border: 1px solid #eef3f4;
   margin-bottom: 10px;
 }
 
 .summary-item {
-  color: #495057;
+  color: var(--color-gray-550);
 }
 .summary-value {
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   margin-left: 6px;
 }
 
@@ -96,26 +93,19 @@
 }
 
 .purchase-recommendations-wrapper .purchase-recommendations-wrapper {
-  border-radius: 0.5rem;
+  border-radius: var(--spacing-2);
   border: 1px solid #e5e7eb;
-  overflow: hidden; /* <-- CLAVE: recorta el scrollbar del hijo */
+  overflow: hidden;
 }
 
-/* 2. Wrapper INTERIOR: (El nuevo div)
-   Este se encarga ÚNICAMENTE del scroll horizontal.
-*/
 .table-scroll-wrapper {
   overflow-x: auto;
 }
 
-/* 3. La tabla:
-   Como estaba antes.
-*/
 .purchase-recommendations-table {
   width: 100%;
   border-collapse: collapse;
 }
-/* fileName: PurchaseRecommendations.css (AÑADIR ESTO AL FINAL) */
 
 .recommendations-v2 {
   display: flex;
@@ -124,9 +114,6 @@
   padding-top: 8px;
 }
 
-/* NOTA: Estos estilos de KPI se reutilizan de 'ComparisonKpiView.css'
-  Si no los tienes en un CSS global, cópialos aquí.
-*/
 .kpi-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -137,56 +124,53 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  background-color: #f8f9fa;
+  background-color: var(--color-surface);
   padding: 16px 12px;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   gap: 4px;
 }
 .kpi-item-value {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: var(--spacing-5);
+  font-weight: var(--font-weight-semibold);
   line-height: 1.3;
-  color: #212529;
+  color: var(--color-text-primary);
 }
 .kpi-item-label {
   font-size: 0.8rem;
-  color: #6c757d;
-  font-weight: 500;
+  color: var(--color-text-tertiary);
+  font-weight: var(--font-weight-medium);
 }
-/* Fin de los estilos reutilizados */
 
 .priority-bar-wrapper {
   padding-top: 16px;
-  border-top: 1px solid #f1f3f5;
+  border-top: 1px solid var(--color-surface-alt);
 }
 
 .recommendations-subtitle {
   font-size: 0.9rem;
-  font-weight: 500;
-  color: #343a40;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gray-700);
   margin: 0 0 12px 0;
 }
 
 .table-wrapper {
   padding-top: 16px;
-  border-top: 1px solid #f1f3f5;
+  border-top: 1px solid var(--color-surface-alt);
 }
 
-/* Estilo para el <summary> de la tabla colapsable */
 .table-summary-toggle {
   font-size: 0.9rem;
-  font-weight: 500;
-  color: #007bff; /* Color de link */
+  font-weight: var(--font-weight-medium);
+  color: var(--color-primary-500);
   cursor: pointer;
-  list-style: none; /* Ocultar flecha por defecto */
+  list-style: none;
 }
 
 .table-summary-toggle::-webkit-details-marker {
-  display: none; /* Ocultar para Chrome/Safari */
+  display: none;
 }
 
 .table-summary-toggle::before {
-  /* Flecha personalizada */
   content: "►";
   display: inline-block;
   margin-right: 8px;
@@ -198,7 +182,6 @@ details[open] > .table-summary-toggle::before {
   transform: rotate(90deg);
 }
 
-/* Estilos de la tabla (ya los tienes, pero por si acaso) */
 .purchase-recommendations-table.compact th:nth-child(2),
 .purchase-recommendations-table.compact td:nth-child(2),
 .purchase-recommendations-table.compact th:nth-child(3),
@@ -212,9 +195,9 @@ details[open] > .table-summary-toggle::before {
 .priority-chip {
   padding: 3px 8px;
   border-radius: 12px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #fff;
+  font-size: var(--spacing-3);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-white);
   white-space: nowrap;
 }
 .priority-chip.priority-alta {
@@ -222,25 +205,23 @@ details[open] > .table-summary-toggle::before {
 }
 .priority-chip.priority-media {
   background-color: #ffbb28;
-  color: #333;
+  color: var(--color-text-primary);
 }
 .priority-chip.priority-baja {
   background-color: #00c49f;
 }
-/* fileName: PurchaseRecommendations.css (REEMPLAZAR ESTAS REGLAS) */
-
 .table-summary-toggle {
   font-size: 0.9rem;
-  font-weight: 500;
-  color: #007bff; /* Color azul de "link" */
+  font-weight: var(--font-weight-medium);
+  color: var(--color-primary-500);
   cursor: pointer;
-  list-style: none; /* Oculta la flecha por defecto */
-  display: inline-flex; /* Alinear con el SVG */
+  list-style: none;
+  display: inline-flex;
   align-items: center;
   padding: 4px 0;
 
   &::before {
-    display: none; /* Oculta la flecha por defecto */
+    display: none;
   }
 }
 
@@ -248,21 +229,18 @@ details[open] > .table-summary-toggle::before {
   text-decoration: underline;
 }
 
-/* Ocultar la flecha en Chrome/Safari */
 .table-summary-toggle::-webkit-details-marker {
   display: none;
 }
 
-/* Estilos para el icono SVG */
 .table-toggle-icon {
   width: 14px;
   height: 14px;
   margin-right: 6px;
-  color: #6c757d; /* Color del icono */
+  color: var(--color-text-tertiary);
   transition: transform 0.2s ease;
 }
 
-/* Rotación del icono SVG cuando está abierto */
 details[open] > .table-summary-toggle > .table-toggle-icon {
   transform: rotate(90deg);
 }

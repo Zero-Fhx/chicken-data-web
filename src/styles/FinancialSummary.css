@@ -1,15 +1,12 @@
-/* styles/FinancialSummary.css (NUEVO CONTENIDO) */
-
 .financial-summary-v2 {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-/* Fila 1: KPIs de arriba (Utilidad Neta, etc.) */
 .financial-kpi-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* 2 columnas */
+  grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
 
@@ -20,61 +17,56 @@
 }
 
 .financial-title-flat {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #6c757d;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-tertiary);
   margin: 0;
 }
 
 .financial-value-main {
   font-size: 1.4rem;
-  font-weight: 600;
-  color: #212529;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
   margin: 0;
 }
 
-/* Fila 2: Contenedor para los 2 medidores */
 .financial-gauge-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* 2 columnas */
+  grid-template-columns: 1fr 1fr;
   align-items: flex-start;
   gap: 16px;
   width: 100%;
   padding: 16px 0;
-  border-top: 1px solid #f1f3f5;
-  border-bottom: 1px solid #f1f3f5;
+  border-top: 1px solid var(--color-surface-alt);
+  border-bottom: 1px solid var(--color-surface-alt);
 }
 
-/* Cada medidor individual (título + gráfico) */
 .financial-gauge-item {
   display: flex;
-  flex-direction: column; /* Apilado vertical */
-  align-items: center; /* Centrado */
-  gap: 8px; /* Espacio entre título y gráfico */
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
   width: 100%;
 }
 
-/* Título del medidor (ej. "Margen de Ganancia (Mes)") */
 .financial-gauge-item .financial-title {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #343a40;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gray-700);
   margin: 0;
   text-align: center;
 }
 
-/* Label de porcentaje en el centro de la dona */
 .financial-gauge-label {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #212529;
+  font-size: 1var (--spacing-4);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
 }
 
-/* Fila 3: KPIs de abajo (ROI, Costo Prom.) */
 .financial-static-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -82,22 +74,21 @@
 }
 
 .financial-item {
-  background-color: #f8f9fa;
+  background-color: var(--color-surface);
   padding: 12px;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
 }
 
-/* Título de los items de abajo (en caja gris) */
 .financial-title-box {
   font-size: 0.8rem;
-  font-weight: 500;
-  color: #6c757d;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-tertiary);
   margin: 0 0 4px 0;
 }
 
 .financial-value {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #212529;
+  font-size: var(--spacing-5);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
   margin: 0;
 }

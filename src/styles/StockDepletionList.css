@@ -1,16 +1,14 @@
-/* fileName: StockDepletionList.css (ARCHIVO NUEVO) */
-
 .table-scroll-wrapper {
   overflow-x: auto;
   width: 100%;
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-lg);
 }
 
 .depletion-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 600px; /* Evita que la tabla se comprima demasiado */
+  min-width: 600px;
 }
 
 .depletion-table th,
@@ -21,31 +19,30 @@
 }
 
 .depletion-table thead {
-  background-color: #f8f9fa;
+  background-color: var(--color-surface);
 }
 
 .depletion-table th {
-  font-size: 0.8rem; /* 12px */
-  font-weight: 600;
-  color: #495057;
+  font-size: 0.8rem;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-550);
   text-align: left;
-  text-transform: uppercase; /* MAYÚSCULAS */
+  text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .depletion-table tbody tr {
-  border-top: 1px solid #e9ecef;
+  border-top: 1px solid var(--color-border-light);
 }
 .depletion-table tbody tr:first-child {
   border-top: none;
 }
 
 .depletion-table td {
-  font-size: 0.9rem;
-  color: #212529;
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
 }
 
-/* Alineación de Texto */
 .depletion-table .text-right {
   text-align: right;
 }
@@ -53,38 +50,34 @@
   text-align: center;
 }
 
-/* Corrección del Salto de Línea */
 .depletion-table .cost-value {
-  white-space: nowrap; /* EVITA EL SALTO DE LÍNEA */
+  white-space: nowrap;
 }
 
-/* Destacar días restantes */
 .depletion-table .days-highlight {
-  font-weight: 500;
-  color: #c9184a; /* Un rojo para llamar la atención */
+  font-weight: var(--font-weight-medium);
+  color: var(--color-pink-600);
 }
 
-/* Estilos de Chip (ya deberías tenerlos, pero por si acaso) */
 .priority-chip {
   padding: 3px 8px;
   border-radius: 12px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #fff;
+  font-size: var(--spacing-3);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-white);
   white-space: nowrap;
 }
 .priority-chip.priority-alta {
-  background-color: #e63946;
+  background-color: var(--color-chart-red-500);
 }
 .priority-chip.priority-media {
   background-color: #ffbb28;
-  color: #333;
+  color: var(--color-text-primary);
 }
 .priority-chip.priority-baja {
-  background-color: #00c49f;
+  background-color: var(--color-chart-teal-500);
 }
 
-/* Alineación de Encabezados (NUEVO) */
 .depletion-table th:nth-child(2),
 .depletion-table th:nth-child(3),
 .depletion-table th:nth-child(4),
