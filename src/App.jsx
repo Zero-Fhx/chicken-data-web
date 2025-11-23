@@ -12,6 +12,7 @@ import { Sales } from '@/pages/Sales'
 import { Suppliers } from '@/pages/Suppliers'
 
 import '@/styles/App.css'
+import '@/styles/index.css'
 import '@fontsource-variable/onest'
 
 export function App () {
