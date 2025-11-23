@@ -11,16 +11,18 @@ import { LogoIcon, MenuIcon } from './Icons'
 export function MobileNavbar ({ onMenuClick }) {
   return (
     <nav className='mobile-navbar'>
-      <button className='menu-btn' onClick={onMenuClick} aria-label='Abrir menú'>
-        <MenuIcon />
-      </button>
+      <div className='mobile-menu'>
+        <button className='menu-btn' onClick={onMenuClick} aria-label='Abrir menú'>
+          <MenuIcon />
+        </button>
+      </div>
 
       <div className='mobile-logo'>
         <LogoIcon width={32} height={32} color='#1a202c' />
         <span className='mobile-title'>Chicken Data</span>
       </div>
 
-      <div className='mobile-user'>
+      <div className='mobile-actions'>
         <div className='mobile-user-avatar'>
           <img src='https://avatar.iran.liara.run/public' alt='User Avatar' />
         </div>

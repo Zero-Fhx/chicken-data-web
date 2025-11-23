@@ -49,22 +49,24 @@ export function TableControls ({
         <h2>{title}</h2>
       </div>
       <div className='table-controls-actions'>
+        <span className='page-size-label'>Mostrar:</span>
         <Select
-          className='muted inline'
+          className='subtle inline'
           style={{ width: 'auto' }}
           value={String(pageSize)}
-          placeholder={`${pageSize} por página`}
+          placeholder={`${pageSize}`}
           onChange={(val) => handlePageSizeChange({ target: { value: Number(val) } })}
-          options={pageSizeOptions.map((o) => ({ label: `${o} por página`, value: String(o) }))}
+          options={pageSizeOptions.map((o) => ({ label: `${o}`, value: String(o) }))}
           disabled={loading}
         />
         <Button
-          className='muted'
+          className='ghost icon-only'
           onClick={handleRefresh}
           disabled={loading}
+          aria-label={refreshLabel}
+          title={refreshLabel}
         >
           <RefreshIcon />
-          {refreshLabel}
         </Button>
       </div>
     </div>

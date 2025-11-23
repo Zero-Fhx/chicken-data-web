@@ -114,20 +114,18 @@ export function Home () {
   )
 
   const trendControls = (
-    <div className='card-controls' style={{ gap: '0.5rem', display: 'flex', flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center' }}>
-      <div className='dashboard-controls-group'>
-        {trendToggleControls}
-        <div className='controls-separator' />
+    <div style={{ display: 'flex', gap: '0.5rem', flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center' }}>
+      {trendToggleControls}
+      <div className='controls-separator' />
+      <div className='period-selector'>
         <Select
-          className='dashboard-select'
-          dropdownClassName='dashboard-dropdown'
+          className='tab'
           value={trendGranularity}
           onChange={(val) => setTrendGranularity(val)}
           options={[{ label: 'Diario', value: 'daily' }, { label: 'Semanal', value: 'weekly' }, { label: 'Mensual', value: 'monthly' }]}
         />
         <Select
-          className='dashboard-select'
-          dropdownClassName='dashboard-dropdown'
+          className='tab'
           value={trendPeriod}
           onChange={(val) => setTrendPeriod(val)}
           // ¡Usa el mapa dinámico según la granularidad seleccionada!
