@@ -1,5 +1,6 @@
 // fileName: TrendChart.jsx (VERSIÓN FINAL COMPLETA)
 
+import { useState } from 'react'
 import {
   Area,
   CartesianGrid,
@@ -80,6 +81,8 @@ const CustomTooltip = ({ active, payload, label }) => {
 // --- FIN Componente de Tooltip ---
 
 export function TrendChart ({ loading, data, dataType = 'both' }) {
+  const [hoveringDataKey, setHoveringDataKey] = useState(undefined)
+
   if (loading) return null
   if (!data || (!data.sales && !data.purchases)) return <p>No hay datos de tendencias.</p>
 
@@ -98,11 +101,30 @@ export function TrendChart ({ loading, data, dataType = 'both' }) {
   // Formatter solo para el eje Y
   const yAxisFormatter = (value) => `S/.\u00A0${Number(value).toFixed(2)}`
 
+  // Handlers para el hover de la leyenda
+  const handleLegendMouseEnter = (payload) => {
+    setHoveringDataKey(payload.dataKey)
+  }
+
+  const handleLegendMouseLeave = () => {
+    setHoveringDataKey(undefined)
+  }
+
+  // Calcular opacidad basada en el hover
+  let revenueOpacity = 1
+  let costOpacity = 1
+
+  if (hoveringDataKey === 'revenue') {
+    costOpacity = 0.3
+  } else if (hoveringDataKey === 'cost') {
+    revenueOpacity = 0.3
+  }
+
   return (
-    <ResponsiveContainer width='100%' height={350}>
+    <ResponsiveContainer width='100%' height='100%'>
       <ComposedChart
         data={chartData}
-        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+        margin={{ top: 5, right: 30, left: 40, bottom: 5 }}
       >
         {/* Gradientes (sin cambios) */}
         <defs>
@@ -118,8 +140,18 @@ export function TrendChart ({ loading, data, dataType = 'both' }) {
 
         {/* Ejes (sin cambios) */}
         <CartesianGrid strokeDasharray='3 3' stroke='#e9ecef' />
-        <XAxis dataKey='name' fontSize={12} tickLine={false} axisLine={false} stroke='#6c757d' />
-        <YAxis fontSize={12} tickLine={false} axisLine={false} tickFormatter={yAxisFormatter} stroke='#6c757d' />
+        <XAxis
+          dataKey='name'
+          fontSize={12}
+          tickLine={false}
+          axisLine={false}
+          stroke='#6c757d'
+          angle={-45}
+          textAnchor='end'
+          height={60}
+          interval='preserveStartEnd'
+        />
+        <YAxis fontSize={12} tickLine={false} axisLine={false} tickFormatter={yAxisFormatter} stroke='#6c757d' width={80} />
 
         {/* Tooltip (Usa el 'content' personalizado) */}
         <Tooltip
@@ -127,16 +159,20 @@ export function TrendChart ({ loading, data, dataType = 'both' }) {
           cursor={{ fill: 'rgba(233, 236, 239, 0.5)' }}
         />
 
-        <Legend wrapperStyle={{ fontSize: '14px', paddingTop: '10px' }} />
+        <Legend
+          wrapperStyle={{ fontSize: '14px', paddingTop: '24px' }}
+          onMouseEnter={handleLegendMouseEnter}
+          onMouseLeave={handleLegendMouseLeave}
+        />
 
-        {/* Áreas y Líneas (sin cambios) */}
+        {/* Áreas y Líneas */}
         {(dataType === 'sales' || dataType === 'both') && (
           <Area
             type='monotone'
             dataKey='revenue'
             name='Ingresos'
             fill='url(#colorSalesGradient)'
-            fillOpacity={0.4}
+            fillOpacity={0.4 * revenueOpacity}
             stroke='none'
             dot={false}
           />
@@ -147,10 +183,11 @@ export function TrendChart ({ loading, data, dataType = 'both' }) {
             dataKey='revenue'
             stroke={COLOR_SALES}
             strokeWidth={2}
+            strokeOpacity={revenueOpacity}
             dot={false}
             legendType='none'
             activeDot={{ r: 4 }}
-            includeInTooltip={false} // Le decimos que no lo incluya
+            includeInTooltip={false}
           />
         )}
         {(dataType === 'purchases' || dataType === 'both') && (
@@ -159,7 +196,7 @@ export function TrendChart ({ loading, data, dataType = 'both' }) {
             dataKey='cost'
             name='Costos'
             fill='url(#colorPurchasesGradient)'
-            fillOpacity={0.6}
+            fillOpacity={0.6 * costOpacity}
             stroke='none'
             dot={false}
           />
@@ -170,10 +207,11 @@ export function TrendChart ({ loading, data, dataType = 'both' }) {
             dataKey='cost'
             stroke={COLOR_PURCHASES}
             strokeWidth={2}
+            strokeOpacity={costOpacity}
             dot={false}
             legendType='none'
             activeDot={{ r: 4 }}
-            includeInTooltip={false} // Le decimos que no lo incluya
+            includeInTooltip={false}
           />
         )}
       </ComposedChart>

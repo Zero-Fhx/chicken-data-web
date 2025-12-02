@@ -12,6 +12,33 @@ const COLORS = {
   outOfStock: '#FF8042' // Rojo
 }
 
+// Custom Tooltip Component
+const CustomTooltip = ({ active, payload }) => {
+  if (active && payload && payload.length) {
+    const entry = payload[0]
+    const name = entry.name
+    const value = entry.value
+
+    // Determinar el color basado en el nombre
+    let color = COLORS.optimal
+    if (name === 'Bajo') color = COLORS.lowStock
+    else if (name === 'Agotado') color = COLORS.outOfStock
+
+    return (
+      <div className='custom-tooltip'>
+        <p className='label'>{name}</p>
+        <p className='item' style={{ color }}>
+          <span className='tooltip-color-box' style={{ backgroundColor: color }} />
+          {'Cantidad: '}
+          <span className='value'>{value}</span>
+        </p>
+      </div>
+    )
+  }
+
+  return null
+}
+
 export function InventorySummary ({ loading, data }) {
   if (loading) return null
   if (!data) return <p>No hay datos de inventario.</p>
@@ -57,7 +84,7 @@ export function InventorySummary ({ loading, data }) {
                 <Cell key={`cell-${index}`} fill={COLORS[entry.name.replace('Óptimo', 'optimal').replace('Bajo', 'lowStock').replace('Agotado', 'outOfStock')]} />
               ))}
             </Pie>
-            <Tooltip />
+            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(233, 236, 239, 0.5)' }} />
             <Legend
               layout='vertical'
               align='right'

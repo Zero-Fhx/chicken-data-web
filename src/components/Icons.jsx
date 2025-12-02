@@ -438,3 +438,139 @@ export function CriticalIcon ({ width = 24, height = 24, color = 'currentColor' 
     </svg>
   )
 }
+
+export function TrendingUpIcon ({ width = 24, height = 24, color = 'currentColor' }) {
+  return (
+    <svg width={width} height={height} viewBox='0 0 24 24' fill='none'>
+      <path
+        d='M21 21H7.8C6.11984 21 5.27976 21 4.63803 20.673C4.07354 20.3854 3.6146 19.9265 3.32698 19.362C3 18.7202 3 17.8802 3 16.2V3M6 15L10 11L14 15L20 9M20 9V13M20 9H16'
+        stroke={color}
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+    </svg>
+  )
+}
+
+export function TrendingDownIcon ({ width = 24, height = 24, color = 'currentColor' }) {
+  return (
+    <svg width={width} height={height} viewBox='0 0 24 24' fill='none'>
+      <path
+        d='M21 21H7.8C6.11984 21 5.27976 21 4.63803 20.673C4.07354 20.3854 3.6146 19.9265 3.32698 19.362C3 18.7202 3 17.8802 3 16.2V3M6 15L10 11L14 15L20 9M20 9V13M20 9H16'
+        stroke={color}
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+    </svg>
+  )
+}
+
+export function LightbulbIcon ({ width = 24, height = 24, color = 'currentColor' }) {
+  return (
+    <svg width={width} height={height} viewBox='0 0 24 24' fill='none'>
+      <path
+        d='M9 21H15M12 3C8.68629 3 6 5.68629 6 9C6 10.8954 6.89499 12.566 8.27388 13.5727C8.67234 13.8539 8.87157 13.9944 9.01125 14.1767C9.15492 14.3636 9.248 14.5997 9.31516 14.8177C9.37791 15.0204 9.41126 15.2451 9.47797 15.6946L9.7 17H14.3L14.522 15.6946C14.5887 15.2451 14.6221 15.0204 14.6848 14.8177C14.752 14.5997 14.8451 14.3636 14.9887 14.1767C15.1284 13.9944 15.3277 13.8539 15.7261 13.5727C17.105 12.566 18 10.8954 18 9C18 5.68629 15.3137 3 12 3Z'
+        stroke={color}
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path d='M12 6V10' stroke={color} strokeWidth='2' strokeLinecap='round' opacity='0.5' />
+    </svg>
+  )
+}
+
+export function FireIcon ({ width = 24, height = 24, color = 'currentColor' }) {
+  return (
+    <svg width={width} height={height} viewBox='0 0 24 24' fill='none'>
+      <path
+        d='M8.5 14.6667C8.5 14.6667 9 13.5 9 12C9 10.5 8.5 9.16667 8.5 9.16667C8.5 9.16667 10.5 7.16667 11 5C11 5 11.5 6 12.5 7C13.5 8 15.5 8.5 15.5 8.5C15.5 8.5 14.5 11 16 13.5C17.3333 15.6667 17 17.5 17 17.5C17 19.9853 14.9853 22 12.5 22C10.0147 22 8 19.9853 8 17.5C8 16.5 8.5 14.6667 8.5 14.6667ZM12 2L11 5.5C11 5.5 14 5.5 14 9C14 9 13 11 14.5 13.5C16 16 15 17 15 17'
+        stroke={color}
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path d='M12 14C12.5 14 13 14.5 13 15.5C13 16.5 12.5 17 12 17C11.5 17 11 16.5 11 15.5C11 14.5 11.5 14 12 14Z' fill={color} />
+    </svg>
+  )
+}
+
+export function SnowflakeIcon ({ width = 24, height = 24, color = 'currentColor' }) {
+  return (
+    <svg width={width} height={height} viewBox='0 0 24 24' fill='none'>
+      <path
+        d='M12 2V22M12 2L9 5M12 2L15 5M12 22L9 19M12 22L15 19M5.93 6.5L18.07 17.5M5.93 6.5L7.5 9.5M5.93 6.5L3 7.5M18.07 17.5L16.5 14.5M18.07 17.5L21 16.5M5.93 17.5L18.07 6.5M5.93 17.5L3 16.5M5.93 17.5L7.5 14.5M18.07 6.5L21 7.5M18.07 6.5L16.5 9.5'
+        stroke={color}
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <circle cx='12' cy='12' r='2' fill={color} />
+    </svg>
+  )
+}
+
+export function TrophyIcon ({ width = 24, height = 24, color = 'currentColor' }) {
+  return (
+    <svg width={width} height={height} viewBox='0 0 24 24' fill='none'>
+      <path
+        d='M3 9H6M18 9H21M9 20H15M12 15V20M12 15C14.7614 15 17 12.7614 17 10V5H7V10C7 12.7614 9.23858 15 12 15ZM3 5H7H3ZM17 5H21H17Z'
+        stroke={color}
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <rect x='10' y='7' width='4' height='2' fill={color} opacity='0.5' />
+    </svg>
+  )
+}
+
+export function ChickenLegIcon ({ width = 24, height = 24, color = 'currentColor' }) {
+  return (
+    <svg width={width} height={height} viewBox='0 0 24 24' fill='none'>
+      <path
+        d='M12 3C12 3 14 4 14.5 6C15 8 14 9 14 11V14L16 16C16.5523 16.5523 16.5523 17.4477 16 18L14 20C13.4477 20.5523 12.5523 20.5523 12 20C11.4477 20.5523 10.5523 20.5523 10 20L8 18C7.44772 17.4477 7.44772 16.5523 8 16L10 14V11C10 9 9 8 9.5 6C10 4 12 3 12 3Z'
+        fill={color}
+        fillOpacity='0.2'
+      />
+      <path
+        d='M12 3C12 3 14 4 14.5 6C15 8 14 9 14 11V14L16 16C16.5523 16.5523 16.5523 17.4477 16 18L14 20C13.4477 20.5523 12.5523 20.5523 12 20C11.4477 20.5523 10.5523 20.5523 10 20L8 18C7.44772 17.4477 7.44772 16.5523 8 16L10 14V11C10 9 9 8 9.5 6C10 4 12 3 12 3Z'
+        stroke={color}
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <circle cx='12' cy='6' r='1.5' fill={color} />
+    </svg>
+  )
+}
+
+export function LeafIcon ({ width = 24, height = 24, color = 'currentColor' }) {
+  return (
+    <svg width={width} height={height} viewBox='0 0 24 24' fill='none'>
+      <path
+        d='M3 21C3 21 6 17 12 17C18 17 21 21 21 21M12 17V3C17 3 21 7 21 12C21 14 20 16 18 17'
+        stroke={color}
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M12 3C7 3 3 7 3 12C3 14 4 16 6 17'
+        stroke={color}
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M12 8C14 8 16 10 16 12M12 12C10 12 8 10 8 12'
+        stroke={color}
+        strokeWidth='1.5'
+        strokeLinecap='round'
+        opacity='0.5'
+      />
+    </svg>
+  )
+}

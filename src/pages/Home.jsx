@@ -1,6 +1,5 @@
 import { ComparisonsCard } from '@/components/Dashboard/ComparisonCard'
 import { DashboardCard } from '@/components/Dashboard/DashboardCard'
-import { FinancialSummary } from '@/components/Dashboard/FinancialSummary'
 import { InventorySummaryCard } from '@/components/Dashboard/InventorySummaryCard'
 import { PeriodSelector } from '@/components/Dashboard/PeriodSelector'
 import { PurchasesCategoryChart } from '@/components/Dashboard/PurchasesCategoryChart'
@@ -17,8 +16,11 @@ import API_ENDPOINTS from '@/services/api'
 import { useEffect, useState } from 'react'
 
 import { AlertsFeedCard } from '@/components/Dashboard/AlertsFeedCard'
+import { BusinessInsights } from '@/components/Dashboard/BusinessInsights'
+import { QuickActionCard } from '@/components/Dashboard/QuickActionCard'
 import { TopDishesCard } from '@/components/Dashboard/TopDishesCard'
 import { TopSuppliersCard } from '@/components/Dashboard/TopSuppliersCard'
+import { CubeAltIcon, CubeIcon, DollarIcon, ShoppingCartIcon } from '@/components/Icons'
 import '@/styles/Dashboard.css'
 
 const API_STATS = `${API_ENDPOINTS.dashboard}/stats`
@@ -114,10 +116,10 @@ export function Home () {
   )
 
   const trendControls = (
-    <div style={{ display: 'flex', gap: '0.5rem', flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center' }}>
+    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'nowrap' }}>
       {trendToggleControls}
       <div className='controls-separator' />
-      <div className='period-selector'>
+      <div className='period-selector' style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
         <Select
           className='tab'
           value={trendGranularity}
@@ -194,13 +196,9 @@ export function Home () {
         {/* Fila 2: Gráfico Principal */}
         <DashboardCard
           title='Tendencia'
-          className='span-3'
+          className='span-3 trend-chart-card'
           loading={trendsLoading}
-          cardControls={
-            <div style={{ display: 'flex', gap: '1rem', flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center' }}>
-              {trendControls}
-            </div>
-          }
+          cardControls={trendControls}
         >
           <TrendChart data={trends} dataType={trendType} period={trendPeriod} />
         </DashboardCard>
@@ -240,17 +238,44 @@ export function Home () {
           refetch={comparisonsRefetch}
         />
 
-        {/* --- TAREA 15: Fila 7 (Combinada) --- */}
-        <DashboardCard
-          title='Resumen: Métricas Financieras'
-          className='span-2'
-          loading={financialLoading}
-          cardControls={financialControls}
-        >
-          <FinancialSummary data={financial} period={financialPeriod} />
-        </DashboardCard>
+        {/* Fila 7: Business Insights */}
+        <BusinessInsights
+          comparisons={comparisons}
+          trends={trends}
+          inventory={metrics?.inventory}
+          salesBreakdown={salesBreakdown}
+          purchasesBreakdown={purchasesBreakdown}
+        />
 
-        {/* <AlertsKpiCard className='span-2' /> */}
+        {/* Fila 8: Quick Actions */}
+        <QuickActionCard
+          icon={<CubeIcon width={32} height={32} />}
+          title='Platos'
+          description='Gestionar platos del menú'
+          to='/dishes'
+          className='span-1'
+        />
+        <QuickActionCard
+          icon={<CubeAltIcon width={32} height={32} />}
+          title='Ingredientes'
+          description='Gestionar ingredientes'
+          to='/ingredients'
+          className='span-1'
+        />
+        <QuickActionCard
+          icon={<DollarIcon width={32} height={32} />}
+          title='Ventas'
+          description='Ver y registrar ventas'
+          to='/sales'
+          className='span-1'
+        />
+        <QuickActionCard
+          icon={<ShoppingCartIcon width={32} height={32} />}
+          title='Compras'
+          description='Gestionar compras'
+          to='/purchases'
+          className='span-1'
+        />
 
       </div>
       {/* --- Fin del Grid --- */}

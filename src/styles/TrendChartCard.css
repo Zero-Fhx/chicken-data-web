@@ -1,0 +1,16 @@
+.trend-chart-card .period-selector {
+  flex-wrap: nowrap;
+}
+
+.trend-chart-card .form-select-trigger {
+  min-width: 90px !important;
+  max-width: 110px;
+}
+
+.trend-chart-card .controls-separator {
+  flex-shrink: 0;
+}
+
+.trend-chart-card .dashboard-card-header {
+  overflow-x: visible;
+}

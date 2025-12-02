@@ -16,6 +16,10 @@
   font-size: var(--font-size-base);
   border-radius: var(--radius-md);
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-2);
   transition: var(--transition-colors), outline var(--transition-slow),
     var(--transition-shadow);
 }

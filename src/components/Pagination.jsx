@@ -70,7 +70,6 @@ export function Pagination ({ currentPage, totalPages, onPageChange, disabled = 
         disabled={currentPage === 1 || disabled}
       >
         <ArrowLeftIcon />
-        Anterior
       </Button>
 
       {pageNumbers[0] > 1 && (
@@ -117,7 +116,6 @@ export function Pagination ({ currentPage, totalPages, onPageChange, disabled = 
         onClick={handleNext}
         disabled={currentPage === totalPages || disabled}
       >
-        Siguiente
         <ArrowRightIcon />
       </Button>
     </div>
